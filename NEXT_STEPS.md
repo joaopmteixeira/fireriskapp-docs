@@ -1,7 +1,7 @@
-# Next Steps
+# Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-04-30
-Estado: Bloco A concluído. Bloco B concluído (incluindo B10). Fase 2 completa do lado de implementação — pendente apenas teste end-to-end e aprovação do João (C2).
+Última atualização: 2026-05-06
+Estado: CHICHORRO 3.1 implementado (Blocos A+B+C1 ✅). Autenticação completa (AUTH-01…05 ✅, branch `feat/access-log`). Pendente: teste e2e em produção (C2) e merge para `3.1-dev`.
 
 ---
 
@@ -247,27 +247,3 @@ Migração automática das colunas `reset_token` / `reset_token_expires_at`.
 **Ação:** percorrer todos os módulos no browser com valores conhecidos
 **Critério:** aprovação pelo João
 
----
-
-## Decisões fechadas
-
-### D1 — UX do módulo de Intervenções
-**Fechada:** implementar os dois modos da referência 3.1 em paralelo: seleção por conjuntos predefinidos e seleção individual das 34 intervenções.
-
-### D2 — POI_CC_Idade na RiPage
-**Fechada:** remover o seletor local da RiPage. O período passa a vir do subfator CC do POI.
-
-### D4 — Gráfico de impacto por intervenção
-**Estado:** backlog — ver UI-01 acima. Não iniciado; aguarda conclusão de C2.
-
-### D3 — Resultados desatualizados no frontend
-**Fechada:** alterar qualquer input de POI/DPI/ESCI/CTI invalida o resultado calculado desse fator/módulo sem apagar visualmente o valor antigo.
-**UX decidida:** valor antigo permanece visível em cinza translúcido, com aviso âmbar no formulário e, no cartão global, a nota `Valor desatualizado`.
-**Implementação:** `resultsStore.ts` mantém um store separado para último valor global válido desatualizado (`chichorro:module-results-stale`).
-
----
-
-## Riscos atuais
-
-- **Risco de quebra de sessões existentes:** ao renomear OGS values (PP+F → R+PP) em ESCI, sessões guardadas em 3.0 ficam inválidas; ao renomear `POI_EF_Altura` values (`Menor9m`→`<=9m`, `Maior9m`→`>9m`), sessões 3.0 com POI_EF calculado ficam igualmente inválidas
-- **CtiPage.tsx** ainda não expõe `VHE_Dispositivos`/`VVE_Dispositivos` — backend tem fallback temporário (usa `Dispositivos` para ambos)

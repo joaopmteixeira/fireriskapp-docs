@@ -30,7 +30,7 @@
 - `ForgotPasswordPage.tsx` e `ResetPasswordPage.tsx` — novas páginas com estilo consistente
 - `LoginPage.tsx` — link "Esqueceu a palavra-passe?" e banner `?reset=ok`
 
-### Sessão expirada
+### AUTH-05 — Modal de sessão expirada
 - `postJson` despacha `SESSION_EXPIRED_EVENT` em qualquer resposta 401
 - `AppLayout` escuta o evento e mostra modal bloqueante: "Sessão expirada — Recarregar página"
 - Cobre o caso de cookies apagadas manualmente pelo utilizador

@@ -1,5 +1,27 @@
 # Decisions Log
 
+## 2026-05 — Autenticação (AUTH-01 a AUTH-05)
+
+Decisão: e-mail de verificação e de reset de palavra-passe enviados em `threading.Thread(daemon=True)`.
+Razão: o worker gunicorn era morto por SIGKILL quando o SMTP da Resend demorava mais do que o timeout do worker. `except Exception` não captura `SystemExit` — corrigido para `except BaseException` dentro da thread. O envio em background elimina o bloqueio do worker.
+
+Decisão: o link de verificação de conta usa `request.url_root` (URL do backend Flask), não `APP_BASE_URL` (frontend).
+Razão: `/auth/verify/<token>` é uma rota Flask, não uma rota React. Usar o URL do frontend gerava 404. `APP_BASE_URL` é usado apenas para o link de reset de palavra-passe, que aponta para uma página React.
+
+Decisão: `POST /auth/forgot-password` responde sempre `{"ok": true}`, mesmo que o e-mail não exista na DB.
+Razão: revelar se um e-mail está registado constitui user enumeration — fuga de informação que permite descobrir utilizadores. O comportamento silencioso é o padrão correto para recuperação de palavra-passe.
+
+Decisão: `SESSION_EXPIRED_EVENT` é despachado via `window.dispatchEvent` pelo `postJson` a cada resposta 401.
+Razão: centralizar a detecção de sessão expirada no ponto de chamada HTTP evita duplicar lógica em cada página. O modal bloqueante em `AppLayout` é o único ponto de resposta ao evento — padrão pub/sub via DOM.
+
+Decisão: `DB_DIR` é configurável via variável de ambiente; default para `data/` relativo ao `Flask.py`.
+Razão: o free tier do Render usa disco efémero — os dados perdem-se a cada redeploy. `DB_DIR=/data` permite apontar para um Render Persistent Disk sem alterar código.
+
+Decisão: colunas `reset_token` e `reset_token_expires_at` adicionadas à tabela `users` via migração automática em `_init_db()` com `ALTER TABLE ... ADD COLUMN` e captura de `sqlite3.OperationalError`.
+Razão: permite adicionar colunas sem recriar a DB nem perder registos existentes em produção.
+
+---
+
 ## 2026-04-22 — Correções POI_EF / POI_IA, sync CTI↔POI_ATIV e aviso RI desatualizado
 
 Decisão: valores de `POI_EF_Altura` usam notação `"<=9m"` / `">9m"` em vez de `"Menor9m"` / `"Maior9m"`.
