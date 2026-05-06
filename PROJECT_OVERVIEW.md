@@ -16,12 +16,16 @@ Método: **CHICHORRO** (FEUP) — sucessão de dissertações de mestrado na Fac
 | Rui Sobral | 2019 | v3.1 | [Ver dissertação](https://hdl.handle.net/10216/122003) |
 
 **Stack:**
-- Frontend: React + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
-- Backend: Python Flask → Render
+- Frontend: React 18 + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
+- Backend: Python Flask + gunicorn → Render
 - Repo: `joaopmteixeira/chichorro-fire-risk-app`
-- App live: `fireriskapp-demo.joaopmteixeira.net` · backend: `chichorro-fire-risk-app.onrender.com`
+- App live: `fireriskapp-demo.joaopmteixeira.net` · backend prod: `chichorro-fire-risk-app.onrender.com`
+- Backend dev (auth): `chichorro-fire-risk-app-dev.onrender.com` (branch `feat/access-log`)
 
-**Branch principal de trabalho:** `3.1-dev`
+**Branches activos:**
+- `3.1-dev` — branch principal; sync automático de docs para `FIRERISKAPP-DOCS`
+- `feat/access-log` — autenticação completa (AUTH-01 a AUTH-05); pendente merge para `3.1-dev`
+- `fireriskapp_v3.1` — snapshot de deploy estável (cópia de `feat/sidebar-layout`)
 
 ---
 
@@ -140,16 +144,31 @@ Passos:
 
 ---
 
+## Autenticação
+
+Sistema de autenticação implementado no branch `feat/access-log`:
+- Login por username/password (env vars hardcoded para admins + tabela `users` SQLite para registos)
+- Registo com verificação de e-mail (Flask-Mail via SMTP Resend)
+- Recuperação de palavra-passe por e-mail (token 1h)
+- Log de acessos (login/logout) com IP e timestamp
+- Modal "sessão expirada" quando cookies são apagadas
+- Ver `docs/HOSTING_OPTIONS.md` para configuração de env vars de produção
+
+---
+
 ## Deploy
 
 ### Atual
-- Frontend: Cloudflare Pages (auto-deploy do GitHub, branch `deploy`)
-- Backend: Render (free tier — cold start ~50s após inatividade)
+- Frontend: Cloudflare Pages (auto-deploy do GitHub) · domínio: `fireriskapp-demo.joaopmteixeira.net`
+- Backend prod: Render free tier (`chichorro-fire-risk-app.onrender.com`) — cold start ~50s após inatividade
+- Backend dev: Render free tier (`chichorro-fire-risk-app-dev.onrender.com`, branch `feat/access-log`)
+- E-mail: Resend SMTP · domínio verificado: `fireriskapp-demo.joaopmteixeira.net`
 
-### Futuro (quando o produto estiver completo)
-- VPS único (ex: Hetzner/DigitalOcean) com nginx
-- nginx serve o React estático + proxy reverso para Flask/Gunicorn
-- Elimina dependência do Render free tier e cold start
+### Opções para produção definitiva
+Ver `docs/HOSTING_OPTIONS.md` para comparação detalhada de plataformas e preços.
+
+**Recomendação de menor custo:** Railway (backend) + Cloudflare Pages (frontend) + Neon PostgreSQL (~€0/mês)
+**Recomendação de controlo total:** VPS Hetzner CX22 €3,79/mês + Cloudflare Pages
 
 ---
 
