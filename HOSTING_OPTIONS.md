@@ -7,7 +7,7 @@ Documento de comparação para decisão de infraestrutura de produção. Cobre b
 ## 1. Backend (Python / Flask / gunicorn)
 
 | Plataforma | Free tier | Plano pago (mínimo) | Limitações free | Spin-down | Adequado para produção? |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Render** *(atual)* | Sim | Starter $7/mês | Ephemeral disk, 512 MB RAM | Sim (15 min) | Sim (Starter+) |
 | **Railway** | $5 crédito/mês | Usage-based (~$5–10/mês) | Crédito esgota-se | Não | Sim |
 | **Fly.io** | 3 VMs 256 MB | ~$1.94/mês/VM | RAM muito baixa para Flask | Não | Sim (2+ VMs) |
@@ -31,7 +31,7 @@ Documento de comparação para decisão de infraestrutura de produção. Cobre b
 ## 2. Frontend (React estático)
 
 | Plataforma | Free tier | Plano pago | Limitações free | CDN global | Deploy por Git |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **Cloudflare Pages** *(atual)* | Ilimitado | Pro $20/mês | 500 builds/mês | Sim (200+ PoPs) | Sim |
 | **Vercel** | Sim | Pro $20/mês | 100 GB bandwidth/mês | Sim | Sim |
 | **Netlify** | Sim | Pro $19/mês | 100 GB bandwidth, 300 min build/mês | Sim | Sim |
@@ -50,7 +50,7 @@ Documento de comparação para decisão de infraestrutura de produção. Cobre b
 ## 3. Base de dados
 
 | Opção | Free tier | Plano pago | Migração de código | Notas |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **SQLite + ephemeral** *(atual)* | Sim | — | Nenhuma | Dados perdidos em redeploy |
 | **SQLite + Render Disk** | Não | $7/mês (add-on) | Só `DB_DIR` env var | Simples, ficheiro local |
 | **Turso (SQLite distribuído)** | Sim (9 GB, 500 DB) | $29/mês | Mínima (libsql driver) | Mantém SQLite sem migração |
@@ -71,7 +71,7 @@ Documento de comparação para decisão de infraestrutura de produção. Cobre b
 ## 4. Recomendações por cenário
 
 | Cenário | Backend | Frontend | Base de dados | Custo/mês |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Demo / tese (gratuito)** | Render free | Cloudflare Pages | SQLite ephemeral | €0 |
 | **Produção baixo custo** | Render Starter | Cloudflare Pages | Render Disk | ~$14 |
 | **Produção + persistência grátis** | Railway | Cloudflare Pages | Neon free | ~$0–5 |

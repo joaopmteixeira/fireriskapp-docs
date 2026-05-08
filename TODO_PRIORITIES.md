@@ -93,13 +93,9 @@ Fluxo completo validado: registo → e-mail → verificação → login → rese
 
 Modal aparece corretamente ao apagar cookie de sessão manualmente ✅
 
----
+### ✅ AUTH-12 — Merge `feat/access-log` → `3.1-dev` `Prioridade Alta`
 
-## Prioridade Imediata
-
-### ❌ AUTH-12 — Merge `feat/access-log` → `3.1-dev`
-
-Bloqueadores resolvidos (DB-01 ✅, TEST-01 ✅, AUTH-11 ✅). Pronto para merge.
+Merge concluído em `3.1-dev` · push para GitHub ✅ · sync docs disparado ✅
 
 ---
 
