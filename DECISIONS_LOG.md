@@ -1,28 +1,37 @@
 # Decisions Log
 
-## 2026-05 — Autenticação (AUTH-01 a AUTH-05)
+## 2026-05 — Autenticação e base de dados (AUTH-01…AUTH-05, DB-01)
 
-Decisão: e-mail de verificação e de reset de palavra-passe enviados em `threading.Thread(daemon=True)`.
-Razão: o worker gunicorn era morto por SIGKILL quando o SMTP da Resend demorava mais do que o timeout do worker. `except Exception` não captura `SystemExit` — corrigido para `except BaseException` dentro da thread. O envio em background elimina o bloqueio do worker.
+Decisão `AUTH-02`: e-mail de verificação e de reset enviados em `threading.Thread(daemon=True)` com `app.app_context()` dentro da thread.
+Razão: o worker gunicorn era morto por SIGKILL quando o SMTP da Resend demorava mais que o timeout do worker. `except Exception` não captura `SystemExit` — corrigido para `except BaseException`. O envio em background elimina o bloqueio do worker.
 
-Decisão: o link de verificação de conta usa `request.url_root` (URL do backend Flask), não `APP_BASE_URL` (frontend).
-Razão: `/auth/verify/<token>` é uma rota Flask, não uma rota React. Usar o URL do frontend gerava 404. `APP_BASE_URL` é usado apenas para o link de reset de palavra-passe, que aponta para uma página React.
+Decisão `AUTH-02`: `url_root = request.url_root.rstrip('/')` capturado antes de spawnar a thread; passado como parâmetro à função de envio.
+Razão: o contexto de pedido Flask não existe dentro da thread — `request.url_root` lança `RuntimeError: Working outside of request context` se chamado lá dentro.
 
-Decisão: `POST /auth/forgot-password` responde sempre `{"ok": true}`, mesmo que o e-mail não exista na DB.
-Razão: revelar se um e-mail está registado constitui user enumeration — fuga de informação que permite descobrir utilizadores. O comportamento silencioso é o padrão correto para recuperação de palavra-passe.
+Decisão `AUTH-02`: o link de verificação usa o `url_root` do backend, não `APP_BASE_URL` (frontend). `APP_BASE_URL` é reservado para o link de reset (rota React).
+Razão: `/auth/verify/<token>` é uma rota Flask — usar o URL do frontend gerava 404.
 
-Decisão: `SESSION_EXPIRED_EVENT` é despachado via `window.dispatchEvent` pelo `postJson` a cada resposta 401.
-Razão: centralizar a detecção de sessão expirada no ponto de chamada HTTP evita duplicar lógica em cada página. O modal bloqueante em `AppLayout` é o único ponto de resposta ao evento — padrão pub/sub via DOM.
+Decisão `AUTH-02`: envio via SDK Resend (`resend.Emails.send()`), não Flask-Mail SMTP.
+Razão: o Render free tier bloqueia SMTP (porta 587). O `urllib` nativo foi descartado porque a Cloudflare WAF bloqueia o fingerprint TLS do Python com erro 1010; o SDK Resend usa `httpx` com TLS moderno que passa.
 
-Decisão: `DB_DIR` é configurável via variável de ambiente; default para `data/` relativo ao `Flask.py`.
-Razão: o free tier do Render usa disco efémero — os dados perdem-se a cada redeploy. `DB_DIR=/data` permite apontar para um Render Persistent Disk sem alterar código.
+Decisão `AUTH-04`: `POST /auth/forgot-password` responde sempre `{"ok": true}`, mesmo que o e-mail não exista na DB.
+Razão: revelar se um e-mail está registado constitui user enumeration. O comportamento silencioso é o padrão correto para recuperação de palavra-passe.
 
-Decisão: colunas `reset_token` e `reset_token_expires_at` adicionadas à tabela `users` via migração automática em `_init_db()` com `ALTER TABLE ... ADD COLUMN` e captura de `sqlite3.OperationalError`.
-Razão: permite adicionar colunas sem recriar a DB nem perder registos existentes em produção.
+Decisão `AUTH-05`: `SESSION_EXPIRED_EVENT` despachado pelo `postJson` a cada resposta 401; modal bloqueante em `AppLayout` é o único ponto de resposta.
+Razão: centralizar a detecção no ponto de chamada HTTP evita duplicar lógica em cada página. Padrão pub/sub via DOM.
+
+Decisão `DB-01`: base de dados migrada de SQLite efémero para PostgreSQL Neon (serverless, free tier permanente).
+Razão: o Render free tier usa disco efémero — a SQLite é apagada a cada redeploy. `libsql-experimental` (Turso) foi descartado: requer compilação Rust/maturin, que falha no Render (sistema de ficheiros read-only durante build). `psycopg2-binary` tem wheels pré-compilados.
+
+Decisão `DB-01`: wrapper `_PGConn` converte automaticamente `?` → `%s` e `AUTOINCREMENT` → `SERIAL PRIMARY KEY`.
+Razão: permite manter toda a lógica em sintaxe sqlite3 sem alterar queries; comutação SQLite (dev) / PostgreSQL (prod) é automática via presença de `NEON_DATABASE_URL`.
+
+Decisão `DB-01`: migrações de coluna via `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`.
+Razão: `IF NOT EXISTS` funciona em SQLite 3.37+ e PostgreSQL — permite migrações automáticas em `_init_db()` sem recriar a tabela nem perder registos.
 
 ---
 
-## 2026-04-22 — Correções POI_EF / POI_IA, sync CTI↔POI_ATIV e aviso RI desatualizado
+## 2026-04-22 — Correções POI_EF / POI_IA, sync CTI↔POI_ATIV e aviso RI desatualizado (UX-02)
 
 Decisão: valores de `POI_EF_Altura` usam notação `"<=9m"` / `">9m"` em vez de `"Menor9m"` / `"Maior9m"`.
 Razão: consistência com os restantes campos de distância que usam operadores `<=`/`>`.
@@ -45,7 +54,7 @@ Razão: sem isso, limpar um lado deixava o outro com o valor antigo, que na reat
 Decisão: quando qualquer input de subfator é alterado e já existe um resultado de RI calculado, aparece um aviso vermelho na RiPage a indicar que o RI pode não estar atualizado.
 Razão: o utilizador pode alterar inputs em POI/CTI/DPI/ESCI sem recalcular o RI, tornando o valor apresentado desatualizado sem aviso visual. A implementação usa `SESSION_DATA_UPDATED_EVENT` com um `loadingRef` para suprimir o evento durante o próprio cálculo do RI.
 
-## 2026-04-22 — UX de invalidação de resultados calculados
+## 2026-04-22 — UX de invalidação de resultados calculados (UX-01)
 
 Decisão: ao alterar ou apagar qualquer input de POI, DPI, ESCI ou CTI, o resultado calculado anteriormente deixa de ser considerado atual, mas continua visível no frontend em cinza translúcido.
 Razão: apagar o valor antigo remove contexto ao utilizador; manter o valor com estado visual desatualizado deixa claro que existe um cálculo anterior, mas obriga a recalcular antes de confiar nele.
@@ -57,7 +66,7 @@ Decisão: o estado desatualizado global fica num store separado em `resultsStore
 Razão: isto evita que módulos dependentes consumam um resultado inválido como se fosse atual, mas permite ao UI renderizar o último valor válido para orientação visual.
 
 Decisão: `clearModuleFactorResult(..., { recomputeModule: false })` é usado durante alterações de inputs em POI/DPI/ESCI.
-Razão: recomputar automaticamente a média global com um subfator removido criaria um valor parcial potencialmente enganador. O estado correto após alteração é “desatualizado” até novo cálculo.
+Razão: recomputar automaticamente a média global com um subfator removido criaria um valor parcial potencialmente enganador. O estado correto após alteração é "desatualizado" até novo cálculo.
 
 ## 2026-04-20 — Análise 3.0 → 3.1 (v3_1_matchup)
 
@@ -99,6 +108,7 @@ Razão: a referência 3.1 já implementa os dois modos em paralelo. Não há raz
 ---
 
 ## 2026-04-18
+
 Decisão: `app/frontend/` é a base ativa principal da interface moderna.
 Razão: já possui estrutura modular por páginas, rotas, autenticação, componentes de domínio e UI reutilizável.
 
@@ -115,28 +125,39 @@ Decisão: `reference/chichorro-2.0-rf/` é uma referência metodológica futura 
 Razão: ajudará a recriar ou reinterpretar um método simplificado + completo.
 
 Decisão: o projeto deve distinguir explicitamente quatro modos de trabalho:
+
 - `active_build`
 - `v3_0_legacy_compare`
 - `v3_1_matchup`
 - `v4_0_research`
+
 Razão: evita confusão entre app ativa, referências funcionais e investigação futura.
 
 Decisão: o padrão de componentes por domínio deve ser preservado.
+
 Exemplos:
+
 - `FactorSection.tsx`
 - `definitions.ts`
+
 Razão: melhora consistência e facilita expansão para novos módulos.
 
 Decisão: a camada de UI reutilizável deve servir de base comum.
+
 Exemplos:
+
 - `Button.tsx`
 - `Card.tsx`
 - `Field.tsx`
 - `ModuleGlobalValueCard.tsx`
+
 Razão: evita duplicação visual e estrutural.
 
 Decisão: o fluxo de autenticação atual inclui componentes transitórios/legacy.
+
 Exemplos:
+
 - `legacyLogin.ts`
 - `AuthPendingScreen.tsx`
+
 Razão: isso deve ser tratado como compatibilidade temporária e não como arquitetura final desejada.

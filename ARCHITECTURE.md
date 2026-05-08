@@ -2,7 +2,7 @@
 
 ## Estrutura de repositório
 
-```
+```text
 chichorro4Cursor/
 ├── app/
 │   ├── frontend/src/
@@ -85,13 +85,16 @@ chichorro4Cursor/
 Cada módulo POI/DPI/ESCI segue este padrão de dois ficheiros:
 
 **`*definitions.ts`** — declaração estática de todos os subfatores:
+
 ```ts
 { key, title, resultKey, formKey, fields: [...] }
 ```
+
 - `fields[]` tem `key`, `label`, `type` (select/number), `options[]`, `visibleWhen` (string JS avaliada)
 - Toda a lógica de visibilidade condicional está aqui — o componente só avalia
 
 **`*FactorSection.tsx`** — componente genérico que recebe uma definição e:
+
 - Gere form state (`values`) inicializado do sessionStorage
 - Aplica `visibleWhen` para mostrar/esconder campos
 - Faz POST ao backend com o payload do subfator
@@ -104,21 +107,22 @@ Se CTI ou RI precisarem do mesmo padrão, seguir esta convenção.
 
 ## `resultsStore.ts` — sessionStorage keys
 
-| Chave sessionStorage                    | Conteúdo                                              |
+| Chave sessionStorage | Conteúdo |
 |-----------------------------------------|-------------------------------------------------------|
-| `chichorro:module-results`              | `{ poi, cti, dpi, esci }` — último valor global válido por módulo |
-| `chichorro:module-results-stale`        | Idem, mas para o último valor antes de ser invalidado |
-| `chichorro:module-factor-results`       | Resultado por subfator `{ poi: { POI_CC: 1.2, … }, … }` |
-| `chichorro:module-inputs`               | Inputs submetidos por módulo                          |
-| `chichorro:form:<formKey>`              | Estado atual do formulário de cada subfator            |
-| `chichorro:computed:<key>`              | Resultados intermédios calculados (ex: CI, VHE, VVE)  |
-| `chichorro:session-storage-hydrated`    | Flag: sessão importada de JSON                        |
-| `collapse:<module>:<subfactorKey>`      | Estado colapsado/expandido de cada cartão de subfator  |
-| `err:<formKey>` / `warn:<formKey>`      | Mensagem de erro/aviso persistida entre navegações    |
-| `miss:<formKey>`                        | Campo em falta (key do input) persistido              |
-| `stale:<formKey>`                       | Flag `isResultStale` persistida                       |
+| `chichorro:module-results` | `{ poi, cti, dpi, esci }` — último valor global válido por módulo |
+| `chichorro:module-results-stale` | Idem, mas para o último valor antes de ser invalidado |
+| `chichorro:module-factor-results` | Resultado por subfator `{ poi: { POI_CC: 1.2, … }, … }` |
+| `chichorro:module-inputs` | Inputs submetidos por módulo |
+| `chichorro:form:<formKey>` | Estado atual do formulário de cada subfator |
+| `chichorro:computed:<key>` | Resultados intermédios calculados (ex: CI, VHE, VVE) |
+| `chichorro:session-storage-hydrated` | Flag: sessão importada de JSON |
+| `collapse:<module>:<subfactorKey>` | Estado colapsado/expandido de cada cartão de subfator |
+| `err:<formKey>` / `warn:<formKey>` | Mensagem de erro/aviso persistida entre navegações |
+| `miss:<formKey>` | Campo em falta (key do input) persistido |
+| `stale:<formKey>` | Flag `isResultStale` persistida |
 
 **Eventos globais (window):**
+
 - `chichorro:module-results-updated` — disparado quando `module-results` ou `module-factor-results` mudam
 - `chichorro:session-data-updated` — disparado quando inputs de módulo mudam (usado pela RiPage para detetar invalidação)
 
@@ -126,23 +130,24 @@ Se CTI ou RI precisarem do mesmo padrão, seguir esta convenção.
 
 ## Endpoints Flask
 
-| Endpoint          | Método | Descrição                                    |
+| Endpoint | Método | Descrição |
 |-------------------|--------|----------------------------------------------|
-| `/POI`            | POST   | Calcula subfator POI; devolve valor parcial  |
-| `/CTI`            | POST   | Calcula CI, VHE, VVE e valor global CTI      |
-| `/DPI`            | POST   | Calcula subfator DPI                         |
-| `/ESCI`           | POST   | Calcula subfator ESCI                        |
-| `/RI`             | POST   | Calcula RI final a partir dos 4 módulos      |
-| `/RI/interv`      | POST   | Calcula RI pós-intervenção (34 intervenções) |
-| `/login`          | POST   | Autenticação (cookie Flask)                  |
-| `/logout`         | POST   | Terminar sessão                              |
-| `/ping`           | GET    | Health check                                 |
+| `/POI` | POST | Calcula subfator POI; devolve valor parcial |
+| `/CTI` | POST | Calcula CI, VHE, VVE e valor global CTI |
+| `/DPI` | POST | Calcula subfator DPI |
+| `/ESCI` | POST | Calcula subfator ESCI |
+| `/RI` | POST | Calcula RI final a partir dos 4 módulos |
+| `/RI/interv` | POST | Calcula RI pós-intervenção (34 intervenções) |
+| `/login` | POST | Autenticação (cookie Flask) |
+| `/logout` | POST | Terminar sessão |
+| `/ping` | GET | Health check |
 
 ---
 
 ## Regra operacional
 
 Cada tarefa deve indicar explicitamente o seu modo:
+
 - `active_build` → editar `app/frontend/` e/ou `app/backend/`
 - `v3_0_legacy_compare` → ler `reference/chichorro-3.0-jt/`
 - `v3_1_matchup` → ler `reference/chichorro-3.1-rs/`; implementar em `app/`

@@ -6,7 +6,7 @@ FireRiskApp é uma aplicação web que implementa o método **CHICHORRO** (FEUP)
 
 O método combina quatro fatores independentes:
 
-```
+```text
 RI = f(POI, CTI, DPI, ESCI)
 ```
 

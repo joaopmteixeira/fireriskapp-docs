@@ -38,7 +38,7 @@ Documento de comparação para decisão de infraestrutura de produção. Cobre b
 | **GitHub Pages** | Sim | — | 1 GB storage, 100 GB bandwidth | Parcial | Sim (Actions) |
 | **Surge.sh** | Sim | $30/mês | Sem CI/CD nativo | Não | Manual |
 
-### Notas relevantes
+### Notas relevantes — frontend
 
 - **Cloudflare Pages**: melhor opção free para esta app. CDN mais amplo do mercado. Integração com domínios Cloudflare é imediata.
 - **Vercel**: ótima DX (developer experience), especialmente para Next.js. Para Vite/React puro é equivalente ao Cloudflare.
@@ -59,7 +59,7 @@ Documento de comparação para decisão de infraestrutura de produção. Cobre b
 | **Railway PostgreSQL** | Incluído no crédito | Usage-based | Média | Conveniente se backend no Railway |
 | **PlanetScale (MySQL)** | Fechou free tier | $39/mês | Média (mysqlclient) | — |
 
-### Notas relevantes
+### Notas relevantes — base de dados
 
 - **Turso**: permite manter o código SQLite quase inalterado (usa `libsql` em vez de `sqlite3`). Ideal para migração gradual.
 - **Neon**: PostgreSQL serverless com branching (útil para CI/CD). Free tier permanente (não expira).

@@ -16,6 +16,7 @@ Método: **CHICHORRO** (FEUP) — sucessão de dissertações de mestrado na Fac
 | Rui Sobral | 2019 | v3.1 | [Ver dissertação](https://hdl.handle.net/10216/122003) |
 
 **Stack:**
+
 - Frontend: React 18 + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
 - Backend: Python Flask + gunicorn → Render
 - Repo: `joaopmteixeira/chichorro-fire-risk-app`
@@ -23,6 +24,7 @@ Método: **CHICHORRO** (FEUP) — sucessão de dissertações de mestrado na Fac
 - Backend dev (auth): `chichorro-fire-risk-app-dev.onrender.com` (branch `feat/access-log`)
 
 **Branches activos:**
+
 - `3.1-dev` — branch principal; sync automático de docs para `FIRERISKAPP-DOCS`
 - `feat/access-log` — autenticação completa (AUTH-01 a AUTH-05); pendente merge para `3.1-dev`
 - `fireriskapp_v3.1` — snapshot de deploy estável (cópia de `feat/sidebar-layout`)
@@ -31,7 +33,7 @@ Método: **CHICHORRO** (FEUP) — sucessão de dissertações de mestrado na Fac
 
 ## Modelo matemático CHICHORRO
 
-```
+```text
 RI = f(POI, CTI, DPI, ESCI)
 ```
 
@@ -100,6 +102,7 @@ Base: código legacy `chichorro_old/` (RI_v4.html + POI/CTI/DPI/ESCI.js).
 Implementação das melhorias do modelo 3.0 → 3.1, desenvolvidas por **Rui Sobral [RS]** na dissertação FEUP 2019.
 
 Alterações do modelo implementadas:
+
 - `CTI`: VHE/VVE com `Dispositivos` separados por veia (B10 pendente no frontend)
 - `DPI_OGS`: 7 → 4 campos, nova lógica de formação e regulamento
 - `ESCI_GP`: novo campo `ESCI_GP_Auto` (tipo de detetor automático)
@@ -117,6 +120,7 @@ Integração do **modelo simplificado** (implementado na v2.0 por **Ricardo Ferr
 O modelo simplificado permite avaliação mais rápida com menos inputs, mantendo boa aproximação ao resultado completo.
 
 Passos:
+
 1. Localizar código v2.0 (RF + Bruno Silva) em `reference/chichorro-2.0-rf/`
 2. Analisar como foi implementado o modelo simplificado
 3. Definir quais inputs do modelo completo (3.1) são substituídos/simplificados
@@ -137,6 +141,7 @@ Passos:
 | `reference/chichorro-2.0-rf/` | Versão 2.0 (autor: Ricardo Ferreira + Bruno Silva) — referência para futura v4.0        |
 
 **Modos de trabalho:**
+
 - `active_build` → editar apenas `app/frontend/` e `app/backend/`
 - `v3_0_legacy_compare` → consultar `reference/chichorro-3.0-jt/` como comparação histórica
 - `v3_1_matchup` → usar `reference/chichorro-3.1-rs/` como referência funcional; implementar em `app/`
@@ -147,6 +152,7 @@ Passos:
 ## Autenticação
 
 Sistema de autenticação implementado no branch `feat/access-log`:
+
 - Login por username/password (env vars hardcoded para admins + tabela `users` SQLite para registos)
 - Registo com verificação de e-mail (Flask-Mail via SMTP Resend)
 - Recuperação de palavra-passe por e-mail (token 1h)
@@ -159,12 +165,14 @@ Sistema de autenticação implementado no branch `feat/access-log`:
 ## Deploy
 
 ### Atual
+
 - Frontend: Cloudflare Pages (auto-deploy do GitHub) · domínio: `fireriskapp-demo.joaopmteixeira.net`
 - Backend prod: Render free tier (`chichorro-fire-risk-app.onrender.com`) — cold start ~50s após inatividade
 - Backend dev: Render free tier (`chichorro-fire-risk-app-dev.onrender.com`, branch `feat/access-log`)
 - E-mail: Resend SMTP · domínio verificado: `fireriskapp-demo.joaopmteixeira.net`
 
 ### Opções para produção definitiva
+
 Ver `docs/HOSTING_OPTIONS.md` para comparação detalhada de plataformas e preços.
 
 **Recomendação de menor custo:** Railway (backend) + Cloudflare Pages (frontend) + Neon PostgreSQL (~€0/mês)

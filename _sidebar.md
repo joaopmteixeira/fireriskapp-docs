@@ -21,5 +21,9 @@
 - **Desenvolvimento**
   - [Decisões Técnicas](DECISIONS_LOG.md)
 
+- **Planeamento**
+  - [Lista de Tarefas por ID](TODO_LIST.md)
+  - [Lista de Tarefas por Prioridade](TODO_PRIORITIES.md)
+
 - **Referência**
   - [Changelog](CHANGELOG.md)

@@ -2,7 +2,7 @@
 
 O FireRiskApp permite avaliar o risco de incêndio num edifício existente com recurso ao método CHICHORRO (FEUP). O resultado final — o **Índice de Risco de Incêndio (RI)** — é obtido a partir de quatro módulos que devem ser preenchidos pela ordem seguinte:
 
-```
+```text
 POI → CTI → DPI → ESCI → RI → Intervenções (opcional)
 ```
 
@@ -54,6 +54,7 @@ Depois de ter um RI calculado, podes ir à página **Intervenções** para explo
 Avalia a probabilidade de ocorrência de incêndio com base em características do edifício e das suas instalações.
 
 **Subfatores:**
+
 - **CC** — Construção e Conservação (tipo de edifício, ano de construção, estado de conservação)
 - **EF** — Instalações de Energia e Fluidos (instalação elétrica, gás, AVAC, aquecimento)
 - **IA** — Instalações de Apoio (confeção de alimentos, armazenagem de combustíveis)
@@ -64,6 +65,7 @@ Avalia a probabilidade de ocorrência de incêndio com base em características 
 Avalia o risco para as pessoas em caso de incêndio, considerando as vias de evacuação.
 
 **Subfatores:**
+
 - **VHE** — Via Horizontal de Evacuação (corredor de saída ao mesmo nível)
 - **VVE** — Via Vertical de Evacuação (caixa de escadas)
 
@@ -74,6 +76,7 @@ Avalia o risco para as pessoas em caso de incêndio, considerando as vias de eva
 Avalia a facilidade de propagação do incêndio pelo edifício.
 
 **Subfatores:**
+
 - **REIC** — Resistência ao Incêndio de Elementos Construtivos
 - **EI** — Estanquidade e Integridade
 - **VDGF** — Vãos, Diedros e Guarda-fogos
@@ -85,6 +88,7 @@ Avalia a facilidade de propagação do incêndio pelo edifício.
 Avalia a capacidade de deteção e combate ao incêndio.
 
 **Subfatores:**
+
 - **GP** — Grau de Prontidão (deteção automática)
 - **SID** — Sinalização, Iluminação e Deteção
 - **AE** — Acessibilidade Exterior
