@@ -18,9 +18,9 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-03 | ✅ | Frontend de registo — SignUpPage, banners LoginPage | feat/access-log |
 | AUTH-04 | ✅ | Recuperação de palavra-passe — ForgotPasswordPage, ResetPasswordPage | feat/access-log |
 | AUTH-05 | ✅ | Modal "sessão expirada" — SESSION_EXPIRED_EVENT, AppLayout | feat/access-log |
-| AUTH-06 | ❌ | Verificar hardening cookies: HTTPONLY, SECURE, SAMESITE | feat/security |
-| AUTH-07 | ❌ | Rate limiting com Flask-Limiter nos endpoints /auth/* | feat/security |
-| AUTH-08 | ❌ | Regenerar sessão após login (mitigação session fixation) | feat/security |
+| AUTH-06 | ✅ | Verificar hardening cookies: HTTPONLY, SECURE, SAMESITE + renomear cookie (anti-fingerprinting) | feat/security |
+| AUTH-07 | ✅ | Rate limiting com Flask-Limiter + Upstash Redis nos endpoints /auth/* | feat/security |
+| AUTH-08 | ✅ | Regenerar sessão após login (mitigação session fixation) | feat/security |
 | AUTH-09 | ❌ | Editar perfil: username, e-mail, password, apagar conta | — |
 | AUTH-10 | ❌ | Sistema de roles/permissões: admin, engineer, viewer, demo | — |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
@@ -41,9 +41,9 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| SEC-01 | ❌ | Rever configuração CORS (origins, credentials, métodos) | feat/security |
-| SEC-02 | ❌ | HTTPS obrigatório em produção, redirects HTTP→HTTPS | feat/security |
-| SEC-03 | ❌ | CSRF tokens, CSP, Helmet headers, proteção APIs admin | feat/security |
+| SEC-01 | ✅ | Rever configuração CORS — allow_headers, métodos, max_age, fallback dev explícito | feat/security |
+| SEC-02 | ✅ | HTTPS confirmado no Render + HSTS via `@app.after_request` quando `SESSION_SECURE=1` | feat/security |
+| SEC-03 | ✅ | X-Content-Type-Options, X-Frame-Options, Referrer-Policy via `@app.after_request`; CSRF coberto por camadas existentes | feat/security |
 
 ---
 

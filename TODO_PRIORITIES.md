@@ -97,54 +97,35 @@ Modal aparece corretamente ao apagar cookie de sessão manualmente ✅
 
 Merge concluído em `3.1-dev` · push para GitHub ✅ · sync docs disparado ✅
 
+### ✅ AUTH-07 — Rate Limiting nos Endpoints de Autenticação `Prioridade Alta`
+
+Flask-Limiter + Upstash Redis EU (free tier) · validado em produção dev ✅ · contadores visíveis no Data Browser Upstash ✅
+
+### ✅ AUTH-08 — Regenerar Sessão Após Login `Prioridade Alta`
+
+`session.clear()` adicionado nos 3 pontos de login em `Flask.py` · mitigação session fixation (OWASP ASVS V3.3) ✅
+
+### ✅ AUTH-06 — Hardening de Cookies de Sessão `Prioridade Alta`
+
+HTTPONLY ✅ · SECURE via `CHICHORRO_SESSION_SECURE=1` ✅ · SAMESITE=Lax ✅ · cookie renomeado para `chichorro_session` (anti-fingerprinting) ✅
+
+### ✅ SEC-01 — Revisão da Configuração CORS `Prioridade Alta`
+
+`allow_headers` restringido a `["Content-Type"]` ✅ · métodos limitados a GET/POST/OPTIONS ✅ · `max_age=86400` ✅ · fallback dev explícito (`localhost:5173`) ✅
+
+### ✅ SEC-02 — HTTPS Obrigatório em Produção `Prioridade Alta`
+
+Render força HTTPS no reverse proxy ✅ · `CHICHORRO_SESSION_SECURE=1` ativo ✅ · HSTS via `@app.after_request` em produção ✅
+
+### ✅ SEC-03 — Headers de Segurança `Prioridade Alta`
+
+`X-Content-Type-Options: nosniff` ✅ · `X-Frame-Options: DENY` ✅ · `Referrer-Policy: strict-origin-when-cross-origin` ✅ · CSRF coberto por camadas existentes ✅ · CSP diferida para Cloudflare Pages ✅
+
 ---
 
 ## Próxima Fase — `feat/security`
 
-Hardening de segurança a implementar num branch dedicado após o merge do AUTH-12.
-
-### ❌ AUTH-06 — Verificar Hardening dos Cookies de Sessão
-
-Confirmar existência das seguintes configurações:
-
-```python
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = "Lax"
-```
-
-**Objetivo:** proteção XSS; proteção CSRF parcial; obrigar HTTPS.
-
-### ❌ AUTH-07 — Implementar Rate Limiting
-
-Instalar: `Flask-Limiter`
-
-Aplicar em:
-
-- `/auth/login`
-- `/auth/register`
-- `/auth/forgot-password`
-- `/auth/reset-password`
-
-Exemplo: 5 tentativas login/minuto; 3 resets password/hora.
-
-**Objetivo:** Mitigar brute force, spam e abuso de endpoints auth.
-
-### ❌ AUTH-08 — Regenerar Sessão Após Login
-
-Limpar sessão antiga e regenerar sessão após autenticação bem-sucedida.
-
-**Objetivo:** Mitigar session fixation.
-
-### ❌ SEC-01 — Rever Configuração CORS
-
-Verificar: origins permitidos, credentials, headers, métodos permitidos.
-
-**Objetivo:** Evitar CORS demasiado permissivo e exposição de APIs.
-
-### ❌ SEC-02 — Rever Configuração HTTPS Produção
-
-Garantir: HTTPS obrigatório, redirects HTTP → HTTPS, cookies secure.
+Hardening de segurança concluído. Pronto para merge em `3.1-dev`.
 
 ---
 

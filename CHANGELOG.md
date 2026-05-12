@@ -51,6 +51,31 @@
 - Fluxo e2e aprovado: registo → e-mail Resend → verificação → login → recuperação de palavra-passe
 - Modal de sessão expirada validado ao apagar cookie manualmente em DevTools
 
+### AUTH-12 — Merge `feat/access-log` → `3.1-dev` *(08/05/2026)*
+
+- Merge completo do sistema de autenticação para o branch principal `3.1-dev`
+- Resolução de 6 conflitos em ficheiros de docs (CHANGELOG, DECISIONS_LOG, HOSTING_OPTIONS, NEXT_STEPS, PROJECT_OVERVIEW, sync-docs.yml)
+- Ficheiros TODO adicionados ao sidebar Docsify e ao sync público para `FIRERISKAPP-DOCS`
+
+### AUTH-07 — Rate limiting nos endpoints de autenticação *(08/05/2026)*
+
+- Flask-Limiter com Upstash Redis (EU Frankfurt, free tier) como backend partilhado entre workers gunicorn
+- Limites: `/auth/login` 5/min · `/auth/register` 3/hora · `/auth/forgot-password` 3/hora · `/auth/reset-password` 5/hora
+- `@app.errorhandler(429)` retorna JSON `{"error": "RATE_LIMITED", "message": "..."}` em PT-PT
+- `postJson` em `api.ts` trata 429 com mensagem PT-PT específica
+- Validado em produção dev: 5 pedidos passam, 6º retorna 429; contadores visíveis no Data Browser Upstash
+
+### AUTH-08 — Regeneração de sessão após login *(08/05/2026)*
+
+- `session.clear()` adicionado antes de `session["chichorro_auth"] = 1` nos 3 pontos de login em `Flask.py`
+- Mitiga session fixation (OWASP ASVS V3.3)
+- Cobre login hardcoded (env vars), login modo debug e login via base de dados
+
+### AUTH-06 — Hardening de cookies de sessão *(08/05/2026)*
+
+- Confirmadas as 3 configurações: `SESSION_COOKIE_HTTPONLY = True`, `SESSION_COOKIE_SECURE` (via `CHICHORRO_SESSION_SECURE=1`), `SESSION_COOKIE_SAMESITE = "Lax"`
+- Cookie renomeado de `session` para `chichorro_session` via `SESSION_COOKIE_NAME` (anti-fingerprinting)
+
 ---
 
 ## v3.1 — Aplicação Web (Abril 2026)

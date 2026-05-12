@@ -1,7 +1,7 @@
 # Estado do Projeto e Próximos Passos
 
 Última atualização: 2026-05-08
-Estado: CHICHORRO 3.1 implementado (Blocos A+B+C1 ✅). Autenticação completa (AUTH-01…05 ✅, branch `feat/access-log`). DB-01 ✅, TEST-01 aprovado ✅ (2026-05-08), AUTH-11 ✅. ProxyFix adicionado (IP real no access_log). Próximo: AUTH-12 — merge `feat/access-log` → `3.1-dev`.
+Estado: CHICHORRO 3.1 implementado (Blocos A+B+C1 ✅). Autenticação completa (AUTH-01…12 ✅) mergeada em `3.1-dev`. Hardening ativo (AUTH-07 ✅, AUTH-08 ✅, AUTH-06 ✅). Branch ativo: `feat/security`. Próximo: SEC-01 (CORS review), SEC-02 (HTTPS).
 
 ---
 
@@ -257,9 +257,17 @@ Migração automática das colunas `reset_token` / `reset_token_expires_at`.
 - **AUTH-11** ✅ — Modal sessão expirada validado ao apagar cookie manualmente em DevTools
 - **ProxyFix** ✅ — `ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)` adicionado; IP real agora registado no `access_log` (antes estava sempre `127.0.0.1`)
 
-### Pendente — próximo passo
+### Concluído em `feat/security` ✅ (2026-05-08)
 
-- **AUTH-12** — Merge `feat/access-log` → `3.1-dev` (todos os bloqueadores resolvidos)
+- **AUTH-12** ✅ — Merge `feat/access-log` → `3.1-dev` concluído; push para GitHub; sync docs disparado
+- **AUTH-07** ✅ — Rate limiting com Flask-Limiter + Upstash Redis; validado em produção dev
+- **AUTH-08** ✅ — `session.clear()` nos 3 pontos de login; mitigação session fixation (OWASP ASVS V3.3)
+- **AUTH-06** ✅ — HTTPONLY ✅ · SECURE via `CHICHORRO_SESSION_SECURE=1` ✅ · SAMESITE=Lax ✅ · cookie renomeado para `chichorro_session` (anti-fingerprinting)
+
+### Pendente — próximos passos (`feat/security`)
+
+- **SEC-01** — Rever configuração CORS (origins, credentials, métodos)
+- **SEC-02** — HTTPS obrigatório em produção, redirects HTTP→HTTPS
 
 ---
 
