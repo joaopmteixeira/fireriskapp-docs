@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-08
+Última atualização: 2026-05-12
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 

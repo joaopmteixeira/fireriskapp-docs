@@ -1,7 +1,7 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-08
-Estado: CHICHORRO 3.1 implementado (Blocos A+B+C1 ✅). Autenticação completa (AUTH-01…12 ✅) mergeada em `3.1-dev`. Hardening ativo (AUTH-07 ✅, AUTH-08 ✅, AUTH-06 ✅). Branch ativo: `feat/security`. Próximo: SEC-01 (CORS review), SEC-02 (HTTPS).
+Última atualização: 2026-05-12
+Estado: CHICHORRO 3.1 implementado ✅. Autenticação completa ✅. Hardening `feat/security` concluído e mergeado em `3.1-dev` (2026-05-12). Auditoria de segurança e usabilidade concluída (S-01..S-05, U-01..U-06). Branch ativo: `3.1-dev`. Próximo: AUTH-09 (Editar Perfil) ou BACK-02 (Logging melhorado).
 
 ---
 

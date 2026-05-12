@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-08
+Última atualização: 2026-05-12
 
 ---
 
@@ -123,9 +123,9 @@ Render força HTTPS no reverse proxy ✅ · `CHICHORRO_SESSION_SECURE=1` ativo �
 
 ---
 
-## Próxima Fase — `feat/security`
+## ✅ `feat/security` mergeado em `3.1-dev` (2026-05-12)
 
-Hardening de segurança concluído. Pronto para merge em `3.1-dev`.
+Auditoria de segurança e usabilidade concluída. Branch mergeado. Próximas opções: **AUTH-09** (Editar Perfil) ou **BACK-02** (Logging melhorado).
 
 ---
 
@@ -237,10 +237,6 @@ Tipos: unit tests, integration tests, e2e tests.
 **Objetivo:** deploy automático, testes automáticos, linting, validação build.
 
 Possível stack: GitHub Actions + Render Deploy Hooks.
-
-### ❌ SEC-03 — Melhorar Segurança Geral
-
-Investigar: CSRF tokens, Content Security Policy (CSP), Helmet headers equivalentes Flask, proteção APIs admin.
 
 ---
 

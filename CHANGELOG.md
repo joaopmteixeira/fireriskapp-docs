@@ -76,6 +76,43 @@
 - Confirmadas as 3 configurações: `SESSION_COOKIE_HTTPONLY = True`, `SESSION_COOKIE_SECURE` (via `CHICHORRO_SESSION_SECURE=1`), `SESSION_COOKIE_SAMESITE = "Lax"`
 - Cookie renomeado de `session` para `chichorro_session` via `SESSION_COOKIE_NAME` (anti-fingerprinting)
 
+### SEC-01 — Revisão da configuração CORS *(12/05/2026)*
+
+- `allow_headers` restringido a `["Content-Type"]`
+- Métodos limitados a `["GET", "POST", "OPTIONS"]`
+- `max_age=86400` (1 dia de cache de preflight)
+- Fallback dev explícito para `localhost:5173` quando `CHICHORRO_CORS_ORIGINS` não está definido
+
+### SEC-02 — HTTPS obrigatório em produção *(12/05/2026)*
+
+- Render força HTTPS no reverse proxy (sem acesso HTTP à app Flask)
+- `CHICHORRO_SESSION_SECURE=1` ativo em produção (cookies apenas transmitidas por HTTPS)
+- HSTS adicionado via `@app.after_request`: `Strict-Transport-Security: max-age=31536000; includeSubDomains` quando `SESSION_COOKIE_SECURE` está ativo
+
+### SEC-03 — Headers de segurança *(12/05/2026)*
+
+- `X-Content-Type-Options: nosniff` — previne MIME sniffing
+- `X-Frame-Options: DENY` — previne clickjacking
+- `Referrer-Policy: strict-origin-when-cross-origin` — limita informação enviada no Referer
+- CSP diferida para Cloudflare Pages (documentada em `docs/plans/SEC-03.md`)
+
+### Auditoria de segurança e usabilidade *(12/05/2026)*
+
+Auditoria completa documentada em `docs/plans/AUDIT-2026-05-12.md`:
+
+- **S-01** — `warnings.warn()` no arranque de `Flask.py` quando `CHICHORRO_SECRET_KEY` usa o valor default inseguro `"dev-change-me"`
+- **S-02** — Validação de e-mail com regex `_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$")` em vez de check permissivo `@`/`.`
+- **U-01** — Estado de carregamento no `LoginPage.tsx`: botão disabled com "A iniciar sessão…" durante o pedido; previne double-submit
+- **U-02** — Componente `PasswordInput.tsx` reutilizável com toggle show/hide (ícone SVG inline, `tabIndex={-1}`); aplicado em `LoginPage`, `SignUpPage` e `ResetPasswordPage`
+- **U-03** — `role="alert"` adicionado a todos os elementos `<p>` de erro nas páginas de autenticação (anuncia erros a screen readers via `aria-live="assertive"` implícito)
+- **U-04** — `role="dialog"`, `aria-modal="true"` e `aria-labelledby` adicionados aos 3 modais em `AppLayout.tsx` (sessão expirada, limpar sessão, sair)
+
+### Merge `feat/security` → `3.1-dev` *(12/05/2026)*
+
+- Merge `--no-ff` do branch `feat/security` para `3.1-dev`
+- 20 ficheiros alterados, 968 inserções
+- Push para GitHub; sync de docs para `FIRERISKAPP-DOCS` disparado
+
 ---
 
 ## v3.1 — Aplicação Web (Abril 2026)
