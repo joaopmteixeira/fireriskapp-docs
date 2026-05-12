@@ -84,7 +84,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
 | BACK-01 | ❌ | Reestruturar Flask.py em módulos: routes/, services/, models/, auth/, db/ | — |
-| BACK-02 | ❌ | Melhorar logging: failed logins, user-agent, request IDs, erros backend | — |
+| BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend | 3.1-dev |
 | BACK-03 | ❌ | Avaliar migração Flask → FastAPI (não prioritário) | — |
 
 ---

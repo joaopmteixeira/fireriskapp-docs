@@ -113,6 +113,15 @@ Auditoria completa documentada em `docs/plans/AUDIT-2026-05-12.md`:
 - 20 ficheiros alterados, 968 inserções
 - Push para GitHub; sync de docs para `FIRERISKAPP-DOCS` disparado
 
+### BACK-02 — Melhorar logging *(12/05/2026)*
+
+- Coluna `user_agent TEXT` adicionada ao `access_log` via migração idempotente (`ALTER TABLE ... ADD COLUMN IF NOT EXISTS`)
+- `_write_access_log()` passa a capturar e guardar o `User-Agent` de cada pedido
+- `/auth/login` regista agora tentativas falhadas: `login_failed` (credenciais inválidas) e `login_failed:unverified` (e-mail não verificado)
+- `@app.before_request` gera `g.request_id = uuid.uuid4().hex[:8]` por pedido
+- `@app.errorhandler(500)` loga o erro com o `request_id` e devolve-o no JSON da resposta para correlação
+- `/admin/log` atualizado para devolver a nova coluna `user_agent`
+
 ---
 
 ## v3.1 — Aplicação Web (Abril 2026)

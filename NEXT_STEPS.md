@@ -29,14 +29,6 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - Alterar palavra-passe (requer palavra-passe atual)
 - Apagar conta — eliminação permanente com dupla confirmação (utilizador tem de escrever texto específico)
 
-### BACK-02 — Melhorar Logging
-
-Adicionar ao `access_log`:
-
-- Registo de tentativas de login falhadas
-- IP de origem e User-Agent
-- Request IDs para correlação de erros 500
-
 ### UI-02 — Página de Documentação
 
 Página de DOCS integrada na app com documentação e manuais de utilização.
