@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-13
+Última atualização: 2026-05-13 (sessão tarde)
 
 ---
 
@@ -136,6 +136,16 @@ Implementação completa em `3.1-dev`:
 - **AUTH-09** — Backend: 5 novas rotas (`/auth/profile/username`, `/auth/profile/email`, `/auth/verify-email-change/<token>`, `/auth/profile/password`, `/auth/profile/delete`); migração DB colunas `new_email`, `new_email_token`, `new_email_token_expires_at`; rate limit 5/hora; fix `ALTER TABLE IF NOT EXISTS` → `try/except` para compatibilidade SQLite
 - **AUTH-09a** — ProfilePage redesign: card compacto `max-w-sm`, header gradient `brand-900→brand-800`, avatar circular com initials fallback, menu accordion com ícones MDI (`mdiAccount`, `mdiLock`, `mdiAlertCircleOutline`, `mdiLogout`) e chevron animado; modal de eliminação com texto de confirmação
 - **AUTH-09b** — Avatar de utilizador: coluna `avatar TEXT` na tabela `users`, rota `POST /auth/profile/avatar` (valida `data:image/`, limite 700 KB base64, rate limit 20/hora), upload frontend com canvas resize 256×256 JPEG 0.85
+- **AUTH-09c** — ProfilePage redesign card compacto: 4 rows expansíveis inline (nome de utilizador, e-mail, palavra-passe, apagar conta); pencil overlay no avatar; sem "Zona de perigo" separada; sem botão "Sair"
+
+### ✅ UI-06 — Página de Definições (concluído 2026-05-13)
+
+- `src/lib/prefs.ts` — store de preferências em localStorage; `Prefs = {theme, warnOnExit, decimalPlaces}`; `usePrefs()` hook reactivo via `PREFS_CHANGED_EVENT`; `applyTheme()` com suporte system/claro/escuro
+- `SettingsPage.tsx` — 3 secções: Aparência (radio), Sessão (toggle), Resultados (radio casas decimais)
+- `AppLayout.tsx` — `shouldWarnOnExit` usa `prefs.warnOnExit`; sidebar username via `/auth/me`
+- `tailwind.config.js` — `darkMode: "class"`; paleta ink estendida (400, 800, 950)
+- `RiPage.tsx` + `CtiPage.tsx` — `toFixed(getPrefs().decimalPlaces)` em todos os resultados numéricos
+- Fix 405 avatar: `_serve_spa_or_asset` em Flask.py exclui agora `auth`, `admin`, `login`, `logout`, `me` do catch-all GET
 
 ---
 
@@ -159,16 +169,12 @@ Sistema de reporte de bugs na app: formulário que o utilizador submete quando e
 
 ### ✅ AUTH-09 — Editar Perfil *(ver secção de concluídos acima)*
 
-- ✅ Alterar nome de utilizador
-- ✅ Alterar e-mail (com re-verificação via link enviado para o novo endereço)
-- ✅ Alterar palavra-passe (requer palavra-passe atual)
-- ✅ Apagar conta — eliminação permanente com confirmação textual
-- ✅ **AUTH-09a** — ProfilePage redesign: card + accordion + MDI icons
-- ✅ **AUTH-09b** — Avatar de utilizador com upload, resize e persistência em DB
+- ✅ AUTH-09 — backend: username, e-mail c/ re-verificação, password, apagar conta, avatar
+- ✅ AUTH-09a — ProfilePage: card layout, header gradient, accordion menu, MDI icons
+- ✅ AUTH-09b — Avatar: upload canvas resize 256×256, rota Flask, DB
+- ✅ AUTH-09c — ProfilePage card compacto: 4 rows expansíveis inline, pencil overlay no avatar
 
-### ❌ UI-06 — Preferências / Definições
-
-Página de configurações do utilizador (a especificar com o Claude o que recomenda incluir).
+### ✅ UI-06 — Preferências / Definições *(ver secção de concluídos acima)*
 
 ### ❌ AUTH-10 — Implementar Sistema de Roles/Permissões
 
@@ -194,9 +200,7 @@ backend/
 
 **Benefícios:** manutenção, escalabilidade, legibilidade, testes.
 
-### ❌ BACK-02 — Melhorar Logging
-
-Adicionar: failed logins, IP origem, user-agent, request IDs, logs erro backend.
+### ✅ BACK-02 — Melhorar Logging *(concluído — ver CHANGELOG)*
 
 ### ❌ INFRA-01 — Implementar Monitorização
 
@@ -212,9 +216,11 @@ Garantir backup de: PostgreSQL Neon, env vars, configs de deployment.
 
 ## Prioridade Baixa / Futuro
 
-### ❌ UI-07 — Dark Mode
+### 🔄 UI-07 — Dark Mode (em progresso)
 
-Implementar tema escuro na aplicação.
+Infra concluída: `darkMode: "class"` no Tailwind, `applyTheme()` em `main.tsx`, paleta `ink` estendida.
+Componentes com dark mode: sidebar, ProfilePage, SettingsPage, Card, Field, Button, ModuleGlobalValueCard, PoiFactorSection, DpiFactorSection, EsciFactorSection.
+**Pendente (UI-07 completo):** RiPage, CtiPage, InterventionsPage, páginas de autenticação (Login, SignUp, ForgotPassword, ResetPassword).
 
 ### ❌ UI-08 — Chatbot AI
 

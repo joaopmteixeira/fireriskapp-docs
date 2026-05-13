@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-12
+Última atualização: 2026-05-13
 
 ---
 
@@ -9,25 +9,42 @@
 | Área | Estado |
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
-| Autenticação e sessões | ✅ Completo (AUTH-01..08, AUTH-11, AUTH-12) |
+| Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-11, AUTH-12) |
 | Hardening de segurança | ✅ Completo (SEC-01..03, feat/security mergeado) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
+| Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
+| Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
+| Dark Mode (UI-07) | 🔄 Em progresso — infra + sidebar + cards POI/DPI/ESCI done; outras páginas pendentes |
 | Branch ativo | `3.1-dev` |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
+## Concluído Recentemente (2026-05-13)
+
+### ✅ AUTH-09 / AUTH-09a / AUTH-09b / AUTH-09c — Perfil de Utilizador
+
+- **AUTH-09** — 5 rotas backend: `/auth/profile/username`, `/auth/profile/email`, `/auth/profile/password`, `/auth/profile/delete`, `/auth/profile/avatar`; migração DB para colunas `avatar`, `new_email`, `new_email_token`
+- **AUTH-09a** — ProfilePage: card layout com header gradient, accordion menu, ícones MDI
+- **AUTH-09b** — Avatar: upload com canvas resize (256×256 JPEG 0.85), armazenamento em DB, sidebar actualizada
+- **AUTH-09c** — ProfilePage redesign card compacto: 4 rows expansíveis inline (nome, e-mail, password, apagar conta); header com avatar + overlay de edição; sem "Zona de perigo"; sem botão "Sair"
+
+### ✅ UI-06 — Página de Definições
+
+- `src/lib/prefs.ts` — store localStorage com `Prefs` (theme, warnOnExit, decimalPlaces); `usePrefs()` hook reactivo; `applyTheme()` com suporte a "system"
+- `SettingsPage.tsx` — 3 secções: Aparência (radio system/claro/escuro), Sessão (toggle avisar-antes-de-sair), Resultados (radio 2/3/4 casas decimais)
+- `main.tsx` — aplica tema na inicialização; escuta mudanças do sistema e de `PREFS_CHANGED_EVENT`
+- `tailwind.config.js` — `darkMode: "class"`; novas cores ink (400, 800, 950)
+- `RiPage.tsx` e `CtiPage.tsx` — usam `getPrefs().decimalPlaces` em todos os `toFixed()`
+
+### 🔄 UI-07 — Dark Mode (em progresso)
+
+Infra concluída. Cards POI/DPI/ESCI, sidebar, perfil e settings têm dark variants. Pendente: RiPage, CtiPage, InterventionsPage, páginas de autenticação.
+
+---
+
 ## Pendente — Prioridade Média
-
-### AUTH-09 — Editar Perfil
-
-Área de perfil do utilizador com as seguintes opções:
-
-- Alterar nome de utilizador
-- Alterar e-mail (com re-verificação via link enviado para o novo endereço)
-- Alterar palavra-passe (requer palavra-passe atual)
-- Apagar conta — eliminação permanente com dupla confirmação (utilizador tem de escrever texto específico)
 
 ### UI-02 — Página de Documentação
 

@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-13
+Última atualização: 2026-05-13 (sessão tarde)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -24,6 +24,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-09 | ✅ | Editar perfil: backend routes (username, e-mail c/ re-verificação, password, apagar conta) | 3.1-dev |
 | AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
 | AUTH-09b | ✅ | Avatar de utilizador — coluna `avatar` DB, rota `POST /auth/profile/avatar`, upload frontend c/ canvas resize | 3.1-dev |
+| AUTH-09c | ✅ | ProfilePage redesign card compacto — 4 rows expansíveis inline (username, e-mail, password, apagar conta); sem modal separado | 3.1-dev |
 | AUTH-10 | ❌ | Sistema de roles/permissões: admin, engineer, viewer, demo | — |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
 | AUTH-12 | ✅ | Merge `feat/access-log` → `3.1-dev` | 3.1-dev |
@@ -58,8 +59,8 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | UI-03 | ❌ | Página de Ajuda integrada na app | — |
 | UI-04 | ❌ | FAQs — Perguntas Frequentes | — |
 | UI-05 | ❌ | Bug Report — formulário de reporte (destino: e-mail/GitHub/ClickUp) | — |
-| UI-06 | ❌ | Preferências / Definições do utilizador | — |
-| UI-07 | ❌ | Dark Mode | — |
+| UI-06 | ✅ | Preferências / Definições do utilizador — dark mode (sistema/claro/escuro), avisar antes de sair, casas decimais | 3.1-dev |
+| UI-07 | 🔄 | Dark Mode — infra concluída (Tailwind class, prefs.ts, applyTheme); sidebar/profile/cards done; páginas de conteúdo em progresso | 3.1-dev |
 | UI-08 | ❌ | Chatbot AI assistente CHICHORRO (Claude API ou similar) | — |
 
 ---
@@ -86,7 +87,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
 | BACK-01 | ❌ | Reestruturar Flask.py em módulos: routes/, services/, models/, auth/, db/ | — |
-| BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend | 3.1-dev |
+| BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend; fix 405 no catch-all SPA | 3.1-dev |
 | BACK-03 | ❌ | Avaliar migração Flask → FastAPI (não prioritário) | — |
 
 ---

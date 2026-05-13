@@ -2,6 +2,40 @@
 
 ---
 
+## v3.1.2 — Perfil, Definições e Dark Mode (2026-05-13)
+
+### AUTH-09 / AUTH-09a / AUTH-09b / AUTH-09c — Sistema de Perfil de Utilizador *(13/05/2026)*
+
+- **AUTH-09 (backend)** — 5 rotas em `Flask.py`: `POST /auth/profile/username` (+ verificação password atual), `POST /auth/profile/email` (envio de link de re-verificação para novo e-mail), `POST /auth/profile/password`, `POST /auth/profile/delete` (confirmação textual `"eliminar conta"`), `POST /auth/profile/avatar`; migração DB para colunas `avatar TEXT`, `new_email`, `new_email_token`, `new_email_token_expires_at`; rate limit 5/hora por rota; endpoint `GET /auth/verify-email-change/<token>`
+- **AUTH-09a** — ProfilePage: card `max-w-sm`, header gradient `brand-900→brand-800`, avatar circular com initials fallback, menu accordion com ícones MDI e chevron animado
+- **AUTH-09b** — Avatar de utilizador: canvas resize 256×256 JPEG 0.85 → base64 → `POST /auth/profile/avatar`; coluna `avatar` na tabela `users`; sidebar actualizada com avatar real
+- **AUTH-09c** — Redesign card compacto: 4 rows expansíveis inline (nome de utilizador, endereço de e-mail, palavra-passe, apagar conta); pencil overlay no avatar para edição; sem modal separado; sem "Zona de perigo"; sem botão "Sair"; errMsg melhorado para mostrar erros específicos do servidor
+
+### UI-06 — Página de Definições *(13/05/2026)*
+
+- `src/lib/prefs.ts` (novo) — store de preferências em localStorage; tipo `Prefs = {theme: "system"|"light"|"dark", warnOnExit: boolean, decimalPlaces: 2|3|4}`; `getPrefs()`, `setPrefs()`, `usePrefs()` (hook reactivo via `PREFS_CHANGED_EVENT`); `applyTheme()` com suporte a preferência do sistema via `matchMedia`
+- `src/pages/SettingsPage.tsx` (novo) — 3 secções num único card: **Aparência** (radio system/claro/escuro), **Sessão** (toggle avisar antes de sair com dados não guardados), **Resultados** (radio 2/3/4 casas decimais); rota `/app/settings` adicionada em `App.tsx`
+- `src/main.tsx` — aplica tema na inicialização; escuta `prefers-color-scheme` do SO e `PREFS_CHANGED_EVENT`
+- `tailwind.config.js` — `darkMode: "class"`; paleta `ink` estendida: `400: "#94a3b8"`, `800: "#1e293b"`, `950: "#020617"`
+- `src/index.css` — `.dark { color-scheme: dark; }`
+- `AppLayout.tsx` — `shouldWarnOnExit` usa `prefs.warnOnExit`; link "Definições" aponta para `/app/settings`; username sidebar corrigido (lê de `/auth/me` em vez de sessionStorage)
+- `RiPage.tsx` + `CtiPage.tsx` — `toFixed(getPrefs().decimalPlaces)` em todos os resultados numéricos
+
+### UI-07 (parcial) — Dark Mode infra + conteúdo principal *(13/05/2026)*
+
+- `Card.tsx` — `dark:bg-ink-900 dark:border-ink-700`; CardHeader com `dark:text-ink-50` / `dark:border-ink-700`
+- `Field.tsx` — Label `dark:text-ink-300`; Select `dark:bg-ink-800 dark:border-ink-700 dark:text-ink-50`
+- `Button.tsx` — variante `secondary` com `dark:bg-ink-800 dark:text-ink-50 dark:border-ink-700 dark:hover:bg-ink-700`
+- `ModuleGlobalValueCard.tsx` — `dark:bg-ink-900 dark:border-ink-700`; valor e label com dark variants
+- `PoiFactorSection.tsx` / `DpiFactorSection.tsx` / `EsciFactorSection.tsx` — removido `style={{ color }}` (inline style bloqueava dark mode); dark variants nos result boxes, banners âmbar/vermelho, botão limpar
+- `AppLayout.tsx` + `ProfilePage.tsx` + `SettingsPage.tsx` — dark variants completos
+
+### Fix backend — Rota catch-all SPA *(13/05/2026)*
+
+- `Flask.py` — `_serve_spa_or_asset` (`@app.get("/<path:asset_path>")`) passou a excluir `auth`, `admin`, `login`, `logout`, `me` do catch-all; evita que o gunicorn responda 405 com `Allow: GET, HEAD, OPTIONS` a pedidos POST para `/auth/profile/*`
+
+---
+
 ## v3.1.1 — Autenticação e segurança (2026-05)
 
 ### AUTH-01 — Log de acessos (base de dados) *(05/05/2026)*
