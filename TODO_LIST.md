@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-12
+Última atualização: 2026-05-13
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -21,7 +21,9 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-06 | ✅ | Verificar hardening cookies: HTTPONLY, SECURE, SAMESITE + renomear cookie (anti-fingerprinting) | feat/security |
 | AUTH-07 | ✅ | Rate limiting com Flask-Limiter + Upstash Redis nos endpoints /auth/* | feat/security |
 | AUTH-08 | ✅ | Regenerar sessão após login (mitigação session fixation) | feat/security |
-| AUTH-09 | ❌ | Editar perfil: username, e-mail, password, apagar conta | — |
+| AUTH-09 | ✅ | Editar perfil: backend routes (username, e-mail c/ re-verificação, password, apagar conta) | 3.1-dev |
+| AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
+| AUTH-09b | ✅ | Avatar de utilizador — coluna `avatar` DB, rota `POST /auth/profile/avatar`, upload frontend c/ canvas resize | 3.1-dev |
 | AUTH-10 | ❌ | Sistema de roles/permissões: admin, engineer, viewer, demo | — |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
 | AUTH-12 | ✅ | Merge `feat/access-log` → `3.1-dev` | 3.1-dev |
