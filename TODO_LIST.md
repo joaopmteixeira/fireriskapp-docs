@@ -36,7 +36,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
 | DB-01 | ✅ | Neon PostgreSQL em produção — env vars, deploy, TEST-01 aprovado | feat/access-log |
-| DB-02 | ❌ | Estratégia de backups: PostgreSQL Neon, env vars, configs | — |
+| DB-02 | ✅ | Migração Neon → Supabase — elimina cold start 45s; per-request connections (PgBouncer) | 3.1-dev |
 
 ---
 
@@ -97,7 +97,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | BACK-01 | ✅ | Migração Flask → FastAPI: calc/, routers/, schemas/, services/, uvicorn | feat/flask-to-fastapi |
 | BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend; fix 405 no catch-all SPA | 3.1-dev |
 | BACK-03 | ✅ | ASCII enum values — remover ç/ã dos values DPI e aliases CTI | feat/flask-to-fastapi |
-| BACK-04 | 🔄 | Merge feat/flask-to-fastapi → produção; deploy FastAPI no Render | feat/flask-to-fastapi |
+| BACK-04 | ✅ | Merge feat/flask-to-fastapi → produção; deploy FastAPI no Render (Supabase, 1.5s login) | 3.1-dev |
 
 ---
 

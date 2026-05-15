@@ -2,16 +2,29 @@
 
 ---
 
-## feat/flask-to-fastapi — BACK-04 Deploy no Render (2026-05-15)
+## 3.1-dev — BACK-04 + DB-02: Deploy FastAPI + Supabase (2026-05-15)
 
-### BACK-04 — Preparação e fixes de deploy FastAPI *(15/05/2026)*
+### BACK-04 — Deploy FastAPI no Render *(15/05/2026)* ✅
 
-Resolução de erros de arranque no Render durante o deploy da migração FastAPI.
+Resolução de erros de arranque no Render e deploy final do backend FastAPI em produção.
 
-- `app/backend/database.py` — `_add_column()` usa agora `IF NOT EXISTS` para PostgreSQL (commits `024a33d`, `a0c5176`); `SimpleConnectionPool` substituído por conexões criadas por request para compatibilidade com Neon free tier — o pool não funciona com o plano free do Neon (commit `d7e14bd`)
-- `app/backend/requirements.txt` — `itsdangerous>=2.0,<3` adicionado: dependência implícita do `SessionMiddleware` do Starlette, não incluída no pacote principal (commit `aa4de81`)
-- Merge `3.1-dev` → `feat/flask-to-fastapi` concluído sem conflitos (commit `f3173f8`); paridade verificada: `parity_runner.py` → **11/11 PASS**
-- Deploy no Render a aguardar deploy verde após `d7e14bd`
+- `app/backend/database.py` — `_add_column()` usa `IF NOT EXISTS` para PostgreSQL (commits `024a33d`, `a0c5176`)
+- `app/backend/database.py` — `SimpleConnectionPool` **removido**; substituído por conexões por request (`psycopg2.connect()` em cada `with _get_db()`). Causa: o pool é criado ao nível do módulo antes do gunicorn fazer fork dos workers — as conexões SSL ficam inválidas nos processos filho (`SSL SYSCALL error: EOF detected`). O PgBouncer do Supabase faz pooling do lado do servidor (commit `6562206`)
+- `app/backend/requirements.txt` — `itsdangerous>=2.0,<3` adicionado: dependência implícita do `SessionMiddleware` do Starlette (commit `aa4de81`)
+- Merge `3.1-dev` → `feat/flask-to-fastapi` sem conflitos (commit `f3173f8`); paridade verificada: `parity_runner.py` → **11/11 PASS**
+- **Merge `feat/flask-to-fastapi` → `3.1-dev`** (commit `748dff1`, --no-ff): FastAPI é agora o backend de produção
+- Teste e2e produção: login 1.49s, `/auth/me` 275ms, sem cold start ✓
+
+### DB-02 — Migração Neon → Supabase *(15/05/2026)* ✅
+
+Migração da base de dados de produção para eliminar o cold start de 45s do Neon free tier.
+
+- **Neon free tier**: autosuspend após 5 min de inatividade → cold start 45s na primeira query pós-idle
+- **Supabase free tier**: suspende apenas após 1 semana → sempre quente em uso regular
+- `DATABASE_URL` (pooler Supabase, porta 6543, IPv4) substituiu `NEON_DATABASE_URL` (porta 5432, IPv6 — incompatível com Render free tier)
+- `config.py` e `database.py` atualizados; env var no Render substituída
+- 2 utilizadores migrados com `tools/migrate_neon_to_supabase.py`
+- Resultado: login ~1.5s (antes 45s), `/auth/me` ~275ms; sem erros SSL
 
 ---
 
