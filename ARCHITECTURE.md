@@ -41,14 +41,36 @@ chichorro4Cursor/
 │   │       ├── api.ts                   → postJson helper, VITE_API_BASE_URL
 │   │       └── resultsStore.ts          → sessionStorage + eventos globais
 │   └── backend/
-│       ├── Flask.py                     → API Flask (todos os endpoints)
-│       ├── Chichorro_POI.py
-│       ├── Chichorro_CTI.py             → física complexa, numpy/sympy
-│       ├── Chichorro_DPI.py
-│       ├── Chichorro_ESCI.py
-│       ├── Chichorro_RI.py
-│       ├── Chichorro_RI_inter.py        → RI pós-intervenção (34 intervenções)
-│       ├── wsgi.py                      → entrypoint de deployment
+│       ├── main.py                      → FastAPI app, middleware, routers, SPA serving
+│       ├── config.py                    → pydantic-settings (Settings)
+│       ├── database.py                  → _get_db() dual-mode SQLite/PostgreSQL
+│       ├── deps.py                      → Depends: require_auth
+│       ├── _limiter.py                  → instância slowapi partilhada
+│       ├── routers/
+│       │   ├── auth.py                  → /auth/*, /login, /logout, /me (16 rotas)
+│       │   ├── admin.py                 → /admin/users, /admin/log
+│       │   ├── poi.py                   → /POI/* + /POI (13 rotas)
+│       │   ├── cti.py                   → /CTI/* + /CTI (4 rotas)
+│       │   ├── dpi.py                   → /DPI/* + /DPI (6 rotas)
+│       │   ├── esci.py                  → /ESCI/* + /ESCI (8 rotas)
+│       │   └── ri.py                    → /RI, /RI/interv (3 rotas)
+│       ├── schemas/
+│       │   ├── auth.py                  → modelos de auth e perfil
+│       │   ├── poi.py                   → POICCRequest … POIRequest
+│       │   ├── cti.py                   → CTIPayload com @model_validator
+│       │   ├── dpi.py                   → DPIREICRequest … DPIRequest
+│       │   ├── esci.py                  → ESCIGPRequest … ESCIRequest
+│       │   └── ri.py                    → RIRequest, RIIntervRequest
+│       ├── services/
+│       │   └── email.py                 → send_verification_email, send_reset_email, …
+│       ├── calc/
+│       │   ├── Chichorro_POI.py
+│       │   ├── Chichorro_CTI.py         → física complexa, numpy/sympy
+│       │   ├── Chichorro_DPI.py
+│       │   ├── Chichorro_ESCI.py
+│       │   ├── Chichorro_RI.py
+│       │   └── Chichorro_RI_inter.py    → RI pós-intervenção (34 intervenções)
+│       ├── wsgi.py                      → entrypoint de deployment (uvicorn/gunicorn)
 │       └── parity_runner.py             → validação de paridade entre versões
 ├── reference/
 │   ├── chichorro-3.0-jt/               → legacy v3.0 (autor: João Teixeira)
@@ -128,19 +150,37 @@ Se CTI ou RI precisarem do mesmo padrão, seguir esta convenção.
 
 ---
 
-## Endpoints Flask
+## Endpoints FastAPI
 
 | Endpoint | Método | Descrição |
-|-------------------|--------|----------------------------------------------|
-| `/POI` | POST | Calcula subfator POI; devolve valor parcial |
+| -------------------------------- | ------ | -------------------------------------------- |
+| `/health` | GET | Health check |
+| `/POI/CC` … `/POI/ATIV` | POST | Subfatores POI individuais |
+| `/POI` | POST | Calcula todos os subfatores POI + valor global |
+| `/CTI/CTI_CI`, `/CTI/CTI_VHE`, `/CTI/CTI_VVE` | POST | Subfatores CTI individuais |
 | `/CTI` | POST | Calcula CI, VHE, VVE e valor global CTI |
-| `/DPI` | POST | Calcula subfator DPI |
-| `/ESCI` | POST | Calcula subfator ESCI |
+| `/DPI/REIC` … `/DPI/OGS` | POST | Subfatores DPI individuais |
+| `/DPI` | POST | Calcula todos os subfatores DPI + valor global |
+| `/ESCI/GP` … `/ESCI/CPB` | POST | Subfatores ESCI individuais |
+| `/ESCI` | POST | Calcula todos os subfatores ESCI + valor global |
 | `/RI` | POST | Calcula RI final a partir dos 4 módulos |
 | `/RI/interv` | POST | Calcula RI pós-intervenção (34 intervenções) |
-| `/login` | POST | Autenticação (cookie Flask) |
-| `/logout` | POST | Terminar sessão |
-| `/ping` | GET | Health check |
+| `/auth/login`, `/login` | POST | Autenticação (cookie `chichorro_session`) |
+| `/auth/logout`, `/logout` | POST | Terminar sessão |
+| `/auth/me` | GET | Estado da sessão + username/email/avatar |
+| `/me` | GET | Estado da sessão (legado) |
+| `/auth/register` | POST | Registo de utilizador + e-mail de verificação |
+| `/auth/verify/{token}` | GET | Ativação de conta |
+| `/auth/forgot-password` | POST | Gerar token de reset de password |
+| `/auth/reset-password` | POST | Redefinir password com token |
+| `/auth/profile/username` | POST | Alterar username |
+| `/auth/profile/email` | POST | Alterar e-mail (com verificação) |
+| `/auth/profile/password` | POST | Alterar password |
+| `/auth/profile/delete` | POST | Eliminar conta |
+| `/auth/profile/avatar` | POST | Atualizar avatar (base64) |
+| `/auth/verify-email-change/{token}` | GET | Confirmar alteração de e-mail |
+| `/admin/users` | GET | Lista de utilizadores (requer auth) |
+| `/admin/log` | GET | Log de acessos (requer auth) |
 
 ---
 

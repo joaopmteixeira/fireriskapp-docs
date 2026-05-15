@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-13 (sessão tarde)
+Última atualização: 2026-05-15
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -54,14 +54,22 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| UI-01 | ❌ | Gráfico impacto intervenções (tornado chart, Recharts) | — |
 | UI-02 | ❌ | Página de Documentação integrada na app | — |
 | UI-03 | ❌ | Página de Ajuda integrada na app | — |
 | UI-04 | ❌ | FAQs — Perguntas Frequentes | — |
 | UI-05 | ❌ | Bug Report — formulário de reporte (destino: e-mail/GitHub/ClickUp) | — |
 | UI-06 | ✅ | Preferências / Definições do utilizador — dark mode (sistema/claro/escuro), avisar antes de sair, casas decimais | 3.1-dev |
 | UI-07 | 🔄 | Dark Mode — infra concluída (Tailwind class, prefs.ts, applyTheme); sidebar/profile/cards done; páginas de conteúdo em progresso | 3.1-dev |
-| UI-08 | ❌ | Chatbot AI assistente CHICHORRO (Claude API ou similar) | — |
+
+---
+
+## FEAT — Funcionalidades Novas
+
+| ID | Estado | Descrição | Branch |
+| --- | --- | --- | --- |
+| FEAT-01 | ❌ | Gráfico impacto intervenções (tornado chart, Recharts) | — |
+| FEAT-02 | ❌ | Guardar edifício — nome, morada, código postal, distrito/concelho/freguesia (cascata), GPS + mapa; resultados associados ao utilizador e em tabela geral | — |
+| FEAT-03 | ❌ | Chatbot AI assistente CHICHORRO (Claude API ou similar) | — |
 
 ---
 
@@ -86,9 +94,10 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| BACK-01 | ❌ | Reestruturar Flask.py em módulos: routes/, services/, models/, auth/, db/ | — |
+| BACK-01 | ✅ | Migração Flask → FastAPI: calc/, routers/, schemas/, services/, uvicorn | feat/flask-to-fastapi |
 | BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend; fix 405 no catch-all SPA | 3.1-dev |
-| BACK-03 | ❌ | Avaliar migração Flask → FastAPI (não prioritário) | — |
+| BACK-03 | ✅ | ASCII enum values — remover ç/ã dos values DPI e aliases CTI | feat/flask-to-fastapi |
+| BACK-04 | 🔄 | Merge feat/flask-to-fastapi → produção; deploy FastAPI no Render | feat/flask-to-fastapi |
 
 ---
 

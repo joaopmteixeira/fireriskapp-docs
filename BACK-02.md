@@ -34,6 +34,7 @@ O `username` registado é o valor enviado no payload — pode ser arbitrário.
 
 - `@app.before_request` gera `g.request_id = uuid.uuid4().hex[:8]` em cada pedido.
 - `@app.errorhandler(500)` loga o erro com o `request_id` e devolve-o no JSON:
+
   ```json
   {"error": "INTERNAL_ERROR", "request_id": "a1b2c3d4"}
   ```

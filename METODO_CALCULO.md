@@ -425,27 +425,24 @@ Avalia a resistência ao fogo dos elementos de compartimentação em função da
 
 **Edifícios posteriores a 1990 — VVE não conforme:**
 
-| Controlo de fumo | Tipo | Resistência estrutura/laje |
-|---|---|---|
-| | | **Respeita** | **< 30 min** | **< 60 min** |
+| Controlo de fumo | Tipo | Resistência: Respeita | Resistência: < 30 min | Resistência: < 60 min |
+|---|---|---|---|---|
 | Com controlo | Mecânico | 1,05 | 1,15 | 1,25 |
 | Com controlo | Natural | 1,10 | 1,20 | 1,30 |
 | Sem controlo | — | 1,20 | 1,30 | 1,40 |
 
 **Edifícios anteriores a 1990 — VVE conforme:**
 
-| Controlo de fumo | Tipo | Resistência estrutura/laje |
-|---|---|---|
-| | | **Respeita** | **< 30 min** | **< 60 min** |
+| Controlo de fumo | Tipo | Resistência: Respeita | Resistência: < 30 min | Resistência: < 60 min |
+|---|---|---|---|---|
 | Com controlo | Mecânico | 1,10 | 1,20 | 1,30 |
 | Com controlo | Natural | 1,15 | 1,25 | 1,35 |
 | Sem controlo | — | 1,30 | 1,40 | 1,50 |
 
 **Edifícios anteriores a 1990 — VVE não conforme:**
 
-| Controlo de fumo | Tipo | Resistência estrutura/laje |
-|---|---|---|
-| | | **Respeita** | **< 30 min** | **< 60 min** |
+| Controlo de fumo | Tipo | Resistência: Respeita | Resistência: < 30 min | Resistência: < 60 min |
+|---|---|---|---|---|
 | Com controlo | Mecânico | 1,15 | 1,25 | 1,35 |
 | Com controlo | Natural | 1,20 | 1,30 | 1,40 |
 | Sem controlo | — | 1,35 | 1,45 | 1,55 |

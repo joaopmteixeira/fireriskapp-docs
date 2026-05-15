@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-13 (sessão tarde)
+Última atualização: 2026-05-15
 
 ---
 
@@ -72,6 +72,7 @@ Monitorização
 - **`SEC`** — Segurança e hardening (não-auth)
 - **`UI`** — Interface e experiência do utilizador
 - **`UX`** — Micro-melhorias de experiência (UX-01…08 concluídos — ver CHANGELOG)
+- **`FEAT`** — Funcionalidades novas da aplicação
 - **`BACK`** — Arquitetura e código backend
 - **`INFRA`** — Infraestrutura, deploy e DevOps
 - **`TEST`** — Testes e validação
@@ -182,23 +183,14 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`
 
 **IMPORTANTE:** As permissões devem ser verificadas no backend. Frontend NÃO é segurança.
 
-### ❌ BACK-01 — Melhorar Estrutura Backend Flask
+### ✅ BACK-01 — Migração Flask → FastAPI *(concluído — ver CHANGELOG)*
 
-A estrutura atual está centralizada em `Flask.py`. Objetivo futuro:
+Migração completa do `Flask.py` para FastAPI com estrutura modular. 11/11 PASS. Branch `feat/flask-to-fastapi`.
 
-```text
-backend/
-├── routes/
-├── services/
-├── models/
-├── auth/
-├── db/
-├── utils/
-├── middleware/
-└── tests/
-```
+### 🔄 BACK-04 — Deploy FastAPI no Render *(em progresso)*
 
-**Benefícios:** manutenção, escalabilidade, legibilidade, testes.
+Passos 1-3 concluídos (fixes `database.py`, merge, paridade). Passo 4 (deploy Render) em curso após fixes `itsdangerous` e conexões per-request para Neon free tier.
+Ver `docs/plans/BACK-04.md`.
 
 ### ✅ BACK-02 — Melhorar Logging *(concluído — ver CHANGELOG)*
 
@@ -222,11 +214,7 @@ Infra concluída: `darkMode: "class"` no Tailwind, `applyTheme()` em `main.tsx`,
 Componentes com dark mode: sidebar, ProfilePage, SettingsPage, Card, Field, Button, ModuleGlobalValueCard, PoiFactorSection, DpiFactorSection, EsciFactorSection.
 **Pendente (UI-07 completo):** RiPage, CtiPage, InterventionsPage, páginas de autenticação (Login, SignUp, ForgotPassword, ResetPassword).
 
-### ❌ UI-08 — Chatbot AI
-
-Assistente de IA para ajudar os utilizadores a compreender os conceitos do CHICHORRO e a utilizar a aplicação (exclusivamente; possivelmente via Claude API ou similar).
-
-### ❌ UI-01 — Gráfico de Impacto de Intervenções
+### ❌ FEAT-01 — Gráfico de Impacto de Intervenções
 
 No módulo de Intervenções, mostrar bar chart horizontal (tornado chart) com o impacto individual de cada intervenção selecionada: quanto reduziria o RI se fosse aplicada isoladamente.
 
@@ -234,13 +222,21 @@ No módulo de Intervenções, mostrar bar chart horizontal (tornado chart) com o
 - Frontend: Recharts (já disponível no projeto)
 - Custo: ~34 cálculos de RI por chamada (aceitável no backend Python)
 
-### ❌ BACK-03 — Avaliar Migração Flask → FastAPI
+### ❌ FEAT-02 — Guardar Edifício
 
-**NÃO prioritário. Flask continua válido.**
+Após cálculo completo, permitir ao utilizador guardar a avaliação associada a um edifício identificado por:
 
-FastAPI vantagens: tipagem moderna, OpenAPI automático, melhor async, arquitetura moderna.
+- Nome do projeto (texto livre)
+- Morada (texto livre)
+- Código postal (formato XXXX-XXX)
+- Distrito / Concelho / Freguesia (três dropdowns em cascata; Distrito inclui Regiões Autónomas dos Açores e da Madeira)
+- Latitude / Longitude + pin interativo no mapa
 
-Só considerar quando: backend crescer bastante, APIs aumentarem, necessidade async real, múltiplos serviços.
+Os resultados (POI, CTI, DPI, ESCI, RI) ficam guardados associados ao utilizador e numa tabela geral da base de dados.
+
+### ❌ FEAT-03 — Chatbot AI
+
+Assistente de IA para ajudar os utilizadores a compreender os conceitos do CHICHORRO e a utilizar a aplicação (exclusivamente; possivelmente via Claude API ou similar).
 
 ### ❌ TEST-02 — Adicionar Testes Automatizados
 

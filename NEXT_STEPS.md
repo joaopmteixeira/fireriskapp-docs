@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-13
+Última atualização: 2026-05-15
 
 ---
 
@@ -15,13 +15,46 @@
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
 | Dark Mode (UI-07) | 🔄 Em progresso — infra + sidebar + cards POI/DPI/ESCI done; outras páginas pendentes |
-| Branch ativo | `3.1-dev` |
+| Migração Flask → FastAPI (BACK-01) | ✅ Completo — 11/11 PASS (`feat/flask-to-fastapi`) |
+| ASCII enums DPI/CTI (BACK-03) | ✅ Completo (`feat/flask-to-fastapi`) |
+| Deploy FastAPI em produção (BACK-04) | 🔄 Em progresso — fixes aplicados; deploy Render a aguardar confirmação verde |
+| Branch ativo | `feat/flask-to-fastapi` (desenvolvimento) · `3.1-dev` (produção) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
-## Concluído Recentemente (2026-05-13)
+## Concluído Recentemente (2026-05-15)
+
+### 🔄 BACK-04 — Deploy FastAPI no Render (em progresso)
+
+- ✅ Passo 1 — `_add_column()` com `IF NOT EXISTS` em `database.py`
+- ✅ Passo 2 — Merge `3.1-dev` → `feat/flask-to-fastapi` (sem conflitos)
+- ✅ Passo 3 — `parity_runner.py` → 11/11 PASS
+- 🔄 Passo 4 — Deploy no Render: `itsdangerous` adicionado a `requirements.txt`; `SimpleConnectionPool` substituído por conexões por request (Neon free tier)
+- ⏳ Passo 5 — Teste e2e produção
+- ⏳ Passo 6 — Merge `feat/flask-to-fastapi` → `3.1-dev`
+- ⏳ Passo 7 — Commit docs
+
+---
+
+## Concluído em 2026-05-14
+
+### ✅ BACK-01 — Migração Flask → FastAPI
+
+- Scaffold FastAPI: `calc/`, `config.py`, `database.py`, `deps.py`, `main.py`
+- Pydantic schemas para todos os endpoints (auth, poi, cti, dpi, esci, ri)
+- Routers modulares: `routers/auth.py`, `routers/admin.py`, `routers/poi.py`, `routers/cti.py`, `routers/dpi.py`, `routers/esci.py`, `routers/ri.py`; `services/email.py`
+- `wsgi.py`, `parity_runner.py`, `requirements.txt` actualizados; `ARCHITECTURE.md` atualizado
+- Verificação: `parity_runner.py` → **11/11 PASS**
+
+### ✅ BACK-03 — ASCII enum values
+
+- `dpiDefinitions.ts` + `Chichorro_DPI.py` + `parity_runner.py` + `schemas/cti.py` — sem `ç`/`ã` nos values de enum
+
+---
+
+## Concluído em 2026-05-13
 
 ### ✅ AUTH-09 / AUTH-09a / AUTH-09b / AUTH-09c — Perfil de Utilizador
 
@@ -72,22 +105,6 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
 
 Página de configurações do utilizador (conteúdo a especificar).
 
-### BACK-01 — Reestruturar Backend Flask
-
-`Flask.py` está atualmente monolítico. Estrutura alvo:
-
-```text
-backend/
-├── routes/
-├── services/
-├── models/
-├── auth/
-├── db/
-├── utils/
-├── middleware/
-└── tests/
-```
-
 ### INFRA-01 — Monitorização
 
 Ferramentas candidatas: Sentry, BetterStack, UptimeRobot, Render monitoring.
@@ -101,7 +118,7 @@ Garantir backup de: PostgreSQL Neon, env vars, configs de deployment.
 
 ## Pendente — Prioridade Baixa / Futuro
 
-### UI-01 — Gráfico de Impacto de Intervenções
+### FEAT-01 — Gráfico de Impacto de Intervenções
 
 Tornado chart (bar chart horizontal) no módulo de Intervenções: impacto individual de cada intervenção selecionada.
 
@@ -109,11 +126,21 @@ Tornado chart (bar chart horizontal) no módulo de Intervenções: impacto indiv
 - Frontend: Recharts (já disponível)
 - Custo: ~34 cálculos de RI por chamada (aceitável)
 
+### FEAT-02 — Guardar Edifício
+
+Após cálculo completo, guardar a avaliação associada a um edifício:
+
+- Nome do projeto, morada, código postal (XXXX-XXX)
+- Distrito / Concelho / Freguesia (dropdowns em cascata; inclui Regiões Autónomas)
+- Latitude / Longitude + pin no mapa
+
+Resultados (POI, CTI, DPI, ESCI, RI) ficam guardados por utilizador e em tabela geral na base de dados.
+
 ### UI-07 — Dark Mode
 
 Tema escuro na aplicação.
 
-### UI-08 — Chatbot AI
+### FEAT-03 — Chatbot AI
 
 Assistente de IA para ajudar os utilizadores a compreender o CHICHORRO e a usar a aplicação (Claude API ou similar).
 
@@ -124,10 +151,6 @@ Unit tests, integration tests, e2e tests. Objetivos: estabilidade, prevenção d
 ### INFRA-02 — Pipeline CI/CD
 
 GitHub Actions + Render Deploy Hooks. Objetivos: deploy automático, testes automáticos, linting, validação de build.
-
-### BACK-03 — Avaliar Migração Flask → FastAPI
-
-Não prioritário. Flask continua válido. Considerar apenas quando o backend crescer significativamente ou surgir necessidade real de async.
 
 ---
 

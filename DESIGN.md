@@ -207,7 +207,7 @@ Sidebar nav links use `rounded-lg` (8px) — an intentional exception for tighte
 
 ### 3.1 Shell
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  Sidebar (fixed, w-56 = 224px, full height)      │
 │  bg-white · border-r border-ink-200              │
@@ -231,7 +231,7 @@ Sidebar nav links use `rounded-lg` (8px) — an intentional exception for tighte
 
 Every module page follows this vertical structure:
 
-```
+```text
 Page heading row          (flex, space-between, col→row at lg:)
   ├── Title + description
   └── ModuleGlobalValueCard (max-w-[17rem], lg:ml-auto)
@@ -263,6 +263,7 @@ Card 2 (results)
 ### 3.4 Auth Pages
 
 Auth pages (Login, SignUp, ForgotPassword, ResetPassword) use a distinct layout:
+
 - Full-viewport gradient background: `bg-gradient-to-br from-brand-900 via-brand-800 to-ink-900`
 - Centered card: `min-h-screen flex items-center justify-center px-4 py-12`
 - Card max-width: `max-w-lg w-full`
@@ -287,7 +288,8 @@ Three variants only. Do not add variants without updating this spec.
 | `ghost` | Tertiary, inline, icon-adjacent | `text-ink-700 hover:bg-ink-100` |
 
 **Base classes (all variants):**
-```
+
+```text
 inline-flex items-center justify-center gap-2
 rounded-xl px-4 py-2.5 text-sm font-semibold
 transition focus:outline-none
@@ -296,12 +298,14 @@ disabled:cursor-not-allowed disabled:opacity-50
 ```
 
 **Loading state:**
+
 - Set `disabled` attribute
 - Change label text to "A processar…" (or context-specific equivalent)
 - Never use a spinner unless the wait exceeds ~3s
 
 **Icon buttons (square):**
-```
+
+```text
 size-11 aspect-square rounded-xl border border-ink-200 bg-ink-50
 text-ink-500 hover:bg-ink-100
 ```
@@ -312,7 +316,7 @@ text-ink-500 hover:bg-ink-100
 
 The fundamental layout unit for all content sections.
 
-```
+```text
 Card:       rounded-2xl border border-ink-200/80 bg-white shadow-soft
 CardHeader: border-b border-ink-100 px-6 py-4  (flex items-center justify-between)
 CardBody:   px-6 py-5
@@ -338,7 +342,7 @@ Always `block` (not inline). Always above the field, never beside it (except in 
 
 #### Select
 
-```
+```text
 mt-1 w-full max-w-md rounded-xl border border-ink-200 bg-white
 px-3 py-2.5 text-sm text-ink-900 shadow-sm outline-none
 transition focus:border-brand-700 focus:ring-2 focus:ring-brand-700/20
@@ -346,7 +350,7 @@ transition focus:border-brand-700 focus:ring-2 focus:ring-brand-700/20
 
 #### Text Input (inline in pages, not via Field component)
 
-```
+```text
 mt-1 w-full max-w-md rounded-xl border border-ink-200 bg-white
 px-3 py-2.5 text-sm text-ink-900 outline-none ring-brand-800/0
 transition focus:border-brand-800 focus:ring-4 focus:ring-brand-800/15
@@ -366,7 +370,8 @@ Add Tailwind `disabled:opacity-50 disabled:cursor-not-allowed` — never hide a 
 **File:** `src/components/ui/PasswordInput.tsx`
 
 Extends Text Input with an absolute-positioned toggle button:
-```
+
+```text
 absolute inset-y-0 right-0 flex items-center px-3
 text-ink-400 hover:text-ink-600
 ```
@@ -378,7 +383,7 @@ Use wherever passwords are entered: Login, SignUp, ResetPassword.
 
 An inline display panel for a single computed value. Used inside CardBody.
 
-```
+```text
 rounded-xl border px-4 py-3
 
 Label: text-xs font-semibold uppercase tracking-wide [color]
@@ -404,7 +409,7 @@ Color variants:
 
 Standalone result card displayed in the page header. Shows the current module's global computed value.
 
-```
+```text
 w-full max-w-[17rem] lg:ml-auto
 rounded-2xl border border-ink-200 bg-white px-6 py-5 shadow-sm
 
@@ -422,18 +427,21 @@ One per module page, always in the page header row.
 Used inside factor section pages (POI, DPI, ESCI). Groups related fields under a toggleable header.
 
 **Header:**
-```
+
+```text
 flex items-center justify-between px-0 py-2 cursor-pointer select-none
 ```
 
 **Chevron icon:**
-```
+
+```text
 transition-transform duration-300
 rotate-180 (when collapsed) → no rotation (when expanded)
 ```
 
 **Collapse animation (CSS grid trick):**
-```
+
+```text
 grid transition-[grid-template-rows] duration-300 ease-in-out
 grid-rows-[0fr] (collapsed) → grid-rows-[1fr] (expanded)
 ```
@@ -460,18 +468,21 @@ Auto-dismiss success banners: fade out after 3s using `transition-opacity durati
 Triggered from `AppLayout.tsx`. Three modals currently: session expired, clear session, logout confirm.
 
 **Overlay:**
-```
+
+```text
 fixed inset-0 z-50 flex items-center justify-center bg-ink-950/40 px-4
 ```
 
 **Panel:**
-```
+
+```text
 w-full max-w-lg rounded-2xl border border-ink-200 bg-white p-6 shadow-xl
 role="dialog" aria-modal="true" aria-labelledby="modal-title"
 ```
 
 **Structure inside panel:**
-```
+
+```text
 h2 (id="modal-title"): text-xl font-bold text-ink-900
 p (description):        mt-3 text-sm leading-6 text-ink-600
 action row:             mt-6 flex flex-wrap justify-end gap-3
@@ -483,31 +494,36 @@ Use `z-[60]` only for the session-expired modal (must always appear on top). All
 
 **File:** `src/components/AppLayout.tsx`
 
-```
+```text
 fixed inset-y-0 left-0 z-10 flex w-56 flex-col border-r border-ink-200 bg-white
 ```
 
 **Sections (top to bottom):**
+
 1. Brand area (`border-b border-ink-200 px-4 py-5`) — logo + app name
 2. Navigation (`flex-1 px-3 py-4 space-y-3`) — grouped nav links
 3. Session actions (`px-3 pb-4`) — buttons at bottom
 
 **Nav group label:**
-```
+
+```text
 px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-ink-400
 ```
 
 **Nav link states:**
-```
+
+```text
 Active:   bg-brand-800 text-white shadow-sm rounded-lg px-3 py-2
 Inactive: text-ink-700 hover:bg-ink-100 rounded-lg px-3 py-2
 ```
 
 **User avatar:**
-```
+
+```text
 h-8 w-8 rounded-full bg-brand-800 text-sm font-bold text-white
 flex items-center justify-center
 ```
+
 Displays the first letter of the username.
 
 ### 4.11 Data Table (proposed — not yet implemented)
@@ -515,23 +531,27 @@ Displays the first letter of the username.
 For the `/admin/log` and `/admin/users` pages. Define now so future implementation is consistent.
 
 **Container:**
-```
+
+```text
 w-full overflow-x-auto rounded-2xl border border-ink-200 bg-white shadow-soft
 ```
 
 **Table:**
-```
+
+```text
 w-full text-sm border-collapse
 ```
 
 **Header row:**
-```
+
+```text
 border-b border-ink-200 bg-ink-50
 th: px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-ink-500
 ```
 
 **Body rows:**
-```
+
+```text
 tr: border-b border-ink-100 hover:bg-ink-50/50 transition
 td: px-4 py-3 text-sm text-ink-700
 ```
@@ -543,7 +563,8 @@ Do not stripe rows — use the subtle hover state for scan-ability instead.
 For displaying role labels, status chips, and event types in the access log.
 
 **Inline badge:**
-```
+
+```text
 inline-flex items-center rounded-md px-2 py-0.5
 text-xs font-semibold
 ```
@@ -557,7 +578,8 @@ text-xs font-semibold
 | Brand | `bg-brand-100 text-brand-800` |
 
 **ID badge (circular, as in InterventionsPage):**
-```
+
+```text
 flex h-5 w-6 shrink-0 items-center justify-center
 rounded-full bg-ink-100 text-xs font-bold text-ink-700
 ```
@@ -601,6 +623,7 @@ When inputs change after a calculation has been performed:
 ### 5.5 Empty / No Results State
 
 When a module has not been calculated yet:
+
 - The result area shows `—` (em dash) in `text-ink-300`.
 - No error is shown — absence of a result is normal before first calculation.
 - The ModuleGlobalValueCard shows the empty state without a stale indicator.
@@ -612,7 +635,8 @@ When a module has not been calculated yet:
 ### 6.1 Field Grid Layout
 
 All form sections use a 2-column responsive grid:
-```
+
+```text
 grid gap-5 sm:grid-cols-2
 ```
 
@@ -623,6 +647,7 @@ Never use 3-column form grids.
 ### 6.2 Conditional Fields
 
 Fields that depend on other field values use `visibleWhen` predicates in the definitions file. When a field is hidden:
+
 - It is removed from the DOM (not just `opacity-0`) — avoids stale values being submitted.
 - Its corresponding result is excluded from module average computation.
 

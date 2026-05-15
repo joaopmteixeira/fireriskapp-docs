@@ -2,6 +2,42 @@
 
 ---
 
+## feat/flask-to-fastapi — BACK-04 Deploy no Render (2026-05-15)
+
+### BACK-04 — Preparação e fixes de deploy FastAPI *(15/05/2026)*
+
+Resolução de erros de arranque no Render durante o deploy da migração FastAPI.
+
+- `app/backend/database.py` — `_add_column()` usa agora `IF NOT EXISTS` para PostgreSQL (commits `024a33d`, `a0c5176`); `SimpleConnectionPool` substituído por conexões criadas por request para compatibilidade com Neon free tier — o pool não funciona com o plano free do Neon (commit `d7e14bd`)
+- `app/backend/requirements.txt` — `itsdangerous>=2.0,<3` adicionado: dependência implícita do `SessionMiddleware` do Starlette, não incluída no pacote principal (commit `aa4de81`)
+- Merge `3.1-dev` → `feat/flask-to-fastapi` concluído sem conflitos (commit `f3173f8`); paridade verificada: `parity_runner.py` → **11/11 PASS**
+- Deploy no Render a aguardar deploy verde após `d7e14bd`
+
+---
+
+## feat/flask-to-fastapi — Migração Flask → FastAPI (2026-05-14)
+
+### BACK-01 — Migração Flask → FastAPI *(14/05/2026)*
+
+Migração do backend monolítico `Flask.py` (~2300 linhas) para FastAPI com estrutura modular.
+A API pública (paths, payloads, cookies) é 100% preservada — o frontend não tem alterações.
+
+- **Fase 1** — Scaffold FastAPI: `calc/` (motores de cálculo movidos de `app/backend/`), `config.py` (pydantic-settings), `database.py` (dual-mode SQLite/PostgreSQL, mantém `_PGConn`), `deps.py` (`require_auth` via `Depends`), `main.py` (app FastAPI + middleware CORS + SessionMiddleware + Limiter + routers)
+- **Fase 2** — Pydantic schemas para todos os endpoints: `schemas/auth.py`, `schemas/poi.py`, `schemas/cti.py` (inclui `@model_validator` para normalização CTI, substitui `_normalize_cti_payload`), `schemas/dpi.py`, `schemas/esci.py`, `schemas/ri.py`
+- **Fase 3** — Routers modulares: `routers/auth.py` (todos os endpoints `/auth/*`, `/login`, `/logout`, `/me`), `routers/admin.py` (`/admin/log`, `/admin/users`), `routers/poi.py`, `routers/cti.py`, `routers/dpi.py`, `routers/esci.py`, `routers/ri.py` (`/RI`, `/RI/interv`); `services/email.py` (helpers Resend extraídos)
+- **Fase 5** — `wsgi.py` actualizado para FastAPI/uvicorn; `parity_runner.py` aponta para `http://127.0.0.1:8000`; `requirements.txt` actualizado (`fastapi`, `uvicorn[standard]`, `pydantic-settings`, `starlette`); `docs/ARCHITECTURE.md` atualizado com nova estrutura
+
+Verificação: `python parity_runner.py` → **11/11 PASS**
+
+### BACK-03 — ASCII enum values *(14/05/2026)*
+
+- `app/frontend/src/components/dpi/dpiDefinitions.ts` — `value:` de 3 opções DPI/OGS → ASCII (sem `ç`/`ã`)
+- `app/backend/calc/Chichorro_DPI.py` — comparações `if/elif` actualizadas para ASCII
+- `app/backend/parity_runner.py` — payload de teste DPI/OGS → ASCII
+- `app/backend/schemas/cti.py` — removidas entradas `"Inexistência"`, `"Não existe"`, `"Não Existe"` do `_ENUM_ALIASES`
+
+---
+
 ## v3.1.2 — Perfil, Definições e Dark Mode (2026-05-13)
 
 ### AUTH-09 / AUTH-09a / AUTH-09b / AUTH-09c — Sistema de Perfil de Utilizador *(13/05/2026)*
