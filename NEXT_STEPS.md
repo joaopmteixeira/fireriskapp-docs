@@ -17,8 +17,9 @@
 | Dark Mode (UI-07) | 🔄 Em progresso — infra + sidebar + cards POI/DPI/ESCI done; outras páginas pendentes |
 | Migração Flask → FastAPI (BACK-01) | ✅ Completo — 11/11 PASS (`feat/flask-to-fastapi`) |
 | ASCII enums DPI/CTI (BACK-03) | ✅ Completo (`feat/flask-to-fastapi`) |
-| Deploy FastAPI em produção (BACK-04) | 🔄 Em progresso — fixes aplicados; deploy Render a aguardar confirmação verde |
-| Branch ativo | `feat/flask-to-fastapi` (desenvolvimento) · `3.1-dev` (produção) |
+| Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
+| Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
+| Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
 
@@ -26,15 +27,22 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 
 ## Concluído Recentemente (2026-05-15)
 
-### 🔄 BACK-04 — Deploy FastAPI no Render (em progresso)
+### ✅ BACK-04 — Deploy FastAPI no Render (concluído 2026-05-15)
 
 - ✅ Passo 1 — `_add_column()` com `IF NOT EXISTS` em `database.py`
 - ✅ Passo 2 — Merge `3.1-dev` → `feat/flask-to-fastapi` (sem conflitos)
 - ✅ Passo 3 — `parity_runner.py` → 11/11 PASS
-- 🔄 Passo 4 — Deploy no Render: `itsdangerous` adicionado a `requirements.txt`; `SimpleConnectionPool` substituído por conexões por request (Neon free tier)
-- ⏳ Passo 5 — Teste e2e produção
-- ⏳ Passo 6 — Merge `feat/flask-to-fastapi` → `3.1-dev`
-- ⏳ Passo 7 — Commit docs
+- ✅ Passo 4 — Deploy no Render: `itsdangerous` adicionado; conexões por request (Supabase + PgBouncer)
+- ✅ Passo 5 — Teste e2e: login 1.5s, `/auth/me` 275ms, sem cold start
+- ✅ Passo 6 — Merge `feat/flask-to-fastapi` → `3.1-dev` (commit `748dff1`)
+- ✅ Passo 7 — Docs actualizados
+
+### ✅ DB-02 — Migração Neon → Supabase (concluído 2026-05-15)
+
+- Cold start 45s eliminado (Supabase pausa após 1 semana vs 5 min no Neon)
+- `SimpleConnectionPool` incompatível com gunicorn fork → per-request connections via PgBouncer
+- `DATABASE_URL` (porta 6543, pooler IPv4) substituiu `NEON_DATABASE_URL`
+- 2 utilizadores migrados com `tools/migrate_neon_to_supabase.py`
 
 ---
 
