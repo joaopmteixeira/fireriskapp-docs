@@ -1,6 +1,9 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-15
+Última atualização: 2026-05-18
+
+> **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-29).
+> Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
 
 ---
 
@@ -14,7 +17,7 @@
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
-| Dark Mode (UI-07) | 🔄 Em progresso — infra + sidebar + cards POI/DPI/ESCI done; outras páginas pendentes |
+| Dark Mode (UI-07) | ✅ Completo — todas as páginas cobertas (commit `d2d6492`) |
 | Migração Flask → FastAPI (BACK-01) | ✅ Completo — 11/11 PASS (`feat/flask-to-fastapi`) |
 | ASCII enums DPI/CTI (BACK-03) | ✅ Completo (`feat/flask-to-fastapi`) |
 | Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
@@ -79,9 +82,9 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - `tailwind.config.js` — `darkMode: "class"`; novas cores ink (400, 800, 950)
 - `RiPage.tsx` e `CtiPage.tsx` — usam `getPrefs().decimalPlaces` em todos os `toFixed()`
 
-### 🔄 UI-07 — Dark Mode (em progresso)
+### ✅ UI-07 — Dark Mode (concluído 2026-05-18)
 
-Infra concluída. Cards POI/DPI/ESCI, sidebar, perfil e settings têm dark variants. Pendente: RiPage, CtiPage, InterventionsPage, páginas de autenticação.
+Todas as páginas cobertas: sidebar, POI/DPI/ESCI cards, ProfilePage, SettingsPage, RiPage, CtiPage, InterventionsPage, páginas de autenticação, PasswordInput.
 
 ---
 
