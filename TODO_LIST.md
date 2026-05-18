@@ -26,6 +26,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-09b | ✅ | Avatar de utilizador — coluna `avatar` DB, rota `POST /auth/profile/avatar`, upload frontend c/ canvas resize | 3.1-dev |
 | AUTH-09c | ✅ | ProfilePage redesign card compacto — 4 rows expansíveis inline (username, e-mail, password, apagar conta); sem modal separado | 3.1-dev |
 | AUTH-10 | ❌ | Sistema de roles/permissões: admin, engineer, viewer, demo | — |
+| AUTH-13 | ❌ | Hardening sessão: max_age configurável, Secure flag obrigatória em prod, CSRF protection | — |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
 | AUTH-12 | ✅ | Merge `feat/access-log` → `3.1-dev` | 3.1-dev |
 
