@@ -14,6 +14,7 @@ Referência operacional de todos os serviços externos usados no projeto. Para c
 | **Supabase** | Base de dados PostgreSQL (produção) | — | `chichorrofireriskapp@gmail.com` (Owner) | Free |
 | **Sentry** | Error monitoring — frontend + backend | — | `chichorrofireriskapp@gmail.com` | Free |
 | **UptimeRobot** | Uptime monitoring e alertas de downtime | — | `chichorrofireriskapp@gmail.com` | Free |
+| **Upstash Redis** | Rate limiting do backend (slowapi storage) | — | `chichorrofireriskapp@gmail.com` | Free |
 | **Resend** | Email transacional (SMTP para auth flows) | — | — | Free |
 | **Linear** | Gestão de tarefas e issues (FIR-XX) | [linear.app](https://linear.app) | email pessoal | Free |
 
@@ -53,6 +54,7 @@ Variáveis críticas: `DATABASE_URL`, `SECRET_KEY`, `SENTRY_DSN`, `RESEND_API_KE
 | **Cloudflare Pages** | 500 deploys/mês; sem limite de tráfego |
 | **Sentry** | 5 000 erros/mês; retenção de 30 dias |
 | **UptimeRobot** | 50 monitores; intervalo mínimo de 5 min |
+| **Upstash Redis** | 10 000 comandos/dia; 256 MB storage; fallback para `memory://` se URL em falta |
 | **Resend** | 3 000 emails/mês; 100/dia |
 
 ---
