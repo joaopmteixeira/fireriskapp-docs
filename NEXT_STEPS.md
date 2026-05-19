@@ -22,10 +22,21 @@
 | ASCII enums DPI/CTI (BACK-03) | ✅ Completo (`feat/flask-to-fastapi`) |
 | Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
-| Monitorização (INFRA-01) | ✅ Parcial — Sentry frontend + UptimeRobot ativos; backend Sentry pendente |
+| Monitorização (INFRA-01) | ✅ Completo — Sentry frontend + backend ativos; UptimeRobot com email alerts |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-05-19)
+
+### ✅ INFRA-01 — Monitorização completa (concluído 2026-05-19)
+
+- Frontend Sentry (`@sentry/react` + ErrorBoundary) ativo na Cloudflare Pages
+- Backend Sentry via `sentry-sdk` base + `@app.exception_handler(Exception)` — captura todos os erros 5xx sem depender de `StarletteIntegration`/`FastApiIntegration` (incompatíveis com Starlette 1.0.0 + Python 3.14); validado em produção
+- UptimeRobot: monitor `/health` a cada 5 min (147ms avg), email `chichorrofireriskapp@gmail.com` configurado
+- Fixes colaterais: starlette-csrf `re.compile()` (commit `5f195e1`), HEAD support no `/health` (commit `576a55c`)
 
 ---
 
@@ -140,15 +151,6 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
 ### UI-06 — Preferências / Definições
 
 Página de configurações do utilizador (conteúdo a especificar).
-
-### INFRA-01 — Monitorização ✅ Parcialmente concluído
-
-- **Frontend Sentry** ✅ — `@sentry/react`, DSN via Cloudflare Pages, ErrorBoundary ativo
-- **UptimeRobot** ✅ — monitor ativo em `/health` a cada 5 min, 147ms avg
-- **Backend Sentry** ❌ — revertido: incompatível com Starlette 1.0.0 + Python 3.14; a retomar quando sentry-sdk suportar Starlette 1.0
-- **Pendente (manual):** configurar email alert no UptimeRobot ("Set up alerts for me")
-
-Linear: FIR-22.
 
 ### DB-02 — Estratégia de Backups
 
