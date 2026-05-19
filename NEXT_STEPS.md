@@ -23,6 +23,7 @@
 | Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
 | Monitorização (INFRA-01) | ✅ Completo — Sentry frontend + backend ativos; UptimeRobot com email alerts |
+| Estratégia de Backups (DB-03) | ✅ Completo — `tools/backup_db.py`; `docs/deploy/ENV_VARS.md` |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
@@ -30,6 +31,12 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 ---
 
 ## Concluído Recentemente (2026-05-19)
+
+### ✅ DB-03 — Estratégia de Backups (concluído 2026-05-19)
+
+- `tools/backup_db.py` — exporta `users` e `access_log` para JSON timestamped em `tools/backups/` (gitignored); usa psycopg2, sem dependência de pg_dump
+- `docs/deploy/ENV_VARS.md` — referência completa de todas as env vars (backend + frontend) por serviço, com indicação de onde obter cada valor
+- `docs/plans/subplans/DB-03.md` — subplan com limitações do Supabase free tier e frequência de backup recomendada
 
 ### ✅ INFRA-01 — Monitorização completa (concluído 2026-05-19)
 
@@ -152,10 +159,6 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
 ### UI-06 — Preferências / Definições
 
 Página de configurações do utilizador (conteúdo a especificar).
-
-### DB-02 — Estratégia de Backups
-
-Garantir backup de: PostgreSQL Neon, env vars, configs de deployment.
 
 ---
 

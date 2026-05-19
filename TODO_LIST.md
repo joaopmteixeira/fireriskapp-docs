@@ -38,6 +38,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | --- | --- | --- | --- |
 | DB-01 | ✅ | Neon PostgreSQL em produção — env vars, deploy, TEST-01 aprovado | feat/access-log |
 | DB-02 | ✅ | Migração Neon → Supabase — elimina cold start 45s; per-request connections (PgBouncer) | 3.1-dev |
+| DB-03 | ✅ | Estratégia de backups — `tools/backup_db.py`, `docs/deploy/ENV_VARS.md`, subplan | 3.1-dev |
 
 ---
 

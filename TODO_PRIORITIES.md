@@ -200,9 +200,9 @@ Possíveis ferramentas: Sentry, BetterStack, UptimeRobot, Grafana, Render monito
 
 **Objetivos:** detetar erros, uptime, debugging, auditoria.
 
-### ❌ DB-02 — Criar Estratégia de Backups
+### ✅ DB-03 — Criar Estratégia de Backups *(concluído 2026-05-19)*
 
-Garantir backup de: PostgreSQL Neon, env vars, configs de deployment.
+`tools/backup_db.py` (export JSON por psycopg2), `docs/deploy/ENV_VARS.md` (referência completa de env vars), `docs/plans/subplans/DB-03.md`.
 
 ---
 
