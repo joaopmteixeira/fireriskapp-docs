@@ -35,7 +35,7 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 
 **v3.1** — implementação completa do modelo CHICHORRO 3.1 (dissertação Rui Sobral, 2019).
 
-- Backend: Python Flask → Render
+- Backend: Python FastAPI/ASGI → Render
 - Frontend: React + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
 
 ---

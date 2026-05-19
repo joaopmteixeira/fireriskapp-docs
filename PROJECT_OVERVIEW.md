@@ -18,7 +18,7 @@ Método: **CHICHORRO** (FEUP) — sucessão de dissertações de mestrado na Fac
 **Stack:**
 
 - Frontend: React 18 + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
-- Backend: Python Flask + gunicorn → Render
+- Backend: Python FastAPI/ASGI + gunicorn/uvicorn workers → Render
 - Repo: `joaopmteixeira/chichorro-fire-risk-app`
 - App live: `fireriskapp-demo.joaopmteixeira.net` · backend prod: `chichorro-fire-risk-app.onrender.com`
 - Backend dev (auth): `chichorro-fire-risk-app-dev.onrender.com` (branch `feat/access-log`)
@@ -94,7 +94,7 @@ Base: código legacy `chichorro_old/` (RI_v4.html + POI/CTI/DPI/ESCI.js).
 - Arquitetura declarativa (definitions files) para POI, DPI, ESCI
 - CTI com lógica própria (inputs numéricos + física complexa)
 - RI com aceitabilidade por período de construção
-- Auth com cookie Flask, sessão em sessionStorage, export/import de sessão JSON
+- Auth com cookie de sessão Starlette/FastAPI, sessão em sessionStorage, export/import de sessão JSON
 - Testes end-to-end em produção — aprovados
 
 ### Fase 2 — CHICHORRO 3.1 ✅ Quase concluído
@@ -154,7 +154,7 @@ Passos:
 Sistema de autenticação implementado no branch `feat/access-log`:
 
 - Login por username/password (env vars hardcoded para admins + tabela `users` SQLite para registos)
-- Registo com verificação de e-mail (Flask-Mail via SMTP Resend)
+- Registo com verificação de e-mail via SDK Resend
 - Recuperação de palavra-passe por e-mail (token 1h)
 - Log de acessos (login/logout) com IP e timestamp
 - Modal "sessão expirada" quando cookies são apagadas
@@ -182,7 +182,7 @@ Ver `docs/HOSTING_OPTIONS.md` para comparação detalhada de plataformas e preç
 
 ## Princípios de desenvolvimento
 
-1. A lógica de cálculo permanece em Python (Flask). O React é só UI.
+1. A lógica de cálculo permanece em Python/FastAPI. O React é só UI.
 2. Não alterar contratos de API durante migrações.
 3. Reproduzir regras de visibilidade condicional (`visibleWhen`) exatamente como no legacy.
 4. Cada fase só avança quando a anterior está verificada e testada em produção.

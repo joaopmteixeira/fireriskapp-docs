@@ -10,7 +10,7 @@ Produto: FireRiskApp — avaliação de risco de incêndio em edifícios histór
 
 O FireRiskApp é uma aplicação web para avaliação do risco de incêndio em edifícios existentes com valor patrimonial, baseada no método CHICHORRO desenvolvido no contexto da FEUP. A aplicação permite recolher dados técnicos do edifício, calcular os quatro fatores do modelo, obter o Índice de Risco de Incêndio (RI), classificar o risco numa escala A++ a F e simular medidas de intervenção que reduzem o risco.
 
-O produto atual corresponde à implementação web do modelo CHICHORRO v3.1, com frontend em React/TypeScript e backend Flask/Python. A lógica de cálculo vive no backend; o frontend deve fornecer uma experiência orientada, validada e persistente para técnicos que precisam de preencher muitos campos sem perder contexto.
+O produto atual corresponde à implementação web do modelo CHICHORRO v3.1, com frontend em React/TypeScript e backend FastAPI/Python. A lógica de cálculo vive no backend; o frontend deve fornecer uma experiência orientada, validada e persistente para técnicos que precisam de preencher muitos campos sem perder contexto.
 
 ---
 
@@ -259,7 +259,7 @@ POI, DPI e ESCI devem usar o padrão de ficheiros `*definitions.ts` + `*FactorSe
 
 - A aplicação deve correr em browsers modernos.
 - A sessão exportada deve ser JSON legível e versionável.
-- O build frontend deve ser servível pelo Flask em produção, além de suportar Cloudflare Pages.
+- O build frontend deve ser servível pelo backend FastAPI em produção, além de suportar Cloudflare Pages.
 
 ### RNF-05 — Performance
 
@@ -270,9 +270,9 @@ POI, DPI e ESCI devem usar o padrão de ficheiros `*definitions.ts` + `*FactorSe
 ### RNF-06 — Operação
 
 - Frontend: React + TypeScript + Vite + Tailwind CSS.
-- Backend: Flask + Python.
+- Backend: FastAPI + Python.
 - Deploy atual: Cloudflare Pages para frontend e Render para backend.
-- Deploy futuro recomendado: VPS com nginx, React estático e Flask/Gunicorn em proxy reverso.
+- Deploy futuro recomendado: VPS com nginx, React estático e FastAPI/Gunicorn-Uvicorn em proxy reverso.
 
 ---
 
@@ -408,7 +408,7 @@ Estados essenciais:
 Estado: concluída.
 
 - Migração base para React.
-- Backend Flask consolidado.
+- Backend FastAPI consolidado.
 - Fluxo POI → CTI → DPI → ESCI → RI.
 - Auth, sessão local e import/export.
 
@@ -482,6 +482,6 @@ Para detalhe de tarefas, estado atual e itens pendentes, ver [`docs/NEXT_STEPS.m
 - `docs/migration/PAGE_BACKEND_MAPPING.md`
 - `app/frontend/src/App.tsx`
 - `app/frontend/src/pages/RiPage.tsx`
-- `app/backend/Flask.py`
+- `app/backend/main.py` + `app/backend/routers/`
 - `app/backend/Chichorro_RI.py`
 - `app/backend/Chichorro_RI_inter.py`

@@ -1,16 +1,16 @@
 # Opções de Alojamento — CHICHORRO Fire Risk App
 
-Documento de comparação para decisão de infraestrutura de produção. Cobre backend (Python/Flask/gunicorn), frontend (React estático) e base de dados.
+Documento de comparação para decisão de infraestrutura de produção. Cobre backend (Python/FastAPI/gunicorn-uvicorn), frontend (React estático) e base de dados.
 
 ---
 
-## 1. Backend (Python / Flask / gunicorn)
+## 1. Backend (Python / FastAPI / gunicorn-uvicorn)
 
 | Plataforma | Free tier | Plano pago (mínimo) | Limitações free | Spin-down | Adequado para produção? |
 | --- | --- | --- | --- | --- | --- |
 | **Render** *(atual)* | Sim | Starter $7/mês | Ephemeral disk, 512 MB RAM | Sim (15 min) | Sim (Starter+) |
 | **Railway** | $5 crédito/mês | Usage-based (~$5–10/mês) | Crédito esgota-se | Não | Sim |
-| **Fly.io** | 3 VMs 256 MB | ~$1.94/mês/VM | RAM muito baixa para Flask | Não | Sim (2+ VMs) |
+| **Fly.io** | 3 VMs 256 MB | ~$1.94/mês/VM | RAM muito baixa para backend Python | Não | Sim (2+ VMs) |
 | **Heroku** | Não | Eco $5/mês (1 000 h) | — | Sim (Eco) | Sim (Basic+) |
 | **PythonAnywhere** | Sim (limitado) | Hacker $5/mês | CPU quota, sem websockets | Não | Para apps simples |
 | **Google Cloud Run** | 2 M req/mês grátis | Pay-per-use | Cold start ~1–2 s | Sim | Sim |

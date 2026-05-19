@@ -1,5 +1,8 @@
 # BACK-02 — Melhorar Logging
 
+> Nota de contexto: documento historico pre-migracao FastAPI. Referencias a Flask/Flask.py descrevem o estado antigo; o backend atual e FastAPI/ASGI em `app/backend/main.py`.
+
+
 **Estado:** ✅ Implementado  
 **Ficheiro alterado:** `app/backend/Flask.py`
 

@@ -310,7 +310,7 @@ Primeira versão pública do FireRiskApp como aplicação web, implementando o m
 ### Stack técnica *(inicial: 13/04/2026)*
 
 - Frontend: React 18 + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
-- Backend: Python Flask → Render
+- Backend: Python FastAPI/ASGI → Render
 
 ---
 

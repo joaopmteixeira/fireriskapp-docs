@@ -63,5 +63,5 @@ Variáveis críticas: `DATABASE_URL`, `SECRET_KEY`, `SENTRY_DSN`, `RESEND_API_KE
 
 | Serviço | Substituído por | Motivo |
 | --- | --- | --- |
-| Flask (backend) | FastAPI | Performance, tipagem, docs automáticas |
+| Backend legado Flask | FastAPI | Performance, tipagem, docs automáticas |
 | Neon PostgreSQL | Supabase | Supabase inclui auth, storage e dashboard integrado |

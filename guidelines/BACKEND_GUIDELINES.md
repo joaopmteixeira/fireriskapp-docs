@@ -12,9 +12,9 @@ Estrutura de ficheiros em `docs/ARCHITECTURE.md`.
 
 Toda a evolução de cálculo e regras deve preservar esta separação funcional enquanto a estrutura atual existir.
 
-### 2. `Flask.py` não deve concentrar toda a lógica
+### 2. `main.py` e routers não devem concentrar toda a lógica
 
-A camada Flask deve:
+A camada FastAPI deve:
 
 - receber pedidos
 - validar e fazer parsing inicial

@@ -1,5 +1,8 @@
 # Decisions Log
 
+> Nota de contexto: documento historico pre-migracao FastAPI. Referencias a Flask/Flask.py descrevem o estado antigo; o backend atual e FastAPI/ASGI em `app/backend/main.py`.
+
+
 ## 2026-05 — Autenticação e base de dados (AUTH-01…AUTH-05, DB-01)
 
 Decisão `AUTH-02`: e-mail de verificação e de reset enviados em `threading.Thread(daemon=True)` com `app.app_context()` dentro da thread.

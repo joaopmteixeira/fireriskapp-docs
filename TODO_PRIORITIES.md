@@ -100,11 +100,11 @@ Merge concluído em `3.1-dev` · push para GitHub ✅ · sync docs disparado ✅
 
 ### ✅ AUTH-07 — Rate Limiting nos Endpoints de Autenticação `Prioridade Alta`
 
-Flask-Limiter + Upstash Redis EU (free tier) · validado em produção dev ✅ · contadores visíveis no Data Browser Upstash ✅
+slowapi + Upstash Redis EU (free tier) · validado em produção dev ✅ · contadores visíveis no Data Browser Upstash ✅
 
 ### ✅ AUTH-08 — Regenerar Sessão Após Login `Prioridade Alta`
 
-`session.clear()` adicionado nos 3 pontos de login em `Flask.py` · mitigação session fixation (OWASP ASVS V3.3) ✅
+Sessao limpa nos pontos de login do backend FastAPI · mitigação session fixation (OWASP ASVS V3.3) ✅
 
 ### ✅ AUTH-06 — Hardening de Cookies de Sessão `Prioridade Alta`
 
@@ -146,7 +146,7 @@ Implementação completa em `3.1-dev`:
 - `AppLayout.tsx` — `shouldWarnOnExit` usa `prefs.warnOnExit`; sidebar username via `/auth/me`
 - `tailwind.config.js` — `darkMode: "class"`; paleta ink estendida (400, 800, 950)
 - `RiPage.tsx` + `CtiPage.tsx` — `toFixed(getPrefs().decimalPlaces)` em todos os resultados numéricos
-- Fix 405 avatar: `_serve_spa_or_asset` em Flask.py exclui agora `auth`, `admin`, `login`, `logout`, `me` do catch-all GET
+- Fix 405 avatar: `_serve_spa_or_asset` no backend FastAPI exclui agora `auth`, `admin`, `login`, `logout`, `me` do catch-all GET
 
 ---
 
@@ -172,7 +172,7 @@ Sistema de reporte de bugs na app: formulário que o utilizador submete quando e
 
 - ✅ AUTH-09 — backend: username, e-mail c/ re-verificação, password, apagar conta, avatar
 - ✅ AUTH-09a — ProfilePage: card layout, header gradient, accordion menu, MDI icons
-- ✅ AUTH-09b — Avatar: upload canvas resize 256×256, rota Flask, DB
+- ✅ AUTH-09b — Avatar: upload canvas resize 256×256, rota FastAPI, DB
 - ✅ AUTH-09c — ProfilePage card compacto: 4 rows expansíveis inline, pencil overlay no avatar
 
 ### ✅ UI-06 — Preferências / Definições *(ver secção de concluídos acima)*
@@ -221,7 +221,7 @@ Envelope uniforme `{"error": "INTERNAL_ERROR"}` para respostas 5xx. O handler at
 
 ### ✅ BACK-01 — Migração Flask → FastAPI *(concluído — ver CHANGELOG)*
 
-Migração completa do `Flask.py` para FastAPI com estrutura modular. 11/11 PASS. Branch `feat/flask-to-fastapi`.
+Migracao completa do backend legado para FastAPI com estrutura modular. 11/11 PASS. Branch `feat/flask-to-fastapi`.
 
 ### ✅ BACK-04 — Deploy FastAPI no Render *(concluído — ver CHANGELOG)*
 
