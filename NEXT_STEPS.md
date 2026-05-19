@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-18
+Última atualização: 2026-05-19
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-29).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -22,6 +22,7 @@
 | ASCII enums DPI/CTI (BACK-03) | ✅ Completo (`feat/flask-to-fastapi`) |
 | Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
+| Monitorização (INFRA-01) | 🔄 Em curso — Sentry + UptimeRobot |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
@@ -140,10 +141,9 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
 
 Página de configurações do utilizador (conteúdo a especificar).
 
-### INFRA-01 — Monitorização
+### INFRA-01 — Monitorização 🔄 Em curso
 
-Ferramentas candidatas: Sentry, BetterStack, UptimeRobot, Render monitoring.
-Objetivos: detetar erros, uptime, debugging, auditoria.
+Sentry (error tracking backend + frontend) + UptimeRobot (uptime monitoring /health). Linear: FIR-22.
 
 ### DB-02 — Estratégia de Backups
 
