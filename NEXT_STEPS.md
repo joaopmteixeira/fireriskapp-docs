@@ -33,7 +33,8 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 
 ### ✅ INFRA-01 — Monitorização completa (concluído 2026-05-19)
 
-- Frontend Sentry (`@sentry/react` + ErrorBoundary) ativo na Cloudflare Pages
+- Frontend Sentry (`@sentry/react` + ErrorBoundary + Session Replay) ativo na Cloudflare Pages; validado em produção — erro capturado com replay da sessão anexado
+- Session Replay: `replaysSessionSampleRate: 0.0` + `replaysOnErrorSampleRate: 1.0` — grava replay apenas em erros, com `maskAllText` e `blockAllMedia`
 - Backend Sentry via `sentry-sdk` base + `@app.exception_handler(Exception)` — captura todos os erros 5xx sem depender de `StarletteIntegration`/`FastApiIntegration` (incompatíveis com Starlette 1.0.0 + Python 3.14); validado em produção
 - UptimeRobot: monitor `/health` a cada 5 min (147ms avg), email `chichorrofireriskapp@gmail.com` configurado
 - Fixes colaterais: starlette-csrf `re.compile()` (commit `5f195e1`), HEAD support no `/health` (commit `576a55c`)
