@@ -161,3 +161,16 @@ Exemplos:
 - `AuthPendingScreen.tsx`
 
 Razão: isso deve ser tratado como compatibilidade temporária e não como arquitetura final desejada.
+
+---
+
+## 2026-05-19 — Auditoria de segurança SECURITY_AUDIT_INITIAL
+
+Decisão `SEC/prefixos`: novos IDs de segurança distribuídos por domínio (SEC-04..09, DB-04, INFRA-03..04, BACK-05..06) em vez de criar prefixo novo `HARD-`.
+Razão: "HARD" não é intuitivo fora de contexto. Os domínios existentes cobrem os gaps e mantêm consistência com o vocabulário do projeto.
+
+Decisão `docs/security/ gitignored`: ficheiros de auditoria de segurança mantidos apenas localmente, excluídos do repositório.
+Razão: documentos de auditoria descrevem vulnerabilidades em detalhe — não devem ser públicos enquanto os problemas não estiverem corrigidos.
+
+Decisão `C-03 reclassificado CRÍTICO+`: qualquer utilizador autenticado (não apenas admin) consegue aceder a `/admin/users` e `/admin/log` — verificado no código (`require_auth` sem role check em `routers/admin.py`). Prioridade máxima de correção.
+Razão: não requer conhecimento técnico — basta conhecer o URL. Expõe e-mail, username e logs de acesso de todos os utilizadores registados.

@@ -2,6 +2,33 @@
 
 ---
 
+## 3.1-dev — INFRA-01 + DB-03: Monitorização + Backups (2026-05-19)
+
+### INFRA-01 — Monitorização completa *(19/05/2026)* ✅
+
+Sentry ativo em produção (frontend + backend) e UptimeRobot a monitorizar o endpoint `/health`.
+
+- `app/frontend/src/main.tsx` — `@sentry/react` inicializado com `Sentry.init()`; `<Sentry.ErrorBoundary>` envolve a app; Session Replay com `replaysOnErrorSampleRate: 1.0` (apenas erros) e `maskAllText: true`; DSN via `VITE_SENTRY_DSN`
+- `app/backend/main.py` — `sentry_sdk.init()` com DSN via `SENTRY_DSN`; `@app.exception_handler(Exception)` captura todos os erros 5xx e faz `sentry_sdk.capture_exception()` — sem dependência de integrações Starlette/FastAPI (incompatíveis com Starlette 1.0.0 + Python 3.14)
+- `app/backend/main.py` — endpoint `/health` passa a usar `@app.api_route(..., methods=["GET", "HEAD"])` para suporte ao UptimeRobot (que usa HEAD)
+- `app/backend/main.py` — `re.compile()` aplicado às `exempt_urls` do `CSRFMiddleware` (bug desde AUTH-13: `starlette-csrf` exige `re.Pattern`, não strings)
+- `app/backend/requirements.txt` — `sentry-sdk>=2.0,<3` adicionado
+- `app/frontend/package.json` — `@sentry/react` adicionado
+- `docs/SERVICES.md` — criado: lista completa de todos os serviços externos, roles, configurações e notificações
+- Validado em produção: erro capturado com replay de sessão anexado no Sentry; UptimeRobot a 147ms avg
+
+### DB-03 — Estratégia de Backups *(19/05/2026)* ✅
+
+Backup automático da base de dados implementado via GitHub Actions, com documentação completa.
+
+- `.github/scripts/backup_db.py` — script commitado que exporta `users` + `access_log` para JSON timestamped em `backup/<timestamp>/`; usa `psycopg2` (sem pg_dump); lê `DATABASE_URL` do ambiente
+- `.github/workflows/backup-db.yml` — workflow que corre de 3 em 3 dias (cron `0 3 */3 * *`) + `workflow_dispatch`; instala `psycopg2-binary`; guarda artifact com 90 dias de retenção
+- `docs/deploy/ENV_VARS.md` — criado: referência completa de todas as env vars do projeto (backend Render + frontend Cloudflare Pages), sem valores, com indicação de onde obter cada um
+- `docs/TOOLS.md` — criado: documentação commitada de todos os scripts em `tools/` (backup_db, create_test_user, dev-backend, migrate_neon_to_supabase, pdf_to_ai_markdown, fix_fences, fix_markdown_lint)
+- Workflow validado em produção: run #1 verde, artifact gerado com sucesso; secret `DATABASE_URL` configurado no repositório GitHub
+
+---
+
 ## 3.1-dev — AUTH-13: Session Hardening + Dark Mode completo (2026-05-18)
 
 ### AUTH-13 — Hardening de segurança da sessão *(18/05/2026)* ✅

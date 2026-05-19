@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-15
+Última atualização: 2026-05-19
 
 ---
 
@@ -17,7 +17,7 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ### Backend
 
-- Flask (Python)
+- FastAPI (Python)
 
 ### Base de Dados
 
@@ -25,7 +25,7 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ### Sistema de Autenticação
 
-- Flask Session Cookies
+- Starlette Session Cookies
 - Sessões server-side
 - Verificação de e-mail
 - Recuperação de palavra-passe
@@ -41,7 +41,7 @@ Já foram identificados:
 
 - hashing de passwords
 - proteção SQL injection
-- sessões Flask
+- sessões FastAPI/Starlette
 - verificação e-mail
 - reset password
 - logging acessos
@@ -183,22 +183,53 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`
 
 **IMPORTANTE:** As permissões devem ser verificadas no backend. Frontend NÃO é segurança.
 
+### ❌ SEC-08 — Remover `legacyLogin.ts` e Limpar `.env`
+
+Ficheiro `legacyLogin.ts` lê `VITE_LOGIN_USER_*` e `VITE_LOGIN_PASS_*`. Variáveis `VITE_*` são incluídas no bundle JS compilado e ficam visíveis em texto claro no browser. Remover antes de qualquer utilizador externo ter acesso à plataforma.
+
+### ❌ BACK-05 — Validação de Enums/Tamanhos nos Schemas Pydantic
+
+Campos como `POI_CC_Comb`, `DPI_OGS_*` são `str` livres — devem ser `Literal["Sim", "Não"]` ou enum Pydantic. Payloads malformados podem causar cálculos de risco silenciosamente errados.
+
+### ❌ DB-04 — Migrations Alembic
+
+Substituir DDL no arranque da app (`CREATE TABLE`, `ALTER TABLE`) por migrations versionadas com rollback e histórico auditável. Necessário antes de deploy definitivo em produção.
+
+### ❌ SEC-07 — Hardening do Upload de Avatar
+
+Bloquear `data:image/svg+xml` e validar magic bytes em `/auth/profile/avatar`. SVG pode conter JavaScript inline e causar XSS se renderizado diretamente no browser.
+
+### ❌ SEC-09 — CSP Header Completo
+
+Adicionar `Content-Security-Policy` header no backend ou proxy. Bloquear `inline scripts` e `unsafe-eval`. Pré-requisito para deploy com utilizadores externos.
+
+### ❌ INFRA-04 — Endpoint `/health/db`
+
+Health check com query real à BD. O `/health` atual responde `ok` mesmo com BD em baixo — impede restart automático no Render em caso de falha de ligação ao Supabase.
+
+### ❌ SEC-04 — Política Explícita de Password Hashing
+
+Documentar e fixar parâmetros de hashing (`werkzeug` PBKDF2-SHA256 com iterações explícitas, ou migrar para Argon2id). Previne mudança silenciosa se a versão do `werkzeug` mudar.
+
+### ❌ SEC-05 — Hash dos Tokens de Reset/Verificação na BD
+
+Guardar `hashlib.sha256(token).hexdigest()` em vez do token em claro. Previne uso direto de tokens ativos se a BD for comprometida.
+
+### ❌ BACK-06 — Error Handler JSON Normalizado
+
+Envelope uniforme `{"error": "INTERNAL_ERROR"}` para respostas 5xx. O handler atual re-lança a exceção sem garantir formato JSON.
+
 ### ✅ BACK-01 — Migração Flask → FastAPI *(concluído — ver CHANGELOG)*
 
 Migração completa do `Flask.py` para FastAPI com estrutura modular. 11/11 PASS. Branch `feat/flask-to-fastapi`.
 
-### 🔄 BACK-04 — Deploy FastAPI no Render *(em progresso)*
-
-Passos 1-3 concluídos (fixes `database.py`, merge, paridade). Passo 4 (deploy Render) em curso após fixes `itsdangerous` e conexões per-request para Neon free tier.
-Ver `docs/plans/BACK-04.md`.
+### ✅ BACK-04 — Deploy FastAPI no Render *(concluído — ver CHANGELOG)*
 
 ### ✅ BACK-02 — Melhorar Logging *(concluído — ver CHANGELOG)*
 
-### ❌ INFRA-01 — Implementar Monitorização
+### ✅ INFRA-01 — Implementar Monitorização *(concluído 2026-05-19)*
 
-Possíveis ferramentas: Sentry, BetterStack, UptimeRobot, Grafana, Render monitoring.
-
-**Objetivos:** detetar erros, uptime, debugging, auditoria.
+Sentry (frontend + backend) + UptimeRobot `/health` a cada 5 min. Session Replay em erros.
 
 ### ✅ DB-03 — Criar Estratégia de Backups *(concluído 2026-05-19)*
 
@@ -208,11 +239,17 @@ Possíveis ferramentas: Sentry, BetterStack, UptimeRobot, Grafana, Render monito
 
 ## Prioridade Baixa / Futuro
 
-### 🔄 UI-07 — Dark Mode (em progresso)
+### ❌ INFRA-03 — Dockerfile + Compose
 
-Infra concluída: `darkMode: "class"` no Tailwind, `applyTheme()` em `main.tsx`, paleta `ink` estendida.
-Componentes com dark mode: sidebar, ProfilePage, SettingsPage, Card, Field, Button, ModuleGlobalValueCard, PoiFactorSection, DpiFactorSection, EsciFactorSection.
-**Pendente (UI-07 completo):** RiPage, CtiPage, InterventionsPage, páginas de autenticação (Login, SignUp, ForgotPassword, ResetPassword).
+Containerização para deploy reproduzível. Para o Render (PaaS) atual, a ausência não é bloqueante. Relevante para migração futura para VPS/Proxmox.
+
+### ❌ SEC-06 — Política de Logs — Sem PII em Produção
+
+Garantir que tokens e PII não são impressos em produção. Verificar que `DEBUG` não está ativo no Render. Links de reset/verificação devem ser suprimidos quando o provider de e-mail está configurado.
+
+### ✅ UI-07 — Dark Mode *(concluído 2026-05-18 — ver CHANGELOG)*
+
+Todas as páginas cobertas: sidebar, cards POI/DPI/ESCI, ProfilePage, SettingsPage, RiPage, CtiPage, InterventionsPage, páginas de autenticação.
 
 ### ❌ FEAT-01 — Gráfico de Impacto de Intervenções
 
@@ -270,7 +307,7 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 
 O projeto atual NÃO usa JWT. Isto NÃO é um problema.
 
-A arquitetura atual (React + Flask + sessões Flask) é totalmente válida.
+A arquitetura atual (React + FastAPI + sessões Starlette) é totalmente válida.
 
 JWT NÃO é automaticamente:
 
@@ -278,7 +315,7 @@ JWT NÃO é automaticamente:
 - mais seguro
 - melhor
 
-Sessões Flask podem até ser mais seguras e simples neste tipo de arquitetura.
+Sessões Starlette/FastAPI podem até ser mais seguras e simples neste tipo de arquitetura.
 
 ---
 
@@ -289,9 +326,9 @@ Manter:
 ```text
 React
 +
-Flask Sessions
+FastAPI + Starlette Sessions
 +
-PostgreSQL Neon
+PostgreSQL Supabase
 ```
 
 E focar em: hardening, organização, deployment, testes, monitorização.

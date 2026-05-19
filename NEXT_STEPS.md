@@ -13,7 +13,7 @@
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-11, AUTH-12) |
-| Hardening de segurança | ✅ Completo (SEC-01..03, AUTH-13: CSRF, max_age, Secure flag) |
+| Hardening de segurança | 🔄 Parcial (SEC-01..03, AUTH-13 ✅; SEC-04..09, BACK-05..06 pendentes — auditoria 2026-05-19) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
@@ -134,6 +134,48 @@ Todas as páginas cobertas: sidebar, POI/DPI/ESCI cards, ProfilePage, SettingsPa
 
 ## Pendente — Prioridade Média
 
+### AUTH-10 — Sistema de Roles/Permissões
+
+Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
+
+**Importante:** verificação de permissões sempre no backend. Frontend não é segurança.
+
+### SEC-08 — Remover `legacyLogin.ts`
+
+Ficheiro `legacyLogin.ts` lê `VITE_LOGIN_USER_*`/`VITE_LOGIN_PASS_*`. Variáveis `VITE_*` ficam em texto claro no bundle JS. Remover antes de utilizadores externos terem acesso.
+
+### BACK-05 — Validação de Enums nos Schemas Pydantic
+
+Campos de cálculo são `str` livres — payloads malformados podem causar resultados de risco incorretos. Usar `Literal` ou enum Pydantic.
+
+### DB-04 — Migrations Alembic
+
+Versioning de schema com rollback. Remover DDL do arranque da app.
+
+### SEC-07 — Hardening Avatar Upload
+
+Bloquear `data:image/svg+xml` e validar magic bytes em `/auth/profile/avatar`.
+
+### SEC-09 — CSP Header
+
+`Content-Security-Policy` header completo no backend ou proxy.
+
+### INFRA-04 — `/health/db`
+
+Health check com query real à BD para deteção de falha de ligação ao Supabase.
+
+### SEC-04 — Política de Password Hashing
+
+Fixar parâmetros PBKDF2-SHA256 explicitamente ou migrar para Argon2id.
+
+### SEC-05 — Hash de Tokens na BD
+
+Guardar `sha256(token)` em vez do token em claro para tokens de reset e verificação.
+
+### BACK-06 — Error Handler JSON
+
+Envelope uniforme `{"error": "INTERNAL_ERROR"}` para respostas 5xx.
+
 ### UI-02 — Página de Documentação
 
 Página de DOCS integrada na app com documentação e manuais de utilização.
@@ -150,19 +192,17 @@ Página de perguntas frequentes integrada na app.
 
 Formulário de reporte de bugs na app. Canal de destino a definir: e-mail, GitHub Issues ou ClickUp.
 
-### AUTH-10 — Sistema de Roles/Permissões
-
-Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
-
-**Importante:** verificação de permissões sempre no backend. Frontend não é segurança.
-
-### UI-06 — Preferências / Definições
-
-Página de configurações do utilizador (conteúdo a especificar).
-
 ---
 
 ## Pendente — Prioridade Baixa / Futuro
+
+### INFRA-03 — Dockerfile + Compose
+
+Containerização para deploy reproduzível. Para o Render (PaaS) atual, a ausência não é bloqueante. Relevante para migração futura para VPS/Proxmox.
+
+### SEC-06 — Política de Logs — Sem PII em Produção
+
+Garantir que tokens e PII não são impressos em produção. Verificar que `DEBUG` não está ativo no Render.
 
 ### FEAT-01 — Gráfico de Impacto de Intervenções
 
@@ -181,10 +221,6 @@ Após cálculo completo, guardar a avaliação associada a um edifício:
 - Latitude / Longitude + pin no mapa
 
 Resultados (POI, CTI, DPI, ESCI, RI) ficam guardados por utilizador e em tabela geral na base de dados.
-
-### UI-07 — Dark Mode
-
-Tema escuro na aplicação.
 
 ### FEAT-03 — Chatbot AI
 
