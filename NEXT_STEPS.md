@@ -13,7 +13,7 @@
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-11, AUTH-12) |
-| Hardening de segurança | ✅ Completo (SEC-01..03, feat/security mergeado) |
+| Hardening de segurança | ✅ Completo (SEC-01..03, AUTH-13: CSRF, max_age, Secure flag) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
@@ -25,6 +25,30 @@
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-05-18)
+
+### ✅ AUTH-13 — Hardening de segurança da sessão (concluído 2026-05-18)
+
+- Cookie de sessão passa a expirar automaticamente após 8h (configurável via `CHICHORRO_SESSION_MAX_AGE`)
+- `session_secure=True` por omissão quando `ENV=production` — não precisa de ser definido manualmente
+- Proteção CSRF ativa em todos os endpoints POST (exceto login/logout/health)
+- Frontend envia automaticamente token CSRF em todos os pedidos
+- `Flask.py` legado eliminado do repositório
+
+### ✅ UI-07 — Dark Mode completo (concluído 2026-05-18)
+
+- RiPage, CtiPage, InterventionsPage e todas as páginas de autenticação cobertas
+- Títulos e subtítulos das páginas POI, DPI, ESCI com suporte dark mode
+- Paleta neutra dark revisada; border de card header oculta quando colapsada
+
+### ✅ Correções de sidebar e avatar (2026-05-18)
+
+- Botão "Limpar sessão" restaurado na sidebar (tinha sido removido acidentalmente)
+- `SidebarNavItem` passa a ter prop `variant` (default/warning/danger) em vez de `danger: boolean` — "Limpar sessão" em âmbar, "Sair" em vermelho
+- Avatar atualiza instantaneamente na sidebar após gravação (dispatch `PROFILE_UPDATED_EVENT`)
 
 ---
 

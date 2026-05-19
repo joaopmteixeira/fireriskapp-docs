@@ -2,6 +2,41 @@
 
 ---
 
+## 3.1-dev — AUTH-13: Session Hardening + Dark Mode completo (2026-05-18)
+
+### AUTH-13 — Hardening de segurança da sessão *(18/05/2026)* ✅
+
+Correção de três gaps de segurança identificados na cookie de sessão (FIR-30).
+
+- `app/backend/config.py` — `session_secure` passa a `True` por omissão quando `ENV=production`; novo campo `session_max_age` (default 8h, configurável via `CHICHORRO_SESSION_MAX_AGE`)
+- `app/backend/main.py` — `SessionMiddleware` passa `max_age`; `CSRFMiddleware` (starlette-csrf) adicionado com double-submit cookie — login/logout/health isentos; CORS passa a aceitar header `x-csrftoken`
+- `app/frontend/src/lib/api.ts` — `getCsrfToken()` lê cookie `csrftoken`; `postJson` inclui `x-csrftoken` em todos os POST
+- `app/backend/requirements.txt` — `starlette-csrf>=1.0,<2` adicionado
+- `app/backend/Flask.py` — **eliminado** (backend legado v3.0, supersedido pelo FastAPI)
+- `docs/deploy/DEPLOY.md` — tabela de env vars de sessão documentada
+
+### UI-07 — Dark Mode completo *(18/05/2026)* ✅
+
+- `RiPage.tsx` — scale classes, result cards, RI boxes, banners, limit card
+- `CtiPage.tsx` — headings, secções CI/VHE/VVE, Input sub-component, ResultBlock, CTI final box
+- `InterventionsPage.tsx` — lista de intervenções, ResultPanel, custo, escala
+- Páginas de autenticação (Login, SignUp, ForgotPassword, ResetPassword) — labels, inputs, banners
+- `PoiPage.tsx`, `DpiPage.tsx`, `EsciPage.tsx` — títulos e subtítulos com suporte dark mode
+- `tailwind.config.js` — paleta neutra dark revisada; border de card header escondida quando colapsada
+
+### Sidebar e avatar *(18/05/2026)*
+
+- `AppLayout.tsx` — botão "Limpar sessão" restaurado (tinha sido removido acidentalmente no commit `c5cbf11`); `SidebarNavItem` refatorado com prop `variant: "default" | "warning" | "danger"` — "Limpar sessão" usa âmbar, "Sair" usa vermelho
+- `ProfilePage.tsx` — dispatch `PROFILE_UPDATED_EVENT` após gravação de avatar; sidebar atualiza instantaneamente sem recarregar
+
+### Correções diversas *(18/05/2026)*
+
+- `fix(auth)` — removido gate `AUTH_NOT_CONFIGURED` que bloqueava logins de utilizadores DB sem pares estáticos definidos (`routers/auth.py`)
+- `fix(dev)` — porta do proxy Vite corrigida de 50 → 8000 (`vite.config.ts`)
+- `chore` — `docs/DEV_LOCAL.md` adicionado ao `.gitignore` (ficheiro local com referências a credenciais)
+
+---
+
 ## 3.1-dev — BACK-04 + DB-02: Deploy FastAPI + Supabase (2026-05-15)
 
 ### BACK-04 — Deploy FastAPI no Render *(15/05/2026)* ✅
