@@ -19,7 +19,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-04 | ✅ | Recuperação de palavra-passe — ForgotPasswordPage, ResetPasswordPage | feat/access-log |
 | AUTH-05 | ✅ | Modal "sessão expirada" — SESSION_EXPIRED_EVENT, AppLayout | feat/access-log |
 | AUTH-06 | ✅ | Verificar hardening cookies: HTTPONLY, SECURE, SAMESITE + renomear cookie (anti-fingerprinting) | feat/security |
-| AUTH-07 | ✅ | Rate limiting com Flask-Limiter + Upstash Redis nos endpoints /auth/* | feat/security |
+| AUTH-07 | ✅ | Rate limiting com slowapi + Upstash Redis nos endpoints /auth/* | feat/security |
 | AUTH-08 | ✅ | Regenerar sessão após login (mitigação session fixation) | feat/security |
 | AUTH-09 | ✅ | Editar perfil: backend routes (username, e-mail c/ re-verificação, password, apagar conta) | 3.1-dev |
 | AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
@@ -157,7 +157,7 @@ Todos os itens concluídos. Detalhe completo em [NEXT_STEPS.md](NEXT_STEPS.md).
 | A1 | ✅ | Análise CTI 3.1 — diferenças identificadas |
 | A1b | ✅ | Atualizar Chichorro_CTI.py (assinatura 3.1, sympy fix, paridade 11/11) |
 | A3 | ✅ | Batch: substituir POI / ESCI / DPI + completar RI |
-| A4 | ✅ | Flask.py + Chichorro_RI_inter.py — endpoints 3.1 + /RI/interv |
+| A4 | ✅ | Backend legado + Chichorro_RI_inter.py — endpoints 3.1 + /RI/interv |
 | B1 | ✅ | poiDefinitions.ts — adicionar POI_CC_Idade |
 | B2 | ✅ | esciDefinitions.ts — ESCI_GP_Auto, ESCI_EXT_Formacao, ESCI_RIA_CS |
 | B3 | ✅ | dpiDefinitions.ts — DPI_OGS de 7→4 campos |

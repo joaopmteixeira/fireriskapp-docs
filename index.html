@@ -19,7 +19,7 @@
   <script>
     window.$docsify = {
       name: 'FireRiskApp Docs',
-      repo: '',
+      repo: 'https://github.com/joaopmteixeira/fireriskapp-docs',
       loadSidebar: true,
       subMaxLevel: 2,
       auto2top: true,
@@ -33,9 +33,22 @@
       alias: {
         '/.*/_sidebar.md': '/_sidebar.md',
       },
+      copyCode: {
+        buttonText: 'Copiar',
+        errorText: 'Erro',
+        successText: 'Copiado!',
+      },
+      pagination: {
+        previousText: '← Anterior',
+        nextText: 'Próximo →',
+        crossChapter: true,
+      },
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
 </body>
 </html>
