@@ -22,7 +22,7 @@
 | ASCII enums DPI/CTI (BACK-03) | ✅ Completo (`feat/flask-to-fastapi`) |
 | Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
-| Monitorização (INFRA-01) | 🔄 Em curso — Sentry + UptimeRobot |
+| Monitorização (INFRA-01) | ✅ Parcial — Sentry frontend + UptimeRobot ativos; backend Sentry pendente |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
@@ -141,9 +141,14 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
 
 Página de configurações do utilizador (conteúdo a especificar).
 
-### INFRA-01 — Monitorização 🔄 Em curso
+### INFRA-01 — Monitorização ✅ Parcialmente concluído
 
-Sentry (error tracking backend + frontend) + UptimeRobot (uptime monitoring /health). Linear: FIR-22.
+- **Frontend Sentry** ✅ — `@sentry/react`, DSN via Cloudflare Pages, ErrorBoundary ativo
+- **UptimeRobot** ✅ — monitor ativo em `/health` a cada 5 min, 147ms avg
+- **Backend Sentry** ❌ — revertido: incompatível com Starlette 1.0.0 + Python 3.14; a retomar quando sentry-sdk suportar Starlette 1.0
+- **Pendente (manual):** configurar email alert no UptimeRobot ("Set up alerts for me")
+
+Linear: FIR-22.
 
 ### DB-02 — Estratégia de Backups
 
