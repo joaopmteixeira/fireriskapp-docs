@@ -20,7 +20,7 @@ Método: **CHICHORRO** (FEUP) — sucessão de dissertações de mestrado na Fac
 - Frontend: React 18 + TypeScript + Vite + Tailwind CSS → Cloudflare Pages
 - Backend: Python FastAPI/ASGI + gunicorn/uvicorn workers → Render
 - Repo: `joaopmteixeira/chichorro-fire-risk-app`
-- App live: `fireriskapp-demo.joaopmteixeira.net` · backend prod: `chichorro-fire-risk-app.onrender.com`
+- App live: `chichorrofireriskapp.joaopmteixeira.net` · backend prod: `chichorro-fire-risk-app.onrender.com`
 - Backend dev (auth): `chichorro-fire-risk-app-dev.onrender.com` (branch `feat/access-log`)
 
 **Branches activos:**
@@ -166,7 +166,7 @@ Sistema de autenticação implementado no branch `feat/access-log`:
 
 ### Atual
 
-- Frontend: Cloudflare Pages (auto-deploy do GitHub) · domínio: `fireriskapp-demo.joaopmteixeira.net`
+- Frontend: Cloudflare Pages (auto-deploy do GitHub) · domínio: `chichorrofireriskapp.joaopmteixeira.net`
 - Backend prod: Render free tier (`chichorro-fire-risk-app.onrender.com`) — cold start ~50s após inatividade
 - Backend dev: Render free tier (`chichorro-fire-risk-app-dev.onrender.com`, branch `feat/access-log`)
 - E-mail: Resend SMTP · domínio verificado: `fireriskapp-demo.joaopmteixeira.net`

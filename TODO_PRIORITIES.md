@@ -287,6 +287,13 @@ Tipos: unit tests, integration tests, e2e tests.
 
 Possível stack: GitHub Actions + Render Deploy Hooks.
 
+### ❌ DOCS-01 — Migrar documentação para VitePress (FIR-31)
+
+Substituir o Docsify pelo VitePress. Gera HTML estático (melhor SEO),
+usa Vite (já no stack), e tem um tema mais cuidado. Migração simples:
+os `.md` existentes funcionam praticamente sem alterações.
+Só faz sentido se a documentação passar a ser pública e indexada.
+
 ---
 
 ## Backlog — Versão Futura (pós-3.1)

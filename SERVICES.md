@@ -10,7 +10,7 @@ Referência operacional de todos os serviços externos usados no projeto. Para c
 | --- | --- | --- | --- | --- |
 | **GitHub** | Repositório de código-fonte | [github.com/joaopmteixeira/chichorro-fire-risk-app](https://github.com/joaopmteixeira/chichorro-fire-risk-app) | email pessoal | Free |
 | **Render** | Backend hosting (FastAPI/Python) | [chichorro-fire-risk-app.onrender.com](https://chichorro-fire-risk-app.onrender.com) | `chichorrofireriskapp@gmail.com` | Free |
-| **Cloudflare Pages** | Frontend hosting (React/Vite) | [fireriskapp-demo.joaopmteixeira.net](https://fireriskapp-demo.joaopmteixeira.net) | `chichorrofireriskapp@gmail.com` | Free |
+| **Cloudflare Pages** | Frontend hosting (React/Vite) | [chichorrofireriskapp.joaopmteixeira.net](https://chichorrofireriskapp.joaopmteixeira.net) | `chichorrofireriskapp@gmail.com` | Free |
 | **Supabase** | Base de dados PostgreSQL (produção) | — | `chichorrofireriskapp@gmail.com` (Owner) | Free |
 | **Sentry** | Error monitoring — frontend + backend | — | `chichorrofireriskapp@gmail.com` | Free |
 | **UptimeRobot** | Uptime monitoring e alertas de downtime | — | `chichorrofireriskapp@gmail.com` | Free |
@@ -27,7 +27,7 @@ Referência operacional de todos os serviços externos usados no projeto. Para c
 | Ambiente | Branch | Serviço | URL |
 | --- | --- | --- | --- |
 | Produção (backend) | `3.1-dev` | Render | [chichorro-fire-risk-app.onrender.com](https://chichorro-fire-risk-app.onrender.com) |
-| Produção (frontend) | `3.1-dev` | Cloudflare Pages | [fireriskapp-demo.joaopmteixeira.net](https://fireriskapp-demo.joaopmteixeira.net) |
+| Produção (frontend) | `3.1-dev` | Cloudflare Pages | [chichorrofireriskapp.joaopmteixeira.net](https://chichorrofireriskapp.joaopmteixeira.net) |
 
 Deploy automático por push para a branch `3.1-dev`.
 

@@ -148,6 +148,14 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 
 ---
 
+## DOCS — Documentação
+
+| ID | Estado | Descrição | Branch |
+| --- | --- | --- | --- |
+| DOCS-01 | ❌ | Migrar documentação de Docsify para VitePress — build estático, melhor SEO, integração com Vite stack existente. Linear: FIR-31. | — |
+
+---
+
 ## CHICHORRO 3.1 — Implementação (Blocos A/B/C)
 
 Todos os itens concluídos. Detalhe completo em [NEXT_STEPS.md](NEXT_STEPS.md).

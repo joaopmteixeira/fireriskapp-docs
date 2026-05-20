@@ -2,7 +2,7 @@
 
 Última atualização: 2026-05-19
 
-> **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-29).
+> **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
 
 ---
@@ -24,6 +24,7 @@
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
 | Monitorização (INFRA-01) | ✅ Completo — Sentry frontend + backend ativos; UptimeRobot com email alerts |
 | Estratégia de Backups (DB-03) | ✅ Completo — `tools/backup_db.py`; `docs/deploy/ENV_VARS.md` |
+| Documentação | ❌ DOCS-01 — migração VitePress (backlog, FIR-31) |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
@@ -233,6 +234,11 @@ Unit tests, integration tests, e2e tests. Objetivos: estabilidade, prevenção d
 ### INFRA-02 — Pipeline CI/CD
 
 GitHub Actions + Render Deploy Hooks. Objetivos: deploy automático, testes automáticos, linting, validação de build.
+
+### DOCS-01 — Migrar documentação para VitePress (FIR-31)
+
+VitePress como substituto do Docsify: build estático, SEO, Vite-native.
+Os `.md` existentes migram sem alterações. Pré-requisito: nenhum.
 
 ---
 
