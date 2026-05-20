@@ -18,6 +18,9 @@ export default defineConfig({
     search: {
       provider: "local",
     },
+    socialLinks: [
+      { icon: "github", link: "https://github.com/joaopmteixeira/fireriskapp-docs" },
+    ],
     nav: [
       { text: "Início", link: "/" },
       { text: "Projeto", link: "/PROJECT_OVERVIEW" },
