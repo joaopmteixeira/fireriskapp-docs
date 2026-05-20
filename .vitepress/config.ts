@@ -52,11 +52,10 @@ export default defineConfig({
         ],
       },
       {
-        text: "Deploy e Infraestrutura",
+        text: "Infraestrutura",
         items: [
           { text: "Opções de Hosting", link: "/HOSTING_OPTIONS" },
           { text: "Serviços", link: "/SERVICES" },
-          { text: "Deploy", link: "/deploy/DEPLOY" },
         ],
       },
       {
