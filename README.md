@@ -27,11 +27,9 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 - [PRD](PRD.md) — requisitos de produto, escopo, critérios de aceitação e roadmap
 - [Arquitetura](ARCHITECTURE.md) — estrutura de ficheiros, endpoints, sessionStorage
 - [Método de Cálculo](METODO_CALCULO.md) — fórmulas, fatores e subvariáveis do CHICHORRO
-- [Histórico do Método](HISTORY_AI.md) — evolução das versões CHICHORRO 2.0 → 3.1
 
 ## Desenvolvimento
 
-- [Guia Local](DEV_LOCAL.md) — como correr o projeto em desenvolvimento
 - [Serviços & APIs](SERVICES.md) — Supabase, Sentry, Render, Cloudflare
 - [Ferramentas](TOOLS.md) — scripts utilitários em `tools/`
 - [Design](DESIGN.md) — paleta, tipografia, componentes
@@ -40,11 +38,9 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 - [Guidelines Backend](guidelines/BACKEND_GUIDELINES.md) — convenções FastAPI/Python
 - [Guidelines Frontend](guidelines/FRONTEND_GUIDELINES.md) — convenções React/TypeScript
 
-## Deploy & Infraestrutura
+## Infraestrutura
 
 - [Opções de Hosting](HOSTING_OPTIONS.md) — comparação de plataformas
-- [Deploy](deploy/DEPLOY.md) — passos de deploy em Render e Cloudflare Pages
-- [Variáveis de Ambiente](deploy/ENV_VARS.md) — todas as variáveis necessárias
 
 ## Planeamento
 
@@ -52,22 +48,11 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 - [TODO](TODO.md) — lista de tarefas geral
 - [Tarefas por ID](TODO_LIST.md) — tarefas organizadas por ID Linear
 - [Tarefas por Prioridade](TODO_PRIORITIES.md) — tarefas ordenadas por prioridade
-- [Plano Auth](plans/main/AUTH_PLAN.md) — plano de autenticação
-- [Plano Segurança](plans/main/SECURITY_PLAN.md) — plano de segurança
 
 ## Decisões & Histórico
 
 - [Decisões Técnicas](DECISIONS_LOG.md) — registo de decisões de arquitetura
 - [Changelog](CHANGELOG.md) — histórico de versões e alterações
-- [Avaliação de Segurança](security/SECURITY_ASSESSMENT.md) — análise de riscos
-- [Auditoria Inicial](security/SECURITY_AUDIT_INITIAL.md) — auditoria de segurança inicial
-- [Auditoria 2026-05-12](audits/AUDIT-2026-05-12.md) — auditoria mais recente
-
-## Migração v3.1
-
-- [Mapeamento Backend](migration/PAGE_BACKEND_MAPPING.md) — páginas ↔ endpoints
-- [Diff Analysis](migration/V3_1_DIFF_ANALYSIS.md) — diferenças entre v3.0 e v3.1
-- [Matriz de Correspondência](migration/V3_1_MATCHUP_MATRIX.md) — variáveis v3.0 vs v3.1
 
 ---
 
