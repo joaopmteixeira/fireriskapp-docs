@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-19
+Última atualização: 2026-05-20
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -152,7 +152,7 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| DOCS-01 | ❌ | Migrar documentação de Docsify para VitePress — build estático, melhor SEO, integração com Vite stack existente. Linear: FIR-31. | — |
+| DOCS-01 | ✅ | Migrar documentação de Docsify para VitePress — build estático, SEO, deploy em docs.chichorrofireriskapp.joaopmteixeira.net. Linear: FIR-31. | 3.1-dev |
 
 ---
 

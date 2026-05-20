@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-19
+Última atualização: 2026-05-20
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -24,10 +24,25 @@
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
 | Monitorização (INFRA-01) | ✅ Completo — Sentry frontend + backend ativos; UptimeRobot com email alerts |
 | Estratégia de Backups (DB-03) | ✅ Completo — `tools/backup_db.py`; `docs/deploy/ENV_VARS.md` |
-| Documentação | ❌ DOCS-01 — migração VitePress (backlog, FIR-31) |
+| Documentação | ✅ Completo (DOCS-01 — VitePress em produção; docs.chichorrofireriskapp.joaopmteixeira.net) |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-05-20)
+
+### ✅ DOCS-01 — Migração para VitePress (concluído 2026-05-20)
+
+- Docsify substituído por VitePress ^1.6.4: build estático, SEO nativo, Vite-native
+- `docs/.vitepress/config.ts` — sidebar com 6 secções, PT-PT, `cleanUrls`, `lastUpdated`, search local, `socialLinks` a apontar para `fireriskapp-docs`
+- `docs/index.md` — homepage com hero e quick links
+- `docs/_sidebar.md` apagado (Docsify legacy — causava 18 dead links no build VitePress)
+- `docs/README.md` reescrito — apenas links para ficheiros públicos; removidos: `deploy/`, `plans/`, `security/`, `audits/`, `migration/`, `HISTORY_AI.md`
+- `.github/workflows/sync-docs.yml` — `audits/` excluída do sync (segurança)
+- Deploy: Cloudflare Pages via `fireriskapp-docs` (repo público); domínio `docs.chichorrofireriskapp.joaopmteixeira.net`; build `npm ci && npm run build`; output `.vitepress/dist`
+- Build local 0 dead links; build Cloudflare verde
 
 ---
 
@@ -234,11 +249,6 @@ Unit tests, integration tests, e2e tests. Objetivos: estabilidade, prevenção d
 ### INFRA-02 — Pipeline CI/CD
 
 GitHub Actions + Render Deploy Hooks. Objetivos: deploy automático, testes automáticos, linting, validação de build.
-
-### DOCS-01 — Migrar documentação para VitePress (FIR-31)
-
-VitePress como substituto do Docsify: build estático, SEO, Vite-native.
-Os `.md` existentes migram sem alterações. Pré-requisito: nenhum.
 
 ---
 

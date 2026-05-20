@@ -2,6 +2,23 @@
 
 ---
 
+## 3.1-dev — DOCS-01: Migração para VitePress (2026-05-20)
+
+### DOCS-01 — Documentação pública em VitePress *(20/05/2026)* ✅
+
+Docsify substituído por VitePress; documentação pública em `docs.chichorrofireriskapp.joaopmteixeira.net`.
+
+- `docs/.vitepress/config.ts` — VitePress ^1.6.4; PT-PT; `cleanUrls`; `lastUpdated`; sidebar 6 secções; search local; `socialLinks` → `fireriskapp-docs`
+- `docs/package.json` — VitePress ^1.6.4 como `devDependency`; scripts `dev`, `build`, `preview`
+- `docs/index.md` — homepage com hero, descrição e quick links
+- `docs/_sidebar.md` — apagado: ficheiro Docsify legado (causava 18 dead links no build VitePress)
+- `docs/README.md` — reescrito: apenas links para ficheiros públicos; removidos links para `deploy/`, `plans/`, `security/`, `audits/`, `migration/`, `HISTORY_AI.md`
+- `.github/workflows/sync-docs.yml` — `audits/` adicionada ao rsync `--exclude` e ao step de limpeza do target (auditoria de segurança não deve ser pública)
+- Deploy: Cloudflare Pages via repo público `joaopmteixeira/fireriskapp-docs`; branch `main`; build `npm ci && npm run build`; output `.vitepress/dist`; domínio `docs.chichorrofireriskapp.joaopmteixeira.net`
+- Build local verificado: 0 dead links; build Cloudflare verde
+
+---
+
 ## 3.1-dev — INFRA-01 + DB-03: Monitorização + Backups (2026-05-19)
 
 ### INFRA-01 — Monitorização completa *(19/05/2026)* ✅
