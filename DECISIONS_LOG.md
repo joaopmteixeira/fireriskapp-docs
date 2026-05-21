@@ -177,3 +177,31 @@ Razão: documentos de auditoria descrevem vulnerabilidades em detalhe — não d
 
 Decisão `C-03 reclassificado CRÍTICO+`: qualquer utilizador autenticado (não apenas admin) consegue aceder a `/admin/users` e `/admin/log` — verificado no código (`require_auth` sem role check em `routers/admin.py`). Prioridade máxima de correção.
 Razão: não requer conhecimento técnico — basta conhecer o URL. Expõe e-mail, username e logs de acesso de todos os utilizadores registados.
+
+---
+
+## 2026-05-20 — Reorganização retroativa do histórico git
+
+Decisão `retroactive-branch-extraction`: commits feitos inline em `3.1-dev` foram isolados
+em branches próprias (`auth/profile`, `db/backup`, `infra/sentry`, `docs/vitepress`) e o
+histórico de `3.1-dev` foi reescrito com merges `--no-ff`.
+Razão: o grafo git não refletia o trabalho por feature; branches visíveis facilitam code
+review, navegação e auditoria futura.
+
+Decisão `git-commit-tree para feat/flask-to-fastapi`: em vez de re-merger `feat/flask-to-fastapi`
+(o que causaria conflitos com os commits da B-section já cherry-picked), usou-se
+`git commit-tree <tree> -p <tip> -p <original-merge-parent>` para criar um merge commit
+com o tree exato do original sem executar nenhum merge real.
+Razão: re-merge tinha common ancestor diferente do original; `commit-tree` cria o commit
+diretamente sem resolver conflitos, preservando o conteúdo byte-a-byte.
+
+Decisão `git-rebase-onto para auth/profile`: após cherry-pick da B-section, o base original
+de `auth/profile` (`3ce018f`) tinha equivalente cherry-picked (`8347187`); usou-se
+`git rebase --onto 8347187 3ce018f auth/profile` para re-assentar a branch no novo base.
+Razão: sem o rebase, o merge de `auth/profile` conflituaria (common ancestor `070c66a`
+causava ambos os lados a conterem as mesmas alterações da B-section).
+
+Decisão `force-with-lease em todas as branches reconstruídas`: `--force-with-lease` em vez
+de `--force` para todas as branches reescritas (incluindo `3.1-dev`).
+Razão: garante que não se sobrescreve trabalho que possa ter sido pushado entretanto
+por outro processo; verificação de segurança mínima num force push.

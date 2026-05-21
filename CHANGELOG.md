@@ -2,6 +2,33 @@
 
 ---
 
+## 3.1-dev — Git history cleanup: retroactive branch extractions (2026-05-20)
+
+### Reorganização retroativa do histórico git *(20/05/2026)*
+
+Commits que tinham sido feitos diretamente em `3.1-dev` foram isolados em branches próprias,
+e o histórico de `3.1-dev` foi reescrito para mostrar merges `--no-ff` explícitos — grafo
+igual ao que seria produzido com git flow.
+
+Branches criadas/extraídas:
+
+- `auth/profile` — AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c, UI-06 (7 commits; perfil de utilizador e definições)
+- `db/backup` — DB-03 (3 commits; estratégia de backups e GitHub Actions workflow)
+- `infra/sentry` — INFRA-01 (13 commits; Sentry frontend + backend + UptimeRobot)
+- `docs/vitepress` — DOCS-01 (5 commits; migração Docsify → VitePress)
+
+Técnicas usadas:
+
+- `git cherry-pick` para reconstituir commits em novo base
+- `git rebase --onto` para corrigir common ancestor de `auth/profile` após mudança de base
+- `git commit-tree` para preservar `feat/flask-to-fastapi` como merge commit sem re-merge (evita conflitos)
+- `git push --force-with-lease` em todas as branches reconstruídas
+- Verificação: `git diff <old-HEAD> reconstruct-3.1-dev` = vazio (conteúdo final idêntico)
+
+Não há alterações de código — apenas reorganização do grafo git.
+
+---
+
 ## 3.1-dev — DOCS-01: Migração para VitePress (2026-05-20)
 
 ### DOCS-01 — Documentação pública em VitePress *(20/05/2026)* ✅
