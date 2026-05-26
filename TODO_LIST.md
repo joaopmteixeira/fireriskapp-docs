@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-20 (UI-07 corrigido para ✅)
+Última atualização: 2026-05-26 (CSRF split-domain fix; Alembic migration 0002 disable RLS; secção 8 verificação produção concluída)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -19,7 +19,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-04 | ✅ | Recuperação de palavra-passe — ForgotPasswordPage, ResetPasswordPage | feat/access-log |
 | AUTH-05 | ✅ | Modal "sessão expirada" — SESSION_EXPIRED_EVENT, AppLayout | feat/access-log |
 | AUTH-06 | ✅ | Verificar hardening cookies: HTTPONLY, SECURE, SAMESITE + renomear cookie (anti-fingerprinting) | feat/security |
-| AUTH-07 | ✅ | Rate limiting com slowapi + Upstash Redis nos endpoints /auth/* | feat/security |
+| AUTH-07 | ✅ | Rate limiting com slowapi + Upstash Redis nos endpoints /auth/* + fail-fast Redis no arranque (A-02) | feat/security + audit-fix |
 | AUTH-08 | ✅ | Regenerar sessão após login (mitigação session fixation) | feat/security |
 | AUTH-09 | ✅ | Editar perfil: backend routes (username, e-mail c/ re-verificação, password, apagar conta) | 3.1-dev |
 | AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
@@ -38,8 +38,10 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | --- | --- | --- | --- |
 | DB-01 | ✅ | Neon PostgreSQL em produção — env vars, deploy, TEST-01 aprovado | feat/access-log |
 | DB-02 | ✅ | Migração Neon → Supabase — elimina cold start 45s; per-request connections (PgBouncer) | 3.1-dev |
-| DB-03 | ✅ | Estratégia de backups — `tools/backup_db.py`, `docs/deploy/ENV_VARS.md`, subplan | 3.1-dev |
-| DB-04 | ❌ | Migrations Alembic — versioning de schema, rollback, remover DDL do arranque da app | — |
+| DB-03 | ✅ | Estratégia de backups — `tools/backup_db.py`, GitHub Actions workflow, `tools/restore_db.py`, subplan (A-04: descoberta dinâmica + restore + DEPLOY_PRODUCTION.md) | 3.1-dev + audit-fix |
+| DB-04 | ✅ | Migrations Alembic — versioning de schema, rollback, remover DDL do arranque da app | audit-fix |
+| DB-05 | ✅ | Least privilege DB — utilizador `chichorro_runtime` criado; `DATABASE_URL_MIGRATIONS` para Alembic; ações manuais Supabase/Render/GitHub pendentes | audit-fix |
+| DB-06 | ❌ | Migrar camada de dados para SQLAlchemy ORM — autogenerate Alembic, connection pooling, remover psycopg2 custom wrapper | — |
 
 ---
 
@@ -47,15 +49,16 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| SEC-01 | ✅ | Rever configuração CORS — allow_headers, métodos, max_age, fallback dev explícito | feat/security |
-| SEC-02 | ✅ | HTTPS confirmado no Render + HSTS via `@app.after_request` quando `SESSION_SECURE=1` | feat/security |
+| SEC-01 | ✅ | CORS estrito em produção — sem `*`, https:// obrigatório, `FRONTEND_URL` incluída nas origins (A-01) | audit-fix |
+| SEC-02 | ✅ | HTTPS obrigatório em produção — fail-fast `FRONTEND_URL`/`BACKEND_URL` (https://), override `app_base_url`, `X-Forwarded-Host` nginx (C-01) | feat/security, sec/c01-tls-end-to-end |
 | SEC-03 | ✅ | X-Content-Type-Options, X-Frame-Options, Referrer-Policy via `@app.after_request`; CSRF coberto por camadas existentes | feat/security |
 | SEC-04 | ❌ | Política explícita de password hashing — algoritmo e parâmetros fixos (Argon2id ou PBKDF2-SHA256 com iterações documentadas) | — |
 | SEC-05 | ❌ | Hash dos tokens de reset/verificação na BD — guardar SHA-256 do token, não o token em claro | — |
-| SEC-06 | ❌ | Política de logs — garantir que tokens e PII não são impressos em produção | — |
+| SEC-06 | ✅ | Política de logs — garantir que tokens e PII não são impressos em produção (A-05) | audit-fix |
 | SEC-07 | ❌ | Bloquear SVG e validar magic bytes no endpoint `/auth/profile/avatar` | — |
-| SEC-08 | ❌ | Remover `legacyLogin.ts` e limpar variáveis `VITE_LOGIN_*` do `.env` local | — |
-| SEC-09 | ❌ | CSP header completo (`Content-Security-Policy`) no backend ou proxy | — |
+| SEC-08 | ✅ | Remover `legacyLogin.ts` e limpar variáveis `VITE_LOGIN_*` do `.env` local (M-05) | audit-fix |
+| SEC-09 | ✅ | CSP + Permissions-Policy no backend (`add_security_headers`) e Cloudflare Pages (`_headers`) (M-01) | audit-fix |
+| SEC-10 | ✅ | Fail-fast secrets em produção — `CHICHORRO_SECRET_KEY` e outros secrets obrigatórios; sem arranque silencioso com defaults inseguros (C-04) | audit-fix |
 
 ---
 
@@ -109,6 +112,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | BACK-04 | ✅ | Merge feat/flask-to-fastapi → produção; deploy FastAPI no Render (Supabase, 1.5s login) | 3.1-dev |
 | BACK-05 | ❌ | Validação enums/max_length nos schemas Pydantic (poi, cti, dpi, esci) — prevenir payloads inválidos nos cálculos | — |
 | BACK-06 | ❌ | Error handler JSON normalizado — envelope uniforme `{"error": "INTERNAL_ERROR"}` para erros 5xx | — |
+| BACK-07 | ✅ | Estabilizar naming de rotas API — decisão documentada: manter paths actuais; aliases legacy removidos (`/login`, `/logout`, `/me`, `/RI_interv`); nginx VPS config documentada (B-02) | audit-fix |
 
 ---
 
@@ -116,10 +120,12 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| INFRA-01 | ✅ | Monitorização: Sentry (frontend + backend) + UptimeRobot `/health` | 3.1-dev |
+| INFRA-01 | ✅ | Monitorização: Sentry (frontend + backend) + UptimeRobot `/health`; M-04 (audit-fix): X-Request-ID middleware, backup failure email Resend, UptimeRobot `/health/db` (manual) | 3.1-dev + audit-fix |
 | INFRA-02 | ❌ | Pipeline CI/CD: GitHub Actions + Render Deploy Hooks | — |
 | INFRA-03 | ❌ | Dockerfile + Compose local/prod — containerização para deploy reproduzível | — |
-| INFRA-04 | ❌ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação | — |
+| INFRA-04 | ✅ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação (A-06) | audit-fix |
+| INFRA-05 | ✅ | Cache-Control headers: `no-store` no backend + `_headers` Cloudflare Pages; `/assets/*` com `immutable` (M-02) | audit-fix |
+| INFRA-06 | ❌ | VPS hardening operacional (diferido) — apenas relevante se arquitetura mudar de Render para VPS/Proxmox | — |
 
 ---
 

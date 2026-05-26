@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-19
+Última atualização: 2026-05-26 (CSRF split-domain fix; Alembic migration 0002 disable RLS; secção 8 verificação produção concluída; todos os 16 planos de audit confirmados em produção)
 
 ---
 
@@ -21,7 +21,7 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ### Base de Dados
 
-- PostgreSQL (Neon)
+- PostgreSQL (Supabase)
 
 ### Sistema de Autenticação
 
@@ -82,6 +82,34 @@ Monitorização
 
 ## Concluído Recentemente
 
+### ✅ Verificação pós-deploy secção 8 + bugs de produção corrigidos (2026-05-26) `Prioridade Alta`
+
+**CSRF split-domain** — cookie CSRF do backend (`api.*`) era ilegível pelo frontend (`chichorrofireriskapp.*`); corrigido com `cookie_domain` no `CSRFMiddleware` (parsado de `FRONTEND_URL`); confirmado nos headers HTTP em produção ✅
+
+**Supabase RLS** — Row Level Security ativo por defeito tornava todas as linhas invisíveis para `chichorro_runtime` → login sempre 401 mesmo com password correta, INSERTs em `access_log` falhavam com `InsufficientPrivilege`; desativado via SQL Editor + Alembic migration `0002_disable_rls.py` ✅
+
+**Secção 8 completa** — todos os 16 planos do ciclo de audit confirmados em produção; login com `JoaoTeixeira` funciona; endpoints `/health` e `/health/db` respondem corretamente; sistema de backups automáticos operacional ✅
+
+---
+
+### ✅ B-01 — Consolidação docs de deploy (2026-05-24) `Prioridade Baixa`
+
+`docs/deploy/ENV_VARS.md` reescrito com todas as variáveis actuais ✅ · `docs/deploy/DEPLOY.md` corrigido (uvicorn, referência a `DEPLOY_PRODUCTION.md`) ✅ · `DEPLOY_CLOUD_VPS.md` apagado ✅ · **audit-fix 16/16 completo**
+
+---
+
+### ✅ BACK-07 / B-02 — Naming de rotas API (2026-05-24) `Prioridade Baixa`
+
+Decisão documentada: manter paths actuais (`/POI/*`, `/CTI/*`, etc.) — subdomain `api.*` fornece contexto; prefixo `/api` seria redundante ✅ · Aliases legacy removidos (`/login`, `/logout`, `/me`, `/RI_interv`) — dead code confirmado por grep ✅ · Nginx VPS prefix-strip config documentada em `DEPLOY_PRODUCTION.md` ✅
+
+---
+
+### ✅ INFRA-01 / M-04 — Observabilidade mínima (2026-05-24) `Prioridade Média`
+
+M-04 (audit-fix): `X-Request-ID` middleware em `main.py` — UUID por pedido, header na resposta, tag Sentry `request_id` no exception handler ✅ · step `if: failure()` em `backup-db.yml` via Resend API para `eng.joao.pm.teixeira@gmail.com` ✅ · **Ações manuais pendentes:** UptimeRobot monitor `/health/db`, Sentry alert rule (> 10 eventos/h), `RESEND_API_KEY` GitHub Secret
+
+---
+
 ### ✅ DB-01 — Neon PostgreSQL — Validação em Produção `Prioridade Alta`
 
 Neon configurado no Render ✅ · Deploy verde ✅ · TEST-01 aprovado ✅
@@ -110,17 +138,39 @@ Sessao limpa nos pontos de login do backend FastAPI · mitigação session fixat
 
 HTTPONLY ✅ · SECURE via `CHICHORRO_SESSION_SECURE=1` ✅ · SAMESITE=Lax ✅ · cookie renomeado para `chichorro_session` (anti-fingerprinting) ✅
 
-### ✅ SEC-01 — Revisão da Configuração CORS `Prioridade Alta`
+### ✅ SEC-01 — CORS estrito em produção (A-01, 2026-05-22) `Prioridade Alta`
 
-`allow_headers` restringido a `["Content-Type"]` ✅ · métodos limitados a GET/POST/OPTIONS ✅ · `max_age=86400` ✅ · fallback dev explícito (`localhost:5173`) ✅
+`allow_headers` restringido ✅ · métodos GET/POST/OPTIONS ✅ · `max_age=86400` ✅ · fallback dev explícito ✅
+A-01 (audit-fix): sem `*`, `https://` obrigatório, `FRONTEND_URL` deve estar incluída nas origins ✅
 
-### ✅ SEC-02 — HTTPS Obrigatório em Produção `Prioridade Alta`
+### ✅ SEC-02 — HTTPS Obrigatório em Produção (C-01 reforçado) `Prioridade Alta`
 
 Render força HTTPS no reverse proxy ✅ · `CHICHORRO_SESSION_SECURE=1` ativo ✅ · HSTS via `@app.after_request` em produção ✅
+C-01 (2026-05-21): fail-fast `FRONTEND_URL`/`BACKEND_URL` obrigatórias e https:// em produção ✅ · `app_base_url` overridden por `FRONTEND_URL` ✅ · `X-Forwarded-Host` adicionado ao nginx ✅ · Flask→FastAPI nos comentários nginx ✅
 
 ### ✅ SEC-03 — Headers de Segurança `Prioridade Alta`
 
 `X-Content-Type-Options: nosniff` ✅ · `X-Frame-Options: DENY` ✅ · `Referrer-Policy: strict-origin-when-cross-origin` ✅ · CSRF coberto por camadas existentes ✅ · CSP diferida para Cloudflare Pages ✅
+
+### ✅ INFRA-05 — Cache-Control no edge e backend (M-02) `Prioridade Média`
+
+M-02 (2026-05-22): `Cache-Control: no-store` adicionado ao middleware `add_security_headers` em `main.py` ✅ · `_headers` Cloudflare Pages actualizado com `no-store` em `/*` e `public, max-age=31536000, immutable` em `/assets/*` ✅ · assets Vite fingerprintados cacheados 1 ano de forma segura ✅ · branch `audit-fix`
+
+### ✅ SEC-09 — CSP e Permissions-Policy (M-01) `Prioridade Média`
+
+M-01 (2026-05-22): `Content-Security-Policy` e `Permissions-Policy` adicionados ao middleware `add_security_headers` em `main.py` ✅ · CSP cobre Google Fonts, Sentry ingest, sem `'unsafe-inline'` ✅ · `app/frontend/public/_headers` criado para Cloudflare Pages com `connect-src` para backend + HSTS preload ✅ · branch `audit-fix`
+
+### ✅ AUTH-07 — Fail-fast Redis no Arranque (A-02) `Prioridade Alta`
+
+A-02 (2026-05-22): `_check_redis_startup()` adicionado ao lifespan em `main.py` — pinga Redis em produção antes de aceitar requests ✅ · URL inválida falha no arranque com `RuntimeError A-02` ✅ · token Redis nunca exposto nos logs (`type(exc).__name__` em vez de `str(exc)`) ✅ · sem package novo (`limits[redis]` já inclui `redis`) ✅ · branch `audit-fix`
+
+### ✅ SEC-10 — Fail-fast Secrets em Produção (C-04) `Prioridade Alta`
+
+C-04 (2026-05-21): `CHICHORRO_SECRET_KEY=dev-change-me` rejeita arranque ✅ · `DATABASE_URL` obrigatória ✅ · `CHICHORRO_CORS_ORIGINS` obrigatória ✅ · `UPSTASH_REDIS_URL` obrigatória (sem fallback `memory://` silencioso) ✅ · `RESEND_API_KEY` obrigatória ✅ · `MAIL_DEFAULT_SENDER` obrigatória ✅ · `deploy/env.production.example` e `deploy/env.development.example` criados ✅ · 8/8 testes de import aprovados ✅
+
+### ✅ AUTH-06 — Cookies Secure/SameSite atrás do proxy (C-02) `Prioridade Alta`
+
+C-02 (2026-05-21): `field_validator` restringe `CHICHORRO_SESSION_SAMESITE` a Lax/Strict ✅ · `wsgi.py` documenta start command Render com `--proxy-headers --forwarded-allow-ips='*'` ✅ · `env.production.example` documenta Render start command ✅ · nota: `ProxyHeadersMiddleware` removido no Starlette 1.0.0 — uvicorn flags são a abordagem correta ✅ · **ação pendente:** atualizar Start Command no dashboard Render
 
 ---
 
@@ -183,17 +233,21 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`
 
 **IMPORTANTE:** As permissões devem ser verificadas no backend. Frontend NÃO é segurança.
 
-### ❌ SEC-08 — Remover `legacyLogin.ts` e Limpar `.env`
+### ✅ SEC-08 — Remover `legacyLogin.ts` e Limpar `.env`
 
-Ficheiro `legacyLogin.ts` lê `VITE_LOGIN_USER_*` e `VITE_LOGIN_PASS_*`. Variáveis `VITE_*` são incluídas no bundle JS compilado e ficam visíveis em texto claro no browser. Remover antes de qualquer utilizador externo ter acesso à plataforma.
+M-05 (2026-05-21): `legacyLogin.ts` eliminado (código morto, nunca importado) ✅ · `VITE_LOGIN_USER_1`/`VITE_LOGIN_PASS_1` removidos do `.env` local ✅ · build TypeScript 0 erros ✅ · branch `audit-fix`
 
 ### ❌ BACK-05 — Validação de Enums/Tamanhos nos Schemas Pydantic
 
 Campos como `POI_CC_Comb`, `DPI_OGS_*` são `str` livres — devem ser `Literal["Sim", "Não"]` ou enum Pydantic. Payloads malformados podem causar cálculos de risco silenciosamente errados.
 
-### ❌ DB-04 — Migrations Alembic
+### ✅ DB-05 — Least Privilege DB User *(concluído 2026-05-24, branch audit-fix)*
 
-Substituir DDL no arranque da app (`CREATE TABLE`, `ALTER TABLE`) por migrations versionadas com rollback e histórico auditável. Necessário antes de deploy definitivo em produção.
+`alembic/env.py` lê `DATABASE_URL_MIGRATIONS` primeiro (superuser postgres para migrations); `DATABASE_URL` passa a apontar para `chichorro_runtime` (apenas DML). `deploy/env.production.example` atualizado. Ações manuais pendentes: criar role no Supabase SQL Editor, atualizar env vars no Render, atualizar secret GitHub Actions.
+
+### ✅ DB-04 — Migrations Alembic *(concluído 2026-05-22, branch audit-fix)*
+
+Alembic configurado com psycopg2 puro (sem SQLAlchemy ORM). `init_db()` guardado para dev SQLite. Migration `0001_initial_schema.py` cobre schema completo atual. Release Command Render: `cd app/backend && alembic upgrade head`.
 
 ### ❌ SEC-07 — Hardening do Upload de Avatar
 
@@ -231,21 +285,34 @@ Migracao completa do backend legado para FastAPI com estrutura modular. 11/11 PA
 
 Sentry (frontend + backend) + UptimeRobot `/health` a cada 5 min. Session Replay em erros.
 
-### ✅ DB-03 — Criar Estratégia de Backups *(concluído 2026-05-19)*
+### ✅ DB-03 — Estratégia de Backups e Restore *(atualizado 2026-05-22 — A-04)*
 
-`tools/backup_db.py` (export JSON por psycopg2), `docs/deploy/ENV_VARS.md` (referência completa de env vars), `docs/plans/subplans/DB-03.md`.
+`tools/backup_db.py` (export JSON, descoberta dinâmica de tabelas), GitHub Actions
+`backup-db.yml` (cron a cada 3 dias, artifact 90 dias), `tools/restore_db.py`
+(restore com `--confirm`, rollback automático), `docs/deploy/ENV_VARS.md`,
+`server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` (secção GitHub Secrets).
 
 ---
 
 ## Prioridade Baixa / Futuro
 
+### ❌ DB-06 — Migrar camada de dados para SQLAlchemy ORM
+
+Refactor da camada de dados: substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x.
+Desbloqueia autogenerate de migrations no Alembic, connection pooling nativo e type safety
+nos modelos `User`/`AccessLog`.
+
+Decidido fora do escopo do audit de segurança (`audit-fix`) — a ser implementado em branch
+próprio após o audit. Pode substituir DB-04 (Alembic sem ORM) se implementado primeiro.
+Ver subplan: `docs/plans/subplans/DB-06_UNDONE.md`.
+
 ### ❌ INFRA-03 — Dockerfile + Compose
 
 Containerização para deploy reproduzível. Para o Render (PaaS) atual, a ausência não é bloqueante. Relevante para migração futura para VPS/Proxmox.
 
-### ❌ SEC-06 — Política de Logs — Sem PII em Produção
+### ✅ SEC-06 — Política de Logs — Sem PII em Produção *(concluído 2026-05-22, branch audit-fix)*
 
-Garantir que tokens e PII não são impressos em produção. Verificar que `DEBUG` não está ativo no Render. Links de reset/verificação devem ser suprimidos quando o provider de e-mail está configurado.
+A-05: `_TokenPathFilter` registado no `uvicorn.access` logger — tokens em `/auth/verify/{token}` e `/auth/verify-email-change/{token}` substituídos por `[REDACTED]` nos logs do Render ✅ · guard `env != "production"` nos `print()` de `email.py` (defesa em profundidade) ✅ · Sentry `send_default_pii=False` já correto ✅
 
 ### ✅ UI-07 — Dark Mode *(concluído 2026-05-18 — ver CHANGELOG)*
 

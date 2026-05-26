@@ -2,6 +2,166 @@
 
 ---
 
+## audit-fix — Ciclo de audit segurança cloud (2026-05-21)
+
+### Auditoria de segurança cloud — planos C-01, C-04, M-05, C-02 *(21/05/2026)*
+
+Branch `audit-fix` criada a partir de `c559e34` (base limpa). Todos os planos do ciclo de
+audit Codex vão para esta branch única; merge em `3.1-dev` no final do ciclo completo.
+
+#### Infraestrutura de audit — `server/`
+
+- `server/cloud_vps_audit_plans/` — 16 planos de audit (C-01..04, A-01..06, M-01..05, B-01..02) com análise Codex + opinião técnica `_CLAUDE.md` + resumo de implementação
+- `server/security_audit_plans/` — 12 fases de auditoria VPS (Proxmox/cloud) criadas pelo Codex
+- `server/HANDOFF_FOR_CLAUDE.md`, `HANDOFF_TODO_COMPATIBILITY_FOR_CLAUDE.md`, `README.md` — documentação de handoff entre Codex e Claude
+- `server/IMPLEMENTATION_PLAN_ORDER_CLAUDE.md` — ordem de implementação justificada dos 16 planos
+
+#### C-01 — TLS end-to-end, fail-fast URLs produção (SEC-02) *(commit `a7ce7ca`)*
+
+- `app/backend/config.py` — novos campos `env`, `frontend_url`, `backend_url`; `model_validator(mode="after")` fail-fast em produção: `FRONTEND_URL`/`BACKEND_URL` obrigatórias e `https://`; `app_base_url` overridden por `FRONTEND_URL` em produção
+- `deploy/nginx-chichorro.example.conf` — comentários Flask→FastAPI; `X-Forwarded-Host $host` adicionado
+
+#### C-04 — Fail-fast secrets em produção (SEC-10) *(commit `4dc1a02`)*
+
+- `app/backend/config.py` — `validate_production_urls` estendido: `CHICHORRO_SECRET_KEY=dev-change-me` rejeita arranque; `DATABASE_URL`, `CHICHORRO_CORS_ORIGINS`, `UPSTASH_REDIS_URL`, `RESEND_API_KEY`, `MAIL_DEFAULT_SENDER` obrigatórias em produção
+- `deploy/env.production.example` criado — referência de vars para dashboard Render
+- `deploy/env.development.example` criado — referência de vars para dev local
+
+#### M-05 — Remover credenciais frontend (SEC-08) *(commit `a5d29c5`)*
+
+- `app/frontend/src/auth/legacyLogin.ts` eliminado — código morto (nunca importado); lia `VITE_LOGIN_USER_*`/`VITE_LOGIN_PASS_*` que ficavam em texto claro no bundle JS
+- `app/frontend/.env` — `VITE_LOGIN_USER_1=admin`/`VITE_LOGIN_PASS_1=admin` removidos localmente (gitignored)
+- Build frontend: 0 erros, 390 módulos
+
+#### C-02 — Cookies Secure/SameSite + proxy headers (AUTH-06) *(commit `bf2f30f`)*
+
+- `app/backend/config.py` — `field_validator("session_samesite")` restringe a `{"Lax", "Strict"}`
+- `app/backend/wsgi.py` — start commands Render (`--proxy-headers --forwarded-allow-ips='*'`) e VPS documentados
+- `deploy/env.production.example` — secção "Render start command" adicionada
+- Nota: `ProxyHeadersMiddleware` removido no Starlette 1.0.0; abordagem correcta é uvicorn flags
+- **Ação manual pendente:** atualizar Start Command no dashboard Render
+
+#### `.gitignore` *(commit `bf2f30f`)*
+
+- `app/backend/Python/` e `app/backend/python_install_*.log` excluídos (instalação local VS Code Python Install Manager)
+
+### Auditoria de segurança cloud — planos A-01, A-06, A-02, M-01, M-02, A-03, A-05, A-04 *(22/05/2026)*
+
+#### A-01 — CORS estrito em produção (SEC-01) *(commit `1410fe8`)*
+
+- `app/backend/config.py` — 3 checks A-01 no `validate_production_urls`: rejeita `*` em qualquer CORS origin; rejeita origins com `http://`; rejeita se `FRONTEND_URL` não estiver incluída nas CORS origins
+- `deploy/env.production.example` — comentário junto a `CHICHORRO_CORS_ORIGINS` com as regras A-01
+- 5/5 testes de import Python aprovados
+
+#### A-06 — Endpoint `/health/db` com query real à BD (INFRA-04) *(commit `c8178c4`)*
+
+- `app/backend/main.py` — endpoint `GET/HEAD /health/db` com `SELECT 1`; HTTP 200/503 sem expor internos; adicionado a `_CSRF_EXEMPT`
+
+#### A-02 — Fail-fast Redis no arranque (AUTH-07) *(commit `4eadb6d`)*
+
+- `app/backend/main.py` — `_check_redis_startup()` no lifespan; pinga Redis em produção antes de aceitar requests (`socket_connect_timeout=5`); token nunca exposto nos logs
+- `deploy/env.production.example` — comentário sobre TLS Redis e comportamento A-02
+
+#### M-01 — CSP e Permissions-Policy (SEC-09) *(commit `b9425ed`)*
+
+- `app/backend/main.py` — `Content-Security-Policy` e `Permissions-Policy` adicionados ao middleware `add_security_headers`; CSP cobre Google Fonts e Sentry ingest; sem `'unsafe-inline'`
+- `app/frontend/public/_headers` — criado: headers Cloudflare Pages com `connect-src` para backend + HSTS `preload`
+
+#### M-02 — Cache-Control no edge e backend (INFRA-05) *(commit `ae92698`)*
+
+- `app/backend/main.py` — `Cache-Control: no-store` no middleware `add_security_headers`
+- `app/frontend/public/_headers` — `no-store` em `/*`; `public, max-age=31536000, immutable` em `/assets/*`; assets Vite fingerprintados cacheados 1 ano de forma segura
+
+#### A-03 — Migrations Alembic (DB-04) *(commit `eb65dbd`)*
+
+- `app/backend/alembic.ini` + `app/backend/alembic/` criados: `env.py`, `script.py.mako`, `versions/0001_initial_schema.py`
+- `alembic/env.py` — ligação psycopg2 via `settings.database_url`; falha com `RuntimeError` se `DATABASE_URL` não definida
+- `alembic/versions/0001_initial_schema.py` — snapshot completo do schema atual (`access_log` + `users`); `IF NOT EXISTS` — idempotente na Supabase existente
+- `app/backend/main.py` — `init_db()` guardado para dev SQLite; produção usa Alembic Release Command
+- `requirements.txt` — `alembic>=1.13,<2` adicionado (instalado 1.18.4)
+- **Ação pendente no Render:** Release Command → `cd app/backend && alembic upgrade head`
+
+#### A-05 — Política de logs sem tokens/PII (SEC-06) *(commit `15ac08b`)*
+
+- `app/backend/main.py` — `_TokenPathFilter` registado no `uvicorn.access` logger; substitui tokens em `/auth/verify/{token}` e `/auth/verify-email-change/{token}` por `[REDACTED]`
+- `app/backend/services/email.py` — guard `env != "production"` nos `print()` (defesa em profundidade)
+
+#### A-04 — Backups externos e restore (DB-03) *(commit `3dc2a8d`)*
+
+- `.github/scripts/backup_db.py` — `TABLES` estático substituído por `discover_tables()` via `information_schema.tables`; `alembic_version` excluída
+- `tools/restore_db.py` (local, gitignored) — restore de JSON com `--confirm` obrigatório; transação única; rollback automático em erro
+- `server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` — renomeado de `docs/deploy/DEPLOY_RENDER_CLOUDFLARE.md`; secção GitHub Secrets adicionada (`DATABASE_URL` para `backup-db.yml`)
+- `docs/plans/subplans/DB-03.md` — secções de backup automático externo, descoberta dinâmica e restore completo adicionadas
+- **Ação manual pendente:** secret `DATABASE_URL` em GitHub → Settings → Secrets → Actions
+
+#### DB-06 — Backlog: SQLAlchemy ORM (decidido 2026-05-22)
+
+- `docs/plans/subplans/DB-06_UNDONE.md` — subplan criado: comparação SQLAlchemy vs. psycopg2 puro, ficheiros afetados, estimativa de escopo (~300-400 linhas), dependências
+- Decidido fora do escopo do audit; depende de DB-04 ou substitui-o
+
+### Auditoria de segurança cloud — planos C-03, M-04, B-02, B-01 + merge final *(24/05/2026)*
+
+#### C-03 — Least Privilege DB User (DB-05) *(commit `91443d1`)*
+
+- `app/backend/alembic/env.py` — `DATABASE_URL_MIGRATIONS` tem prioridade sobre `DATABASE_URL` quando disponível; Alembic usa superuser (`postgres`) para migrations; runtime usa `chichorro_runtime` (só DML)
+- `deploy/env.production.example` — `DATABASE_URL_MIGRATIONS` documentada com comentário explicativo
+- `server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` — secção Supabase SQL completa: SQL para criar role `chichorro_runtime`, GRANTs mínimos (`SELECT`, `INSERT`, `UPDATE`, `DELETE` nas tabelas da app), ordem de atualização das env vars no Render
+- **Ações manuais pendentes:** Supabase SQL Editor (criar role + GRANTs); Render (atualizar `DATABASE_URL` para porta 6543 + adicionar `DATABASE_URL_MIGRATIONS`); GitHub Actions (secret `DATABASE_URL` para `chichorro_runtime`)
+
+#### M-04 — Observabilidade mínima (INFRA-01 extensão) *(commit `6c0c782`)*
+
+- `app/backend/main.py` — middleware `add_request_id`: gera UUID4 por pedido antes do CSRF, expõe em `X-Request-ID` na resposta; tag `request_id` adicionada ao scope Sentry no exception handler para correlação de eventos
+- `.github/workflows/backup-db.yml` — step `if: failure()` com notificação via Resend API para `eng.joao.pm.teixeira@gmail.com`; inclui link direto para o run falhado; token `RESEND_API_KEY` necessário como GitHub Secret
+- **Ações manuais pendentes:** UptimeRobot monitor HTTP para `/health/db` (5 min); Sentry alert rule > 10 eventos/1h → e-mail; `RESEND_API_KEY` em GitHub Secrets
+
+#### B-02 — Naming de rotas API (BACK-07) *(commit `ecc7149`)*
+
+- `app/backend/routers/auth.py` — aliases legacy removidos: `POST /login`, `POST /logout`, `GET /me` (dead code — frontend usa exclusivamente `/auth/*`)
+- `app/backend/routers/ri.py` — `@router.post("/RI_interv")` removido; rota canónica `/RI/interv` mantida
+- `server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` — secção "VPS — nginx config" adicionada: prefix-strip `proxy_pass http://127.0.0.1:8000/;` (trailing slash) elimina `/api/` antes de repassar ao backend; backend permanece deployment-agnostic
+- **Decisão:** subdomain `api.*` já fornece contexto; prefixo `/api` no código seria redundante; nginx é o ponto correto para este concern
+
+#### B-01 — Consolidação docs de deploy *(commit `f0b6966`)*
+
+- `docs/deploy/ENV_VARS.md` — reescrito: adicionadas `FRONTEND_URL`, `BACKEND_URL` (obrigatórias desde C-01), `DATABASE_URL_MIGRATIONS` (obrigatória desde DB-05), `VITE_API_BASE_URL` (Cloudflare Pages); `UPSTASH_REDIS_URL` marcada obrigatória em produção (A-02); comandos Render corrigidos (`uvicorn main:app` + `alembic upgrade head` como Release Command); Root Directory corrigido para `app/backend`; GitHub Secrets documentados; emails em `<>` (markdownlint MD034)
+- `docs/deploy/DEPLOY.md` — secção "Backend (Linux típico)" substituída por tabela de comandos Render + referência a `DEPLOY_PRODUCTION.md`; arranque local corrigido para uvicorn
+- `server/cloud_vps_audit_plans/DEPLOY_CLOUD_VPS.md` — **apagado** (`git rm`): cobria apenas C-01 (TLS); conteúdo integralmente absorvido por `DEPLOY_PRODUCTION.md`
+
+#### Merge `audit-fix` → `3.1-dev` *(commit `8b35963`)*
+
+- 16/16 planos do ciclo de audit Codex integrados em `3.1-dev` com `--no-ff`
+- 37 commits de `audit-fix` integrados; 63 ficheiros alterados; sem conflitos
+
+#### Fix deploy — `alembic/env.py` SQLAlchemy engine *(commit `a07fe55`)*
+
+- `app/backend/alembic/env.py` — substituída ligação raw `psycopg2.connect()` por `sqlalchemy.create_engine()`;
+  alembic 1.18.4 (SQLAlchemy 2.0) exige um objecto `Connection` SQLAlchemy em `context.configure()`,
+  não uma `psycopg2.extensions.connection` (causava `AttributeError: 'psycopg2.extensions.connection' object has no attribute 'dialect'`)
+- Deploy no Render confirmado live *(2026-05-24, 18:02 UTC)*
+
+### Verificação pós-deploy e bugs encontrados em produção *(26/05/2026)*
+
+#### Fix CSRF — cookie_domain split-domain *(commit `16a6604` audit-fix / `f92e000` 3.1-dev)*
+
+- `app/backend/main.py` — `cookie_domain` adicionado ao `CSRFMiddleware`: em produção é derivado do
+  hostname de `FRONTEND_URL` (`chichorrofireriskapp.joaopmteixeira.net`) via `urlparse`
+- **Causa:** frontend e backend em subdomínios diferentes; cookie `csrftoken` era escoped para
+  `api.*` e ilegível via `document.cookie` no frontend → `getCsrfToken()` sempre vazia → 403 em
+  todos os POST não isentos (forgot-password, register, cálculos)
+- Confirmado: `Set-Cookie: csrftoken=...; Domain=chichorrofireriskapp.joaopmteixeira.net`
+- Em desenvolvimento (`ENV != "production"`), `cookie_domain` fica `None` — sem alterações
+
+#### Fix RLS Supabase — migração 0002 *(commit `afa38d6` audit-fix / `ff76fa2` 3.1-dev)*
+
+- `app/backend/alembic/versions/0002_disable_rls.py` — criada: `ALTER TABLE public.users DISABLE ROW LEVEL SECURITY` + `ALTER TABLE public.access_log DISABLE ROW LEVEL SECURITY`
+- **Causa:** Supabase ativa RLS por defeito; `chichorro_runtime` tem grants de tabela mas sem políticas
+  RLS → vê zero linhas → login retornava 401 `INVALID_CREDENTIALS` (SELECT na `users` vazio);
+  INSERT no `access_log` falhava com `psycopg2.errors.InsufficientPrivilege`
+- Fix manual executado no Supabase SQL Editor (2026-05-26); migração 0002 torna-o reproduzível
+- Login confirmado a funcionar após desativar RLS
+
+---
+
 ## 3.1-dev — Git history cleanup: retroactive branch extractions (2026-05-20)
 
 ### Reorganização retroativa do histórico git *(20/05/2026)*
