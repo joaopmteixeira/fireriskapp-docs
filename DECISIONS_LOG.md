@@ -297,7 +297,22 @@ Razão: `3.1-dev` é a branch de produção futura; o bug estaria presente no pr
 
 ---
 
-## 2026-05-26 — CSRF split-domain e RLS Supabase
+## 2026-05-26 — AUTH-10, estratégia de roles, CSRF split-domain e RLS Supabase
+
+Decisão `auth10-admin-only-first`: implementar apenas o check de admin (coluna `role`, `require_admin`); não enforçar viewer/demo nesta iteração.
+Razão: viewer e demo estão subespeficicados; corrigir a vulnerabilidade crítica (Codex finding #1) não requer a estrutura completa de roles; a coluna `role` fica extensível sem migration adicional.
+
+Decisão `auth10-env-var-users-always-admin`: utilizadores hardcoded via `CHICHORRO_AUTH_USER_N` recebem `role = "admin"` diretamente no código, sem linha na BD.
+Razão: estes utilizadores não têm entrada na tabela `users`; a BD não é consultada no path de login por env var; é o comportamento operacionalmente correto.
+
+Decisão `auth10-frontend-role-ux-only`: o frontend usa o role apenas para UX (esconder links admin no sidebar); o controlo de acesso real é exclusivamente no backend via `require_admin`.
+Razão: princípio de defesa em profundidade — o frontend pode ser contornado; o `require_admin` é a única garantia válida.
+
+Decisão `auth10-consolidate-subplan`: `AUTH-10_CLAUDE.md` em `server/cloud_vps_audit_plans/` removido; conteúdo integrado em `docs/plans/subplans/AUTH-10.md`.
+Razão: evitar duplicação entre dois ficheiros; o subplan em `docs/plans/` é o local canónico para documentação de implementação.
+
+Decisão `audit-fix-2-branch`: findings 2-7 do Codex review tratados numa branch dedicada `audit-fix-2` após o merge de `auth/roles`.
+Razão: isolar as correções do Codex de outras features; manter o histórico de audit organizado por ciclo.
 
 Decisão `csrf-cookie-domain-split-subdomain`: adicionar `cookie_domain` ao `CSRFMiddleware` derivado do hostname de `FRONTEND_URL`.
 Razão: frontend (`chichorrofireriskapp.joaopmteixeira.net`) e backend (`api.*`) em subdomínios diferentes; o browser não partilha cookies entre subdomínios; `document.cookie` no frontend não conseguia ler o `csrftoken` → `getCsrfToken()` sempre vazia → 403 em todos os POST não isentos. Em dev ambos correm em `localhost` e o bug não se manifestava.
@@ -307,3 +322,12 @@ Razão: RLS do Supabase foi concebido para proteger acesso direto via Supabase J
 
 Decisão `rls-fix-alembic-not-code`: o fix RLS é uma migração de schema (Alembic 0002), não lógica de arranque da app.
 Razão: `chichorro_runtime` não tem `ALTER TABLE` — o DDL tem de correr via `DATABASE_URL_MIGRATIONS` (postgres superuser) que é exatamente o que o Alembic faz. Centralizar no Alembic garante que qualquer re-deploy futuro aplica o fix automaticamente.
+
+Decisão `audit-fix-2-positive-url-validation`: substituir validação negativa `startswith("http://")` por validação positiva com `urlparse` (scheme=="https" e netloc presente).
+Razão: a validação negativa aceitava `ftp://`, URLs sem esquema (example.com) e protocol-relative (//example.com); em especial, `FRONTEND_URL` malformada afeta o cálculo do domínio do cookie CSRF.
+
+Decisão `audit-fix-2-db-migrations-required`: tornar `DATABASE_URL_MIGRATIONS` obrigatória em produção (config.py + alembic/env.py).
+Razão: o fallback silencioso para `DATABASE_URL` permitia que o Alembic corresse com a credencial runtime (chichorro_runtime) que não tem DDL; fail-fast garante que um re-deploy sem a credencial correta é detetado imediatamente.
+
+Decisão `audit-fix-2-backup-role-select-only`: criar role `chichorro_backup` (SELECT apenas) para o workflow backup-db.yml, separado de `chichorro_runtime` (DML).
+Razão: uma fuga do secret `DATABASE_URL_BACKUP` não dá escrita na BD; separação de credenciais por função é princípio de least privilege.

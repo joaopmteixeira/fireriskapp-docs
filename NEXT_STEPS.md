@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-24 (deploy audit-fix live — alembic/env.py fix; ações manuais concluídas)
+Última atualização: 2026-05-26 (audit-fix-2 completo — findings #2-7 do Codex; branch pendente merge)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -12,7 +12,7 @@
 | Área | Estado |
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
-| Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-11, AUTH-12) |
+| Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
 | Hardening de segurança | 🔄 Parcial (audit-fix 16/16 ✅; SEC-04/05/07, BACK-05/06 pendentes) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
@@ -31,22 +31,51 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 
 ---
 
-## Concluído Recentemente (2026-05-26) — Bugs de produção corrigidos
+## Concluído Recentemente (2026-05-26)
 
-### ✅ Fix CSRF cookie_domain — split-domain (concluído 2026-05-26)
+### ✅ AUTH-10 — Sistema de roles e UI admin
+
+- Coluna `role TEXT NOT NULL DEFAULT 'engineer'` — migration `0003_add_user_role.py` via Alembic
+- `deps.py` — `require_admin`: 401 se não autenticado, 403 se não admin
+- Login env var → `session["chichorro_role"] = "admin"` · Login DB → role da BD na sessão
+- `/auth/me` devolve `role` · `/admin/users` e `/admin/log` protegidos por `require_admin`
+- Frontend: `saveRole`/`getRole` em `session.ts` · grupo ADMIN condicional no fundo do sidebar
+- `AdminUsersPage.tsx` — tabela: username, email, verificado, role (badge), criado em (YYYY-MM-DD HH:MM)
+- `AdminLogPage.tsx` — tabela: timestamp, username, evento, IP, user agent (limit 200)
+- Verificado em produção: anónimo → 401 ✅ · admin → 200 ✅ · engineer → 403 ✅
+- Ação manual executada: `UPDATE public.users SET role = 'admin' WHERE username = 'JoaoTeixeira';`
+- Branch `auth/roles` mergeada em `3.1-dev` com `--no-ff`
+
+### ✅ audit-fix-2 — Codex findings #2-7
+
+- #2 — Validação positiva `https://` com `urlparse` em `config.py` (rejeita `ftp://`, URLs sem esquema)
+- #3 — `DATABASE_URL_MIGRATIONS` obrigatória em produção; Alembic falha explicitamente sem ela
+- #4 — Backup usa `DATABASE_URL_BACKUP` (role `chichorro_backup`, só SELECT); ações manuais documentadas em `DEPLOY_PRODUCTION.md`
+- #5 — `backup_db.py`: PK descoberta via `information_schema`; `sql.Identifier` em vez de f-string
+- #6 — `README.md` frontend sem referências a `VITE_LOGIN_*`
+- #7 — CSP: `*.ingest.de.sentry.io` adicionado em `_headers` e `main.py`
+- Branch `audit-fix-2` pronta para merge em `3.1-dev`
+
+### ✅ Codex security review — documentação
+
+- `CODEX_REVIEW_BRIEF.md` — brief para revisão pelo OpenAI Codex (diff `c559e34..2cd965a`, 16 planos)
+- `CODEX_REVIEW_FINDINGS_FOR_CLAUDE.md` — 6 findings do Codex (CRITICAL→LOW)
+- `CODEX_REVIEW_ANALYSIS_CLAUDE.md` — análise Claude: concordância, ordem de correção, finding #7 (CSP Sentry)
+
+### ✅ Fix CSRF cookie_domain — split-domain
 
 - `app/backend/main.py` — `cookie_domain` adicionado ao `CSRFMiddleware`; em produção scoped ao hostname do frontend
 - Causa: CSRF cookie ilegível em `document.cookie` no frontend (subdomínio diferente do backend) → 403 em todos os POST
 - Verificado: `Domain=chichorrofireriskapp.joaopmteixeira.net` no `Set-Cookie`
 
-### ✅ Fix RLS Supabase — chichorro_runtime (concluído 2026-05-26)
+### ✅ Fix RLS Supabase — chichorro_runtime
 
 - Supabase ativa RLS por defeito; `chichorro_runtime` sem políticas RLS → vê zero linhas → login 401
 - Fix manual: `ALTER TABLE public.users DISABLE ROW LEVEL SECURITY; ALTER TABLE public.access_log DISABLE ROW LEVEL SECURITY;`
 - Migração Alembic `0002_disable_rls.py` criada para reproduzir o fix automaticamente
 - Login confirmado a funcionar
 
-### ✅ Secção 8 da checklist — verificação pós-deploy concluída (2026-05-26)
+### ✅ Secção 8 da checklist — verificação pós-deploy concluída
 
 - `/health` → `X-Request-ID` + `Cache-Control: no-store` ✅
 - `/health/db` → HTTP 200 ✅
@@ -55,7 +84,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - Artifact backup GitHub Actions confirmado (users.json, access_log.json, meta.json) ✅
   - Dados estavam a zero no run de 25 Mai (RLS bloqueava SELECTs); próximo run a 28 Mai terá dados reais
 
-## Concluído Recentemente (2026-05-24) — Deploy
+## Concluído Recentemente (2026-05-24)
 
 ### ✅ Fix deploy — alembic/env.py SQLAlchemy engine (concluído 2026-05-24)
 
@@ -71,10 +100,6 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - GitHub Secrets — `DATABASE_URL` + `RESEND_API_KEY` configurados
 - UptimeRobot — monitor `/health/db` a cada 5 min; Sentry — alert rule `> 10 eventos/1h`
 - Cloudflare Pages — vars e domínio verificados
-
----
-
-## Concluído Recentemente (2026-05-24)
 
 ### ✅ B-01 — Consolidação docs de deploy (concluído 2026-05-24)
 

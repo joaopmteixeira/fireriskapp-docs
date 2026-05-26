@@ -2,6 +2,72 @@
 
 ---
 
+## audit-fix-2 — Codex findings #2-7 (2026-05-26)
+
+Branch criada a partir de `auth/roles` (via `3.1-dev`). Corrige os 6 findings pendentes da revisão Codex.
+
+### Finding #2 — Validação positiva `https://` *(commit `24e0cdd`)*
+
+- `app/backend/config.py` — substituído `startswith("http://")` por `_require_https_url()` via `urlparse`; rejeita `ftp://`, URLs sem esquema, protocol-relative; aplicado a `FRONTEND_URL`, `BACKEND_URL` e cada CORS origin
+
+### Finding #3 — `DATABASE_URL_MIGRATIONS` fail-fast em produção *(commit `4b027ce`)*
+
+- `app/backend/config.py` — `validate_production_urls` exige `DATABASE_URL_MIGRATIONS` definida em `ENV=production`
+- `app/backend/alembic/env.py` — eliminado fallback silencioso; `RuntimeError` explícito se ausente em produção
+
+### Finding #4 — Role read-only para backup *(commit `3307b0a`)*
+
+- `.github/workflows/backup-db.yml` — usa `DATABASE_URL_BACKUP` em vez de `DATABASE_URL` (chichorro_runtime)
+- `server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` — nova secção "Supabase — Utilizador de backup com SELECT (A-04)" com SQL de criação do role `chichorro_backup` e checklist; secção GitHub Secrets atualizada para `DATABASE_URL_BACKUP`
+
+### Finding #5 — Backup robusto sem coluna `id` *(commit `bd5b6a3`)*
+
+- `.github/scripts/backup_db.py` — `get_pk_columns()` via `information_schema`; `export_table()` usa `psycopg2.sql.Identifier` em vez de f-string com ORDER BY id fixo
+
+### Finding #6 — README frontend: remover `VITE_LOGIN_*` *(commit `7fb926e`)*
+
+- `app/frontend/README.md` — removidas referências a `VITE_LOGIN_USER_N`/`VITE_LOGIN_PASS_N`; secção "Autenticação" reescrita; env var corrigida para `VITE_API_BASE_URL`
+
+### Finding #7 — CSP: endpoint Sentry EU *(commit `7707b28`)*
+
+- `app/frontend/public/_headers` — `*.ingest.de.sentry.io` adicionado ao `connect-src`
+- `app/backend/main.py` — mesmo fix no middleware `add_security_headers`
+
+---
+
+## auth/roles — AUTH-10: sistema de roles e UI admin (2026-05-26)
+
+Branch criada a partir de `3.1-dev`. Merge `--no-ff` em `3.1-dev` em 2026-05-26.
+
+### Codex security review — documentação *(commit `d88fac0`)*
+
+- `server/cloud_vps_audit_plans/CODEX_REVIEW_BRIEF.md` — brief para revisão OpenAI Codex do ciclo audit-fix
+- `server/cloud_vps_audit_plans/CODEX_REVIEW_FINDINGS_FOR_CLAUDE.md` — 6 findings do Codex (CRITICAL: `/admin/*` sem autorização; HIGH: validação https, DATABASE_URL_MIGRATIONS; MEDIUM: backup sensível, backup sem `id`; LOW: README VITE_LOGIN_*)
+- `server/cloud_vps_audit_plans/CODEX_REVIEW_ANALYSIS_CLAUDE.md` — análise Claude com concordância, ordem de correção, finding #7 (CSP bloqueia Sentry)
+
+### AUTH-10 backend *(commit `f9af8d3`)*
+
+- `app/backend/alembic/versions/0003_add_user_role.py` — migration: `ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'engineer'`
+- `app/backend/deps.py` — `require_admin`: 401 se não autenticado, 403 se `chichorro_role != "admin"`
+- `app/backend/routers/auth.py` — login env var define `session["chichorro_role"] = "admin"`; login DB lê `role` da BD; logout limpa `chichorro_role`; `/auth/me` devolve `role`
+- `app/backend/routers/admin.py` — `require_auth` → `require_admin`; query de `/admin/users` inclui coluna `role`
+
+### AUTH-10 frontend *(commits `4ffeab4`, `2d60de1`)*
+
+- `app/frontend/src/auth/session.ts` — `saveRole(role)`, `getRole()`, `logout()` limpa `chichorro_role_v1`
+- `app/frontend/src/pages/AppLayout.tsx` — `userRole` state; `/auth/me` guarda role; grupo ADMIN no fundo do sidebar (condicional, acima da secção do utilizador)
+- `app/frontend/src/pages/AdminUsersPage.tsx` (NOVO) — tabela: username, email, verificado, role (badge colorido), criado em (YYYY-MM-DD HH:MM)
+- `app/frontend/src/pages/AdminLogPage.tsx` (NOVO) — tabela: timestamp, username, evento, IP, user agent (truncado, limit 200)
+- `app/frontend/src/App.tsx` — rotas `/app/admin/users` e `/app/admin/log`
+
+### Documentação *(commits `04cee5c`, `37410f1`)*
+
+- `docs/plans/subplans/AUTH-10.md` — consolidado com toda a informação de implementação
+- `server/cloud_vps_audit_plans/AUTH-10_CLAUDE.md` — removido (conteúdo integrado no subplan)
+- Finding #7 (CSP Sentry) adicionado a `CODEX_REVIEW_ANALYSIS_CLAUDE.md`
+
+---
+
 ## audit-fix — Ciclo de audit segurança cloud (2026-05-21)
 
 ### Auditoria de segurança cloud — planos C-01, C-04, M-05, C-02 *(21/05/2026)*

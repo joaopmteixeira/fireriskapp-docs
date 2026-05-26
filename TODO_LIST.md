@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-26 (CSRF split-domain fix; Alembic migration 0002 disable RLS; secção 8 verificação produção concluída)
+Última atualização: 2026-05-26 (audit-fix-2 completo — findings #2-7 Codex; branch pendente merge em 3.1-dev)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -25,7 +25,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
 | AUTH-09b | ✅ | Avatar de utilizador — coluna `avatar` DB, rota `POST /auth/profile/avatar`, upload frontend c/ canvas resize | 3.1-dev |
 | AUTH-09c | ✅ | ProfilePage redesign card compacto — 4 rows expansíveis inline (username, e-mail, password, apagar conta); sem modal separado | 3.1-dev |
-| AUTH-10 | ❌ | Sistema de roles/permissões: admin, engineer, viewer, demo | — |
+| AUTH-10 | ✅ | Sistema de roles/permissões: coluna `role`, `require_admin`, admin UI — viewer/demo diferidos | auth/roles → 3.1-dev |
 | AUTH-13 | ✅ | Hardening sessão: max_age configurável, Secure flag obrigatória em prod, CSRF protection | 3.1-dev |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
 | AUTH-12 | ✅ | Merge `feat/access-log` → `3.1-dev` | 3.1-dev |
@@ -49,8 +49,8 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| SEC-01 | ✅ | CORS estrito em produção — sem `*`, https:// obrigatório, `FRONTEND_URL` incluída nas origins (A-01) | audit-fix |
-| SEC-02 | ✅ | HTTPS obrigatório em produção — fail-fast `FRONTEND_URL`/`BACKEND_URL` (https://), override `app_base_url`, `X-Forwarded-Host` nginx (C-01) | feat/security, sec/c01-tls-end-to-end |
+| SEC-01 | ✅ | CORS estrito em produção — sem `*`, validação positiva https:// (urlparse), `FRONTEND_URL` incluída nas origins (A-01; reforçado audit-fix-2 #2) | audit-fix, audit-fix-2 |
+| SEC-02 | ✅ | HTTPS obrigatório em produção — fail-fast `FRONTEND_URL`/`BACKEND_URL` validação positiva urlparse (C-01; reforçado audit-fix-2 #2) | feat/security, audit-fix-2 |
 | SEC-03 | ✅ | X-Content-Type-Options, X-Frame-Options, Referrer-Policy via `@app.after_request`; CSRF coberto por camadas existentes | feat/security |
 | SEC-04 | ❌ | Política explícita de password hashing — algoritmo e parâmetros fixos (Argon2id ou PBKDF2-SHA256 com iterações documentadas) | — |
 | SEC-05 | ❌ | Hash dos tokens de reset/verificação na BD — guardar SHA-256 do token, não o token em claro | — |

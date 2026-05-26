@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-26 (CSRF split-domain fix; Alembic migration 0002 disable RLS; secção 8 verificação produção concluída; todos os 16 planos de audit confirmados em produção)
+Última atualização: 2026-05-26 (audit-fix-2 completo — findings #2-7 Codex; branch pendente merge em 3.1-dev)
 
 ---
 
@@ -227,11 +227,9 @@ Sistema de reporte de bugs na app: formulário que o utilizador submete quando e
 
 ### ✅ UI-06 — Preferências / Definições *(ver secção de concluídos acima)*
 
-### ❌ AUTH-10 — Implementar Sistema de Roles/Permissões
+### ✅ AUTH-10 — Sistema de Roles/Permissões *(concluído 2026-05-26, branch auth/roles → 3.1-dev)*
 
-Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`
-
-**IMPORTANTE:** As permissões devem ser verificadas no backend. Frontend NÃO é segurança.
+Coluna `role TEXT NOT NULL DEFAULT 'engineer'` ✅ · `require_admin` em `deps.py` (401/403) ✅ · login env var → `role=admin`, login DB → role da BD ✅ · `/auth/me` devolve `role` ✅ · `/admin/users` e `/admin/log` protegidos ✅ · sidebar grupo ADMIN condicional ✅ · `AdminUsersPage` e `AdminLogPage` ✅ · viewer/demo diferidos (coluna existe, sem enforcement)
 
 ### ✅ SEC-08 — Remover `legacyLogin.ts` e Limpar `.env`
 
