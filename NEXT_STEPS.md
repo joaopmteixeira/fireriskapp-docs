@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-26 (audit-fix-2 completo — findings #2-7 do Codex; branch pendente merge)
+Última atualização: 2026-05-27 (audit-fix-2 mergeada em 3.1-dev; audit-fix-3 a corrigir gaps Codex post-review)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -54,7 +54,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - #5 — `backup_db.py`: PK descoberta via `information_schema`; `sql.Identifier` em vez de f-string
 - #6 — `README.md` frontend sem referências a `VITE_LOGIN_*`
 - #7 — CSP: `*.ingest.de.sentry.io` adicionado em `_headers` e `main.py`
-- Branch `audit-fix-2` pronta para merge em `3.1-dev`
+- Branch `audit-fix-2` mergeada em `3.1-dev` (commit `9f07380`)
 
 ### ✅ Codex security review — documentação
 

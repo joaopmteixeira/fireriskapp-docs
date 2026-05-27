@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-26 (audit-fix-2 completo — findings #2-7 Codex; branch pendente merge em 3.1-dev)
+Última atualização: 2026-05-27 (audit-fix-2 mergeada em 3.1-dev; audit-fix-3 a corrigir gaps Codex post-review)
 
 ---
 
