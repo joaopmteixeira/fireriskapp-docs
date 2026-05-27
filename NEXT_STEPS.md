@@ -13,7 +13,7 @@
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
-| Hardening de segurança | 🔄 Parcial (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/06 pendentes) |
+| Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/06 ✅) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
@@ -56,6 +56,23 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - Fix CSRF: `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` adicionados a `_CSRF_EXEMPT`
 - Validado em produção: hash SHA-256 visível na BD Supabase; fluxo completo testado ✅
 - Branch `sec/token-hashing` mergeada em `3.1-dev` com `--no-ff` (commit `f09437f`)
+
+### ✅ BACK-05 — Pydantic Literal types nos schemas de cálculo
+
+- `schemas/dpi.py` — todos os 23 campos reescritos com `Literal` (valores extraídos de `Chichorro_DPI.py`)
+- `schemas/esci.py` — todos os 23 campos reescritos com `Literal` (valores extraídos de `Chichorro_ESCI.py`)
+- `schemas/cti.py` — 13 campos `str` livres substituídos por `Literal`; aliases `_DISPOSITIVOS`/`_REACAO_FOGO`; `model_validator(mode="before")` e `normalize_cti_fields` preservados (Literal usa valores pós-normalização)
+- `poi.py` diferido (139 campos — BACK-05d, tarefa separada)
+- Payloads inválidos retornam agora HTTP 422 em vez de calcular resultados errados
+- `sessions/*.json` actualizados para conformidade: `VHE_Dispositivos`/`VVE_Dispositivos` adicionados ao CTI; `DPI_OGS_OGS` corrigido (ç→c); campos ESCI em falta adicionados
+- Branch `back/validation`; validado em produção ✅
+
+### ✅ BACK-06 — Error handler JSON normalizado
+
+- `app/backend/main.py` — `unhandled_exception_handler` passa a retornar `JSONResponse({"error": "INTERNAL_ERROR", "request_id": ...}, 500)` em vez de re-lançar a exceção
+- `HTTPException` continua a ser re-lançada (FastAPI trata nativamente)
+- Garante que erros 5xx inesperados produzem sempre JSON estruturado (nunca HTML ou stack trace)
+- Branch `back/validation`; validado em produção ✅
 
 ---
 
@@ -416,10 +433,6 @@ Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
 
 Ficheiro `legacyLogin.ts` lê `VITE_LOGIN_USER_*`/`VITE_LOGIN_PASS_*`. Variáveis `VITE_*` ficam em texto claro no bundle JS. Remover antes de utilizadores externos terem acesso.
 
-### BACK-05 — Validação de Enums nos Schemas Pydantic
-
-Campos de cálculo são `str` livres — payloads malformados podem causar resultados de risco incorretos. Usar `Literal` ou enum Pydantic.
-
 ### DB-04 — Migrations Alembic
 
 Versioning de schema com rollback. Remover DDL do arranque da app.
@@ -431,10 +444,6 @@ Versioning de schema com rollback. Remover DDL do arranque da app.
 ### INFRA-04 — `/health/db`
 
 Health check com query real à BD para deteção de falha de ligação ao Supabase.
-
-### BACK-06 — Error Handler JSON
-
-Envelope uniforme `{"error": "INTERNAL_ERROR"}` para respostas 5xx.
 
 ### UI-02 — Página de Documentação
 

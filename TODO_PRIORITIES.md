@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-27 (SEC-04 Argon2id + SEC-07 magic bytes + SEC-05 SHA-256 tokens mergeados em 3.1-dev)
+Última atualização: 2026-05-27 (BACK-05 Pydantic Literal types + BACK-06 JSON error handler — branch back/validation, validados em produção)
 
 ---
 
@@ -235,9 +235,9 @@ Coluna `role TEXT NOT NULL DEFAULT 'engineer'` ✅ · `require_admin` em `deps.p
 
 M-05 (2026-05-21): `legacyLogin.ts` eliminado (código morto, nunca importado) ✅ · `VITE_LOGIN_USER_1`/`VITE_LOGIN_PASS_1` removidos do `.env` local ✅ · build TypeScript 0 erros ✅ · branch `audit-fix`
 
-### ❌ BACK-05 — Validação de Enums/Tamanhos nos Schemas Pydantic
+### ✅ BACK-05 — Pydantic Literal types nos schemas de cálculo *(concluído 2026-05-27, branch back/validation)*
 
-Campos como `POI_CC_Comb`, `DPI_OGS_*` são `str` livres — devem ser `Literal["Sim", "Não"]` ou enum Pydantic. Payloads malformados podem causar cálculos de risco silenciosamente errados.
+`schemas/dpi.py`, `schemas/esci.py`, `schemas/cti.py` — todos os campos enum reescritos com `Literal` (valores extraídos dos scripts de cálculo). Payloads inválidos retornam 422. `poi.py` diferido (BACK-05d). Sessions actualizadas para conformidade.
 
 ### ✅ DB-05 — Least Privilege DB User *(concluído 2026-05-24, branch audit-fix)*
 
@@ -267,9 +267,9 @@ Health check com query real à BD. O `/health` atual responde `ok` mesmo com BD 
 
 `hashlib.sha256(token.encode()).hexdigest()` (64 hex chars) guardado na BD; token em claro vai apenas no email/URL. CSRF exempt para `/auth/register`, `/auth/forgot-password`, `/auth/reset-password`.
 
-### ❌ BACK-06 — Error Handler JSON Normalizado
+### ✅ BACK-06 — Error handler JSON normalizado *(concluído 2026-05-27, branch back/validation)*
 
-Envelope uniforme `{"error": "INTERNAL_ERROR"}` para respostas 5xx. O handler atual re-lança a exceção sem garantir formato JSON.
+`unhandled_exception_handler` em `main.py` retorna `JSONResponse({"error":"INTERNAL_ERROR","request_id":...}, 500)`. `HTTPException` continua a ser re-lançada (FastAPI trata nativamente). Erros 5xx produzem sempre JSON estruturado.
 
 ### ✅ BACK-01 — Migração Flask → FastAPI *(concluído — ver CHANGELOG)*
 

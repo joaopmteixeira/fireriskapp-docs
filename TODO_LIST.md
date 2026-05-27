@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-27 (SEC-04 Argon2id, SEC-05 SHA-256 tokens, SEC-07 magic bytes — mergeados em 3.1-dev)
+Última atualização: 2026-05-27 (BACK-05 Pydantic Literal types, BACK-06 JSON error handler — branch back/validation, validados em produção)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -110,8 +110,8 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend; fix 405 no catch-all SPA | 3.1-dev |
 | BACK-03 | ✅ | ASCII enum values — remover ç/ã dos values DPI e aliases CTI | feat/flask-to-fastapi |
 | BACK-04 | ✅ | Merge feat/flask-to-fastapi → produção; deploy FastAPI no Render (Supabase, 1.5s login) | 3.1-dev |
-| BACK-05 | ❌ | Validação enums/max_length nos schemas Pydantic (poi, cti, dpi, esci) — prevenir payloads inválidos nos cálculos | — |
-| BACK-06 | ❌ | Error handler JSON normalizado — envelope uniforme `{"error": "INTERNAL_ERROR"}` para erros 5xx | — |
+| BACK-05 | ✅ | Pydantic `Literal` types nos schemas dpi, esci, cti — payloads inválidos retornam 422; poi.py diferido (BACK-05d) | back/validation |
+| BACK-06 | ✅ | Error handler JSON normalizado — `JSONResponse({"error":"INTERNAL_ERROR"}, 500)` em vez de re-raise | back/validation |
 | BACK-07 | ✅ | Estabilizar naming de rotas API — decisão documentada: manter paths actuais; aliases legacy removidos (`/login`, `/logout`, `/me`, `/RI_interv`); nginx VPS config documentada (B-02) | audit-fix |
 
 ---
