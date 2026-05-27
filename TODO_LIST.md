@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-27 (audit-fix-2 mergeada em 3.1-dev; audit-fix-3 a corrigir gaps Codex post-review)
+Última atualização: 2026-05-27 (SEC-04 Argon2id, SEC-05 SHA-256 tokens, SEC-07 magic bytes — mergeados em 3.1-dev)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -52,10 +52,10 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | SEC-01 | ✅ | CORS estrito em produção — sem `*`, validação positiva https:// (urlparse), `FRONTEND_URL` incluída nas origins (A-01; reforçado audit-fix-2 #2) | audit-fix, audit-fix-2 |
 | SEC-02 | ✅ | HTTPS obrigatório em produção — fail-fast `FRONTEND_URL`/`BACKEND_URL` validação positiva urlparse (C-01; reforçado audit-fix-2 #2) | feat/security, audit-fix-2 |
 | SEC-03 | ✅ | X-Content-Type-Options, X-Frame-Options, Referrer-Policy via `@app.after_request`; CSRF coberto por camadas existentes | feat/security |
-| SEC-04 | ❌ | Política explícita de password hashing — algoritmo e parâmetros fixos (Argon2id ou PBKDF2-SHA256 com iterações documentadas) | — |
-| SEC-05 | ❌ | Hash dos tokens de reset/verificação na BD — guardar SHA-256 do token, não o token em claro | — |
+| SEC-04 | ✅ | Argon2id password hashing (argon2-cffi, RFC 9106 level 1) + upgrade-on-login a partir de werkzeug scrypt/pbkdf2 | sec/hardening |
+| SEC-05 | ✅ | Hash SHA-256 dos tokens de reset/verificação/email-change na BD; CSRF exemption para endpoints públicos | sec/token-hashing |
 | SEC-06 | ✅ | Política de logs — garantir que tokens e PII não são impressos em produção (A-05) | audit-fix |
-| SEC-07 | ❌ | Bloquear SVG e validar magic bytes no endpoint `/auth/profile/avatar` | — |
+| SEC-07 | ✅ | Bloquear SVG e validar magic bytes no endpoint `/auth/profile/avatar` (JPEG/PNG/WebP/GIF) | sec/hardening |
 | SEC-08 | ✅ | Remover `legacyLogin.ts` e limpar variáveis `VITE_LOGIN_*` do `.env` local (M-05) | audit-fix |
 | SEC-09 | ✅ | CSP + Permissions-Policy no backend (`add_security_headers`) e Cloudflare Pages (`_headers`) (M-01) | audit-fix |
 | SEC-10 | ✅ | Fail-fast secrets em produção — `CHICHORRO_SECRET_KEY` e outros secrets obrigatórios; sem arranque silencioso com defaults inseguros (C-04) | audit-fix |

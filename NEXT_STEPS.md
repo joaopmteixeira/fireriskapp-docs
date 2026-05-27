@@ -13,7 +13,7 @@
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
-| Hardening de segurança | 🔄 Parcial (audit-fix 16/16 ✅; SEC-04/05/07, BACK-05/06 pendentes) |
+| Hardening de segurança | 🔄 Parcial (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/06 pendentes) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
@@ -28,6 +28,34 @@
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-05-27)
+
+### ✅ SEC-04 — Argon2id password hashing + upgrade-on-login
+
+- `argon2-cffi>=23.1` adicionado ao `requirements.txt`
+- `_PH = PasswordHasher()` (RFC 9106 level 1: `m=65536, t=3, p=4`)
+- `_verify_password`: positivo em `$argon2`, tudo o resto → `check_password_hash` werkzeug (cobre scrypt e pbkdf2)
+- Upgrade-on-login: após login com hash não-argon2, re-hash e UPDATE atómico na BD
+- Branch `sec/hardening` mergeada em `3.1-dev` com `--no-ff` (commit `a9c788e`)
+
+### ✅ SEC-07 — Validação magic bytes no upload de avatar
+
+- `_check_avatar_magic()`: decodifica os primeiros 12 bytes reais do base64 e valida assinatura
+- JPEG `\xff\xd8\xff` · PNG `\x89PNG` · WebP `RIFF...WEBP` · GIF `GIF8`/`GIF9`
+- SVG e qualquer tipo fora da lista rejeitados com HTTP 400
+- Branch `sec/hardening` mergeada em `3.1-dev` com `--no-ff` (commit `a9c788e`)
+
+### ✅ SEC-05 — SHA-256 dos tokens de verificação/reset/email-change na BD
+
+- `_hash_token(token)` → `hashlib.sha256(token.encode()).hexdigest()` (64 hex chars)
+- 3 stores (register, forgot-password, profile/email) guardam o hash; token em claro vai apenas no email/URL
+- 3 lookups (verify, reset-password, verify-email-change) fazem WHERE pelo hash
+- Fix CSRF: `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` adicionados a `_CSRF_EXEMPT`
+- Validado em produção: hash SHA-256 visível na BD Supabase; fluxo completo testado ✅
+- Branch `sec/token-hashing` mergeada em `3.1-dev` com `--no-ff` (commit `f09437f`)
 
 ---
 
@@ -396,10 +424,6 @@ Campos de cálculo são `str` livres — payloads malformados podem causar resul
 
 Versioning de schema com rollback. Remover DDL do arranque da app.
 
-### SEC-07 — Hardening Avatar Upload
-
-Bloquear `data:image/svg+xml` e validar magic bytes em `/auth/profile/avatar`.
-
 ### SEC-09 — CSP Header
 
 `Content-Security-Policy` header completo no backend ou proxy.
@@ -407,14 +431,6 @@ Bloquear `data:image/svg+xml` e validar magic bytes em `/auth/profile/avatar`.
 ### INFRA-04 — `/health/db`
 
 Health check com query real à BD para deteção de falha de ligação ao Supabase.
-
-### SEC-04 — Política de Password Hashing
-
-Fixar parâmetros PBKDF2-SHA256 explicitamente ou migrar para Argon2id.
-
-### SEC-05 — Hash de Tokens na BD
-
-Guardar `sha256(token)` em vez do token em claro para tokens de reset e verificação.
 
 ### BACK-06 — Error Handler JSON
 

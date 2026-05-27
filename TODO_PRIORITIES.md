@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-27 (audit-fix-2 mergeada em 3.1-dev; audit-fix-3 a corrigir gaps Codex post-review)
+Última atualização: 2026-05-27 (SEC-04 Argon2id + SEC-07 magic bytes + SEC-05 SHA-256 tokens mergeados em 3.1-dev)
 
 ---
 
@@ -247,9 +247,9 @@ Campos como `POI_CC_Comb`, `DPI_OGS_*` são `str` livres — devem ser `Literal[
 
 Alembic configurado com psycopg2 puro (sem SQLAlchemy ORM). `init_db()` guardado para dev SQLite. Migration `0001_initial_schema.py` cobre schema completo atual. Release Command Render: `cd app/backend && alembic upgrade head`.
 
-### ❌ SEC-07 — Hardening do Upload de Avatar
+### ✅ SEC-07 — Hardening do Upload de Avatar *(concluído 2026-05-27, branch sec/hardening)*
 
-Bloquear `data:image/svg+xml` e validar magic bytes em `/auth/profile/avatar`. SVG pode conter JavaScript inline e causar XSS se renderizado diretamente no browser.
+`_check_avatar_magic()` valida os primeiros 12 bytes reais do ficheiro (JPEG `\xff\xd8\xff`, PNG `\x89PNG`, WebP `RIFF...WEBP`, GIF `GIF8`/`GIF9`); SVG e tipos não listados rejeitados com 400.
 
 ### ❌ SEC-09 — CSP Header Completo
 
@@ -259,13 +259,13 @@ Adicionar `Content-Security-Policy` header no backend ou proxy. Bloquear `inline
 
 Health check com query real à BD. O `/health` atual responde `ok` mesmo com BD em baixo — impede restart automático no Render em caso de falha de ligação ao Supabase.
 
-### ❌ SEC-04 — Política Explícita de Password Hashing
+### ✅ SEC-04 — Argon2id Password Hashing *(concluído 2026-05-27, branch sec/hardening)*
 
-Documentar e fixar parâmetros de hashing (`werkzeug` PBKDF2-SHA256 com iterações explícitas, ou migrar para Argon2id). Previne mudança silenciosa se a versão do `werkzeug` mudar.
+`argon2-cffi` com RFC 9106 level 1 (`m=65536, t=3, p=4`). Upgrade-on-login automático a partir de hashes werkzeug (scrypt/pbkdf2). JoaoTeixeira migrado; Rui Sobral migra no próximo login.
 
-### ❌ SEC-05 — Hash dos Tokens de Reset/Verificação na BD
+### ✅ SEC-05 — Hash dos Tokens de Reset/Verificação na BD *(concluído 2026-05-27, branch sec/token-hashing)*
 
-Guardar `hashlib.sha256(token).hexdigest()` em vez do token em claro. Previne uso direto de tokens ativos se a BD for comprometida.
+`hashlib.sha256(token.encode()).hexdigest()` (64 hex chars) guardado na BD; token em claro vai apenas no email/URL. CSRF exempt para `/auth/register`, `/auth/forgot-password`, `/auth/reset-password`.
 
 ### ❌ BACK-06 — Error Handler JSON Normalizado
 
