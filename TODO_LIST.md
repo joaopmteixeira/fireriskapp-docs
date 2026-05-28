@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-27 (BACK-05 Pydantic Literal types, BACK-06 JSON error handler — branch back/validation, validados em produção)
+Última atualização: 2026-05-27 (BACK-05d poi.py Literal types; TEST-02 pytest 12/12; INFRA-02 GitHub Actions)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -110,7 +110,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | BACK-02 | ✅ | Melhorar logging: failed logins, user-agent, request IDs, erros backend; fix 405 no catch-all SPA | 3.1-dev |
 | BACK-03 | ✅ | ASCII enum values — remover ç/ã dos values DPI e aliases CTI | feat/flask-to-fastapi |
 | BACK-04 | ✅ | Merge feat/flask-to-fastapi → produção; deploy FastAPI no Render (Supabase, 1.5s login) | 3.1-dev |
-| BACK-05 | ✅ | Pydantic `Literal` types nos schemas dpi, esci, cti — payloads inválidos retornam 422; poi.py diferido (BACK-05d) | back/validation |
+| BACK-05 | ✅ | Pydantic `Literal` types nos schemas dpi, esci, cti, poi (BACK-05d) — payloads inválidos retornam 422 | back/validation |
 | BACK-06 | ✅ | Error handler JSON normalizado — `JSONResponse({"error":"INTERNAL_ERROR"}, 500)` em vez de re-raise | back/validation |
 | BACK-07 | ✅ | Estabilizar naming de rotas API — decisão documentada: manter paths actuais; aliases legacy removidos (`/login`, `/logout`, `/me`, `/RI_interv`); nginx VPS config documentada (B-02) | audit-fix |
 
@@ -121,7 +121,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
 | INFRA-01 | ✅ | Monitorização: Sentry (frontend + backend) + UptimeRobot `/health`; M-04 (audit-fix): X-Request-ID middleware, backup failure email Resend, UptimeRobot `/health/db` (manual) | 3.1-dev + audit-fix |
-| INFRA-02 | ❌ | Pipeline CI/CD: GitHub Actions + Render Deploy Hooks | — |
+| INFRA-02 | ✅ | Pipeline CI/CD: GitHub Actions test.yml (pytest) + build.yml (npm build), path filters | infra/ci-cd |
 | INFRA-03 | ❌ | Dockerfile + Compose local/prod — containerização para deploy reproduzível | — |
 | INFRA-04 | ✅ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação (A-06) | audit-fix |
 | INFRA-05 | ✅ | Cache-Control headers: `no-store` no backend + `_headers` Cloudflare Pages; `/assets/*` com `immutable` (M-02) | audit-fix |
@@ -134,7 +134,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | ID | Estado | Descrição |
 | --- | --- | --- |
 | TEST-01 | ✅ | Teste e2e em produção: registo → e-mail → verificação → login → reset password (aprovado 2026-05-08) |
-| TEST-02 | ❌ | Testes automatizados: unit, integration, e2e |
+| TEST-02 | ✅ | Testes automatizados: pytest 12/12 (health, Literal 422, calc 200, auth básico) — branch `test/automated-tests` |
 
 ---
 

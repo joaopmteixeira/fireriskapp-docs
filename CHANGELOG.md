@@ -2,6 +2,77 @@
 
 ---
 
+## 2026-05-27 — audit-fix-3 · SEC-04 · SEC-05 · SEC-07 · BACK-05 · BACK-06 · BACK-05d · TEST-02 · INFRA-02
+
+### audit-fix-3 — Gaps Codex post-review *(branch `audit-fix-3`)*
+
+- `app/backend/database.py` — coluna `users.role` adicionada ao path SQLite `init_db()` (estava ausente após AUTH-10)
+- `app/backend/config.py` — validação do username na `DATABASE_URL` alargada para suportar o formato Supabase `username.project_ref`; fail-fast em produção mantido
+- `app/frontend/vite.config.ts` — prefixo `/admin` adicionado ao proxy de desenvolvimento (faltava após BACK-07)
+- `tools/backup_db.py` — sincronizado com `.github/scripts/backup_db.py`: descoberta de PK via `information_schema` e `psycopg2.sql.Identifier`
+- `docs/` — contradições pós-audit-fix-2 corrigidas
+- `.gitignore` — regra `tools/*` com excepção explícita para `backup_db.py`; `tools/backups/` mantido
+
+### SEC-04 — Argon2id password hashing *(branch `sec/hardening`)*
+
+- `app/backend/routers/auth.py` — `argon2-cffi` substitui werkzeug PBKDF2/scrypt; `_PH = PasswordHasher()` (RFC 9106 level 1: m=65536, t=3, p=4)
+- `_verify_password`: positivo em `$argon2id`, fallback werkzeug para hashes legados (scrypt/pbkdf2)
+- Upgrade-on-login: após autenticação com hash não-argon2, re-hash atómico e UPDATE na BD
+- `requirements.txt`: `argon2-cffi>=23.1,<25` adicionado
+
+### SEC-07 — Validação magic bytes no avatar *(branch `sec/hardening`)*
+
+- `app/backend/routers/auth.py` — `_check_avatar_magic()` decodifica os primeiros 12 bytes base64 e valida assinatura: JPEG `\xff\xd8\xff`, PNG `\x89PNG`, WebP `RIFF…WEBP`, GIF `GIF8`/`GIF9`
+- SVG e qualquer tipo fora da lista rejeitados com HTTP 400
+- `docs/plans/subplans/SEC-04.md` e `SEC-07.md` actualizados
+
+### SEC-05 — SHA-256 dos tokens de verificação/reset/email-change *(branch `sec/token-hashing`)*
+
+- `app/backend/routers/auth.py` — `_hash_token(token)` → `hashlib.sha256(token.encode()).hexdigest()`
+- 3 stores (register, forgot-password, profile/email-change) guardam o hash; token em claro apenas no e-mail/URL
+- 3 lookups (verify, reset-password, verify-email-change) fazem `WHERE` pelo hash
+- `app/backend/main.py` — `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` adicionados a `_CSRF_EXEMPT`
+- `docs/plans/subplans/SEC-05.md` actualizado
+
+### BACK-05 — Pydantic Literal types em dpi, esci, cti *(branch `back/validation`)*
+
+- `schemas/dpi.py` — 23 campos `str` → `Literal` (valores de `Chichorro_DPI.py`)
+- `schemas/esci.py` — 23 campos `str` → `Literal` (valores de `Chichorro_ESCI.py`)
+- `schemas/cti.py` — 13 campos `str` → `Literal`; aliases `_DISPOSITIVOS`/`_REACAO_FOGO`; `model_validator(mode="before")` preservado; Literal usa valores pós-normalização
+- `sessions/*.json` actualizados para conformidade (campos obrigatórios em falta, `ç`→`c`)
+
+### BACK-06 — Error handler JSON normalizado *(branch `back/validation`)*
+
+- `app/backend/main.py` — `unhandled_exception_handler` retorna `JSONResponse({"error":"INTERNAL_ERROR","request_id":...}, 500)` em vez de re-raise
+- `HTTPException` continua a ser re-lançada (FastAPI trata nativamente)
+- `docs/plans/subplans/BACK-05.md` e `BACK-06.md` criados
+
+### BACK-05d — Pydantic Literal types em poi.py *(branch `back/validation`)*
+
+- `app/backend/schemas/poi.py` — 49 campos `str` livres → `Literal[...]` em 12 sub-modelos + `POIRequest`
+- Import `from typing import Literal`; sem `model_validator` (valores literais directos das condicionais de `Chichorro_POI.py`)
+- `POI_ATIV_TipoEdif2`: union flat de 19 valores (dependência runtime não suportada por Literal cruzado)
+- `docs/plans/subplans/BACK-05.md` actualizado com secção BACK-05d
+- Validado: `POICCRequest(POI_CC_Comb="Talvez", ...)` → `ValidationError: literal_error` ✅
+
+### TEST-02 — Infraestrutura pytest *(branch `test/automated-tests`)*
+
+- `pytest>=8.0,<9` e `pytest-cov>=5.0,<6` adicionados a `requirements.txt`
+- `app/backend/pytest.ini` — `testpaths = tests`
+- `app/backend/tests/conftest.py` — override `require_auth` + seed CSRF cookie + fixtures de payload (DPI/ESCI/CTI/POI do `parity_runner.py`)
+- `tests/test_health.py` — GET /health e GET /health/db
+- `tests/test_literals.py` — POST com campo Literal inválido → 422; auth login sem body → 422; credenciais inválidas → 401
+- `tests/test_calc.py` — POST com payload válido → 200 + resultado `0 < x ≤ 5`
+- **12/12 testes passam** em 0.22s ✅
+
+### INFRA-02 — GitHub Actions CI/CD *(branch `infra/ci-cd`)*
+
+- `.github/workflows/test.yml` — Python 3.12, `pytest -v --cov`, activa em `app/backend/**`
+- `.github/workflows/build.yml` — Node 20, `npm ci && npm run build`, activa em `app/frontend/**`
+- Path filters: sem runs desnecessários em alterações de docs ou outro subprojeto
+
+---
+
 ## audit-fix-2 — Codex findings #2-7 (2026-05-26)
 
 Branch criada a partir de `auth/roles` (via `3.1-dev`). Corrige os 6 findings pendentes da revisão Codex.

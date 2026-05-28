@@ -331,3 +331,64 @@ Razão: o fallback silencioso para `DATABASE_URL` permitia que o Alembic corress
 
 Decisão `audit-fix-2-backup-role-select-only`: criar role `chichorro_backup` (SELECT apenas) para o workflow backup-db.yml, separado de `chichorro_runtime` (DML).
 Razão: uma fuga do secret `DATABASE_URL_BACKUP` não dá escrita na BD; separação de credenciais por função é princípio de least privilege.
+
+---
+
+## 2026-05-27 — audit-fix-3 · SEC-04 · SEC-05 · SEC-07 · BACK-05 · BACK-06 · BACK-05d · TEST-02 · INFRA-02
+
+Decisão `audit-fix-3-gitignore-tools-exception`: `.gitignore` usa regra `tools/*` com excepção explícita `!tools/backup_db.py` em vez de ignorar todo o diretório.
+Razão: `tools/` contém scripts utilitários versionados; a regra anterior removia-os silenciosamente do índice git.
+
+Decisão `audit-fix-3-backup-script-sync`: `tools/backup_db.py` sincronizado com `.github/scripts/backup_db.py` (idênticos após a sessão).
+Razão: os dois scripts divergiram após audit-fix-2; `tools/` não tinha a descoberta de PK via `information_schema` nem `psycopg2.sql.Identifier`; manter duas versões distintas era fonte de bugs silenciosos em backups locais.
+
+Decisão `sec04-argon2id-over-werkzeug`: `argon2-cffi` substitui werkzeug PBKDF2/scrypt como algoritmo de hash de passwords.
+Razão: Argon2id é o algoritmo recomendado pelo OWASP e pelo RFC 9106; werkzeug usa PBKDF2-HMAC-SHA256, menos resistente a ataques de GPU; a mudança não quebra contas existentes graças ao fallback.
+
+Decisão `sec04-upgrade-on-login`: re-hash automático no login quando o hash existente não é Argon2id (fallback werkzeug bem-sucedido → UPDATE atómico na BD).
+Razão: migração gradual e transparente; evita migration forçada que tornaria contas legadas inacessíveis; a conversão acontece no próximo login sem intervenção manual.
+
+Decisão `sec04-werkzeug-fallback-temporary`: fallback werkzeug mantido para hashes `$pbkdf2`/`$scrypt$` existentes até todos os utilizadores migrarem.
+Razão: utilizadores activos com hashes legados conseguem autenticar-se enquanto a migração gradual decorre; remoção diferida para quando todos os registos forem `$argon2`.
+
+Decisão `sec05-sha256-token-storage`: tokens de verificação/reset/email-change guardados como `sha256(token)` na BD; token em claro apenas no URL do e-mail enviado ao utilizador.
+Razão: uma fuga da BD não exporia tokens activos; o princípio é análogo ao das passwords — o servidor só precisa de comparar hashes; `hashlib.sha256` sem dependência adicional.
+
+Decisão `sec05-csrf-exempt-auth-routes`: `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` adicionados a `_CSRF_EXEMPT` em `main.py`.
+Razão: estas rotas são invocadas antes de o cookie CSRF ser semeado (utilizador sem sessão); sem isenção, o registo e o reset retornavam 403 em vez de processar o pedido.
+
+Decisão `sec07-magic-bytes-not-mime-type`: validação do avatar por magic bytes (primeiros 12 bytes) em vez de `Content-Type` declarado pelo cliente.
+Razão: o campo `Content-Type` e a extensão do ficheiro podem ser adulterados; os magic bytes revelam o tipo real independentemente do que o cliente declara.
+
+Decisão `sec07-svg-rejected`: SVG rejeitado mesmo quando bem formado.
+Razão: SVG é XML e pode conter scripts embutidos (XSS stored); o projeto não tem sanitizador de SVG; rejeição total é mais segura do que tentar sanitizar.
+
+Decisão `back05-literal-over-strenuum`: `Literal[...]` da stdlib em vez de `StrEnum` para validação de valores de campo em dpi.py, esci.py, cti.py.
+Razão: `Literal` é nativamente suportado pelo Pydantic v2 sem boilerplate adicional; `StrEnum` exigiria classes separadas para cada campo com valores distintos; Pydantic valida e devolve HTTP 422 com detalhe de campo automaticamente.
+
+Decisão `back05-cti-model-validator-preserved`: em `cti.py`, o `model_validator(mode="before")` existente é preservado; os `Literal` usam os valores pós-normalização.
+Razão: cti.py normaliza `Dispositivo` e `ReacaoFogo` antes da validação Pydantic; aplicar `Literal` antes do validator causaria rejeição de valores válidos que seriam normalizados; a ordem correcta é normalizar → validar.
+
+Decisão `back06-500-json-envelope`: `unhandled_exception_handler` devolve `JSONResponse({"error":"INTERNAL_ERROR","request_id":...}, 500)` em vez de re-raise.
+Razão: re-raise em FastAPI resultava em resposta de texto plano, quebrando clientes que esperam JSON; o `request_id` permite correlação nos logs Sentry.
+
+Decisão `back06-http-exception-reraise`: `HTTPException` é re-lançada pelo handler genérico (não tratada).
+Razão: FastAPI tem handler próprio para `HTTPException` com formatação correcta; interceptar duplicaria o tratamento e poderia mascarar o código HTTP original.
+
+Decisão `back05d-literal-flat-union-tipoedif2`: `POI_ATIV_TipoEdif2` usa union flat de todos os 19 valores possíveis em vez de validação cruzada com `TipoEdif`.
+Razão: Pydantic Literal não suporta cross-field validation sem `model_validator`; poi.py não tem `model_validator` (ao contrário de cti.py); a union flat rejeita valores completamente inválidos e o cruzamento correto fica a cargo da lógica de cálculo.
+
+Decisão `test02-csrf-seed-via-get`: fixture `client` faz `GET /health` antes de ceder o cliente para semear o cookie CSRF; pedidos POST usam `{"x-csrftoken": client.cookies.get("csrftoken")}`.
+Razão: `CSRFMiddleware` corre antes da validação Pydantic — sem o header CSRF, mesmo um body inválido devolve 403 (não 422); o `GET /health` é isento de CSRF e planta o cookie sem efeitos secundários.
+
+Decisão `test02-auth-override-dependency`: `app.dependency_overrides[require_auth] = lambda: "test_user"` em vez de login real nos testes de cálculo.
+Razão: os endpoints de cálculo não tocam na BD; forçar um login real exigiria BD de teste ou mock de psycopg2; o override é a abordagem idiomática do FastAPI para testes unitários de rotas protegidas.
+
+Decisão `test02-health-db-tolerant`: `test_health_db` aceita HTTP 200 ou 503.
+Razão: em CI (GitHub Actions) não há BD de teste configurada; o teste verifica que o endpoint responde com o formato correto, não que a BD está acessível — esse check é feito pelo UptimeRobot em produção.
+
+Decisão `infra02-python312-not-314`: CI usa Python 3.12 em vez de 3.14 (versão local).
+Razão: o Render usa Python 3.12; o CI deve espelhar o ambiente de produção, não o ambiente de desenvolvimento local.
+
+Decisão `infra02-no-render-deploy-hook`: Render Deploy Hook não incluído no INFRA-02.
+Razão: o hook URL requer acesso ao dashboard Render; deploy permanece manual por decisão do utilizador; o hook pode ser adicionado a `test.yml` numa tarefa dedicada quando o utilizador confirmar o URL.

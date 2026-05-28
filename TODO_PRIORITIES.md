@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-27 (BACK-05 Pydantic Literal types + BACK-06 JSON error handler — branch back/validation, validados em produção)
+Última atualização: 2026-05-27 (BACK-05d poi.py Literal types; TEST-02 pytest 12/12; INFRA-02 GitHub Actions)
 
 ---
 
@@ -235,9 +235,9 @@ Coluna `role TEXT NOT NULL DEFAULT 'engineer'` ✅ · `require_admin` em `deps.p
 
 M-05 (2026-05-21): `legacyLogin.ts` eliminado (código morto, nunca importado) ✅ · `VITE_LOGIN_USER_1`/`VITE_LOGIN_PASS_1` removidos do `.env` local ✅ · build TypeScript 0 erros ✅ · branch `audit-fix`
 
-### ✅ BACK-05 — Pydantic Literal types nos schemas de cálculo *(concluído 2026-05-27, branch back/validation)*
+### ✅ BACK-05 + BACK-05d — Pydantic Literal types nos schemas de cálculo *(concluído 2026-05-27, branch back/validation)*
 
-`schemas/dpi.py`, `schemas/esci.py`, `schemas/cti.py` — todos os campos enum reescritos com `Literal` (valores extraídos dos scripts de cálculo). Payloads inválidos retornam 422. `poi.py` diferido (BACK-05d). Sessions actualizadas para conformidade.
+`schemas/dpi.py`, `schemas/esci.py`, `schemas/cti.py` e `schemas/poi.py` — todos os 49+23+23+13 campos enum reescritos com `Literal` (valores extraídos dos scripts de cálculo). Payloads inválidos retornam 422. Sessions actualizadas para conformidade.
 
 ### ✅ DB-05 — Least Privilege DB User *(concluído 2026-05-24, branch audit-fix)*
 
@@ -340,17 +340,13 @@ Os resultados (POI, CTI, DPI, ESCI, RI) ficam guardados associados ao utilizador
 
 Assistente de IA para ajudar os utilizadores a compreender os conceitos do CHICHORRO e a utilizar a aplicação (exclusivamente; possivelmente via Claude API ou similar).
 
-### ❌ TEST-02 — Adicionar Testes Automatizados
+### ✅ TEST-02 — Testes Automatizados *(concluído 2026-05-27, branch `test/automated-tests`)*
 
-**Objetivos:** garantir estabilidade, evitar regressões, validar auth, validar cálculo modelo CHICHORRO.
+pytest 12/12: health, Literal 422 (DPI/ESCI/CTI/POI), cálculo válido 200, auth login sem body 422, credenciais inválidas 401. Fixture `client` com override de auth e CSRF automático.
 
-Tipos: unit tests, integration tests, e2e tests.
+### ✅ INFRA-02 — Pipeline CI/CD *(concluído 2026-05-27, branch `infra/ci-cd`)*
 
-### ❌ INFRA-02 — Criar Pipeline CI/CD
-
-**Objetivo:** deploy automático, testes automáticos, linting, validação build.
-
-Possível stack: GitHub Actions + Render Deploy Hooks.
+`test.yml` (Python 3.12, pytest --cov, path `app/backend/**`) + `build.yml` (Node 20, npm ci + build, path `app/frontend/**`). Sem Render Deploy Hook por agora (deploy permanece manual).
 
 ### ✅ DOCS-01 — Migrar documentação para VitePress (FIR-31) *(concluído 2026-05-20)*
 

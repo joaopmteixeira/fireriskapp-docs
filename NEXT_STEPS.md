@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-27 (audit-fix-2 mergeada em 3.1-dev; audit-fix-3 a corrigir gaps Codex post-review)
+Última atualização: 2026-05-27 (BACK-05d poi.py Literal types; TEST-02 pytest infrastructure; INFRA-02 GitHub Actions CI/CD)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -13,7 +13,7 @@
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
-| Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/06 ✅) |
+| Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/05d/06 ✅) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
@@ -73,6 +73,33 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - `HTTPException` continua a ser re-lançada (FastAPI trata nativamente)
 - Garante que erros 5xx inesperados produzem sempre JSON estruturado (nunca HTML ou stack trace)
 - Branch `back/validation`; validado em produção ✅
+
+### ✅ BACK-05d — Pydantic Literal types em poi.py
+
+- `schemas/poi.py` — 49 campos `str` livres substituídos por `Literal[...]` em 12 sub-modelos + `POIRequest` completo
+- Valores extraídos directamente de `calc/Chichorro_POI.py`; sem `model_validator` (valores literais directos)
+- `POI_ATIV_TipoEdif2` usa union flat dos 19 valores possíveis — sem cross-field validation, mas rejeita valores completamente inválidos
+- `docs/plans/subplans/BACK-05.md` actualizado com secção BACK-05d
+- Branch `back/validation` (fresca); validado localmente (`ValidationError: literal_error` ✅)
+
+### ✅ TEST-02 — Infraestrutura pytest e testes iniciais
+
+- `pytest>=8.0,<9` e `pytest-cov>=5.0,<6` adicionados a `requirements.txt`
+- `app/backend/pytest.ini` — `testpaths = tests`
+- `app/backend/tests/conftest.py` — fixture `client` (override `require_auth` + seed CSRF cookie), fixture `ch` (headers CSRF), fixtures de payload para DPI/ESCI/CTI/POI
+- `tests/test_health.py` — `GET /health` e `GET /health/db` (tolerante a BD indisponível)
+- `tests/test_literals.py` — POST com campo Literal inválido → 422; auth login sem body → 422; auth login inválido → 401
+- `tests/test_calc.py` — POST com payload válido → 200 + resultado numérico `0 < x ≤ 5`
+- **12/12 testes passam** em 0.22s localmente ✅
+- Branch `test/automated-tests`; subplan `TEST-02.md` criado
+
+### ✅ INFRA-02 — Pipeline CI/CD GitHub Actions
+
+- `.github/workflows/test.yml` — ativa em push/PR com alterações em `app/backend/**`; Python 3.12; `pytest -v --cov`
+- `.github/workflows/build.yml` — ativa em push/PR com alterações em `app/frontend/**`; Node 20; `npm ci && npm run build`
+- Path filters: cada workflow corre apenas quando os ficheiros relevantes mudam
+- Sem Render Deploy Hook por agora (deploy permanece manual)
+- Branch `infra/ci-cd`; subplan `INFRA-02.md` criado
 
 ---
 
@@ -423,28 +450,6 @@ Todas as páginas cobertas: sidebar, POI/DPI/ESCI cards, ProfilePage, SettingsPa
 
 ## Pendente — Prioridade Média
 
-### AUTH-10 — Sistema de Roles/Permissões
-
-Estrutura sugerida: `admin`, `engineer`, `viewer`, `demo`.
-
-**Importante:** verificação de permissões sempre no backend. Frontend não é segurança.
-
-### SEC-08 — Remover `legacyLogin.ts`
-
-Ficheiro `legacyLogin.ts` lê `VITE_LOGIN_USER_*`/`VITE_LOGIN_PASS_*`. Variáveis `VITE_*` ficam em texto claro no bundle JS. Remover antes de utilizadores externos terem acesso.
-
-### DB-04 — Migrations Alembic
-
-Versioning de schema com rollback. Remover DDL do arranque da app.
-
-### SEC-09 — CSP Header
-
-`Content-Security-Policy` header completo no backend ou proxy.
-
-### INFRA-04 — `/health/db`
-
-Health check com query real à BD para deteção de falha de ligação ao Supabase.
-
 ### UI-02 — Página de Documentação
 
 Página de DOCS integrada na app com documentação e manuais de utilização.
@@ -469,10 +474,6 @@ Formulário de reporte de bugs na app. Canal de destino a definir: e-mail, GitHu
 
 Containerização para deploy reproduzível. Para o Render (PaaS) atual, a ausência não é bloqueante. Relevante para migração futura para VPS/Proxmox.
 
-### SEC-06 — Política de Logs — Sem PII em Produção
-
-Garantir que tokens e PII não são impressos em produção. Verificar que `DEBUG` não está ativo no Render.
-
 ### FEAT-01 — Gráfico de Impacto de Intervenções
 
 Tornado chart (bar chart horizontal) no módulo de Intervenções: impacto individual de cada intervenção selecionada.
@@ -495,13 +496,13 @@ Resultados (POI, CTI, DPI, ESCI, RI) ficam guardados por utilizador e em tabela 
 
 Assistente de IA para ajudar os utilizadores a compreender o CHICHORRO e a usar a aplicação (Claude API ou similar).
 
-### TEST-02 — Testes Automatizados
+### ✅ TEST-02 — Testes Automatizados (concluído 2026-05-27)
 
-Unit tests, integration tests, e2e tests. Objetivos: estabilidade, prevenção de regressões, validação auth e modelo CHICHORRO.
+12/12 testes pytest passam. Cobre health, Literal 422, cálculo válido e auth básico. Ver secção acima.
 
-### INFRA-02 — Pipeline CI/CD
+### ✅ INFRA-02 — Pipeline CI/CD (concluído 2026-05-27)
 
-GitHub Actions + Render Deploy Hooks. Objetivos: deploy automático, testes automáticos, linting, validação de build.
+GitHub Actions: `test.yml` (Python 3.12 + pytest) e `build.yml` (Node 20 + npm build), ambos com path filters. Ver secção acima.
 
 ---
 
