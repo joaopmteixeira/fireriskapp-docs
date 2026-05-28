@@ -4,6 +4,34 @@
 
 ---
 
+## 2026-05-28 — SEC-04b · session-remount · POI conditional fields · DOCS-02
+
+Decisão `sec04b-remove-werkzeug-confirmed`: werkzeug removido do `_verify_password` após confirmação visual na BD Supabase que ambos os utilizadores ativos têm hashes `$argon2id`.
+Razão: o fallback werkzeug era temporário por design (SEC-04); quando todos os hashes estão migrados, manter werkzeug aumenta a superfície de ataque e introduz código morto.
+
+Decisão `sec04b-requirements-cleanup`: `werkzeug>=3.0,<4` removido de `requirements.txt`.
+Razão: werkzeug só era usado no fallback; sem fallback, a dependência é completamente desnecessária e reduz o footprint de dependências.
+
+Decisão `session-remount-key-on-outlet`: `key={sessionKey}` adicionado ao `<Outlet>` no `AppLayout.tsx` em vez de forçar reload de página.
+Razão: importar ou limpar uma sessão actualizava o sessionStorage mas a página React não remontava — componentes mantinham estado antigo em memória; o `key` é a abordagem idiomática React para forçar unmount/mount sem reload de página.
+
+Decisão `poi-payload-filter-by-options-length`: payload filtrado por `opts.length > 0` em vez de `!f.visibleWhen || f.visibleWhen(values)`.
+Razão: a primeira correção filtrava todos os campos escondidos incluindo campos com opções estáticas (ex: `POI_IA_Conduta`) que o backend exige como obrigatórios; o problema original só afetava campos `getOptions` dinâmicos que retornam `[]` quando não aplicáveis.
+
+Decisão `poi-conditional-fields-optional-backend`: `POI_IA_TipoInst2` e `POI_ATIV_TipoEdif2` tornados `Optional[Literal[...]] = None` no backend.
+Razão: campos dinâmicos com `getOptions` que retorna `[]` são excluídos do payload pelo frontend; o backend deve aceitar a ausência destes campos sem falha de validação; a lógica de cálculo em `Chichorro_POI.py` já os ignora quando não aplicáveis.
+
+Decisão `cti-ativ-bidirectional-sync-via-module-inputs`: sincronização CTI↔ATIV TipoEdif implementada actualizando module inputs de ambos os lados antes de `setValues` (antes do disparo de `SESSION_DATA_UPDATED_EVENT`).
+Razão: os listeners de sync lêem `getModuleInputs()` para decidir o valor correcto; se os module inputs estiverem já actualizados quando o evento dispara, os listeners encontram valores consistentes e fazem no-op sem sobrepor a mudança do utilizador.
+
+Decisão `cti-tipodedif-not-disabled`: `disabled={isTipoEdifSynced}` removido do campo TipoEdif na CtiPage.
+Razão: o utilizador quer poder editar CTI TipoEdif directamente; o campo estava bloqueado enquanto POI ATIV tivesse um valor — comportamento não intencional; o sync bidirecional garante consistência sem precisar de bloquear o campo.
+
+Decisão `docs02-canonical-subplan-header`: formato canónico `Estado → Data de conclusão → Branch` adoptado para todos os subplans; YAML frontmatter e datas inline no H1 proibidos.
+Razão: os 58 subplans tinham 4+ formatos distintos (YAML frontmatter, `*(concluído YYYY-MM-DD)*` no H1, `**Data:**` sem "de conclusão"); uniformização facilita leitura e geração de relatórios automáticos.
+
+---
+
 ## 2026-04-18
 
 Decisão: `app/frontend/` é a base ativa principal da interface moderna.

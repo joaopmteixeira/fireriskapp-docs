@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-27 (BACK-05d poi.py Literal types; TEST-02 pytest infrastructure; INFRA-02 GitHub Actions CI/CD)
+Última atualização: 2026-05-28 (SEC-04b werkzeug removido; DOCS-02 subplans uniformizados; POI 422 fix; CTI sync bidirecional; session remount fix)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -28,6 +28,31 @@
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-05-28)
+
+### ✅ SEC-04b — Remoção do fallback werkzeug
+
+- `app/backend/routers/auth.py` — `_verify_password` simplificada: apenas `_PH.verify` (argon2id); fallback werkzeug e upgrade-on-login removidos
+- `app/backend/requirements.txt` — `werkzeug>=3.0,<4` removido
+
+### ✅ DOCS-02 — Uniformização headers subplans
+
+- 58 ficheiros `docs/plans/subplans/` — formato canónico Estado → Data de conclusão → Branch aplicado em batch
+- `docs/plans/subplans/DESIGN.md` eliminado (duplicado de `docs/DESIGN.md`)
+- `docs/TODO_PRIORITIES.md` — SEC-09 ❌ duplicado removido; INFRA-04 corrigido ❌→✅
+
+### ✅ fix — Session remount no AppLayout
+
+- `app/frontend/src/pages/AppLayout.tsx` — `key={sessionKey}` no `<Outlet>` para forçar remount ao importar/limpar sessão
+
+### ✅ fix — POI campos condicionais + sync CTI↔ATIV
+
+- `app/backend/schemas/poi.py` — `POI_IA_TipoInst2` e `POI_ATIV_TipoEdif2` tornados `Optional[Literal[...]] = None` nos 3 modelos
+- `app/frontend/src/components/poi/PoiFactorSection.tsx` — payload filtrado por `opts.length > 0`; pré-actualização CTI module inputs em `setField`
+- `app/frontend/src/pages/CtiPage.tsx` — `disabled={isTipoEdifSynced}` removido; pré-actualização POI module inputs em `update`; sync bidirecional funcional
 
 ---
 

@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-27 (BACK-05d poi.py Literal types; TEST-02 pytest 12/12; INFRA-02 GitHub Actions)
+Última atualização: 2026-05-28 (SEC-04b werkzeug removido; DOCS-02 subplans uniformizados; POI conditional fields fix; CTI sync bidirecional)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -159,6 +159,7 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
 | DOCS-01 | ✅ | Migrar documentação de Docsify para VitePress — build estático, SEO, deploy em docs.chichorrofireriskapp.joaopmteixeira.net. Linear: FIR-31. | 3.1-dev |
+| DOCS-02 | ✅ | Uniformizar headers de todos os subplans (`docs/plans/subplans/`) — formato canónico Estado→Data→Branch; eliminado DESIGN.md duplicado | 3.1-dev |
 
 ---
 

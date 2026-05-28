@@ -25,7 +25,19 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ## Concluídos Recentemente (mais recente → mais antigo)
 
-### ✅ SEC-04b — Remoção do fallback werkzeug `Prioridade Alta` *(2026-05-28, `sec/remove-werkzeug-fallback`)*
+### ✅ fix: POI campos condicionais + sync CTI↔ATIV + CTI desbloqueado *(2026-05-28, `3.1-dev`)*
+
+`POI_IA_TipoInst2` e `POI_ATIV_TipoEdif2` tornados `Optional` no backend; payload filtrado por `opts.length > 0` (fix correto após tentativa com visibleWhen); CTI TipoEdif desbloqueado; sync bidirecional CTI↔ATIV via module inputs. Resolve HTTP 422 em POI IA e POI ATIV.
+
+---
+
+### ✅ fix: session remount no AppLayout *(2026-05-28, `3.1-dev`)*
+
+`key={sessionKey}` no `<Outlet>` força remount ao importar/limpar sessão — páginas reflectem novo estado imediatamente sem reload manual.
+
+---
+
+### ✅ SEC-04b — Remoção do fallback werkzeug `Prioridade Alta` *(2026-05-28, `3.1-dev`)*
 
 Após confirmação que ambos os utilizadores têm hashes `$argon2id`, werkzeug removido de `auth.py` e `requirements.txt`; `_verify_password` simplificada para apenas argon2id.
 

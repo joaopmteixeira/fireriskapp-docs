@@ -2,6 +2,32 @@
 
 ---
 
+## 2026-05-28 — SEC-04b · DOCS-02 · session-remount · POI conditional fields
+
+### SEC-04b — Remoção do fallback werkzeug *(commit direto `3.1-dev`)*
+
+- `app/backend/routers/auth.py` — `_verify_password` simplificada: apenas `_PH.verify` (argon2id); bloco werkzeug e upgrade-on-login removidos
+- `app/backend/requirements.txt` — `werkzeug>=3.0,<4` removido
+- `docs/plans/subplans/SEC-04.md` — secção SEC-04b adicionada com data/branch
+
+### DOCS-02 — Uniformização headers dos subplans *(commit direto `3.1-dev`)*
+
+- 58 ficheiros `docs/plans/subplans/` — formato canónico `Estado → Data de conclusão → Branch`; YAML frontmatter, datas inline no H1 e campos `**Data:**` removidos
+- `docs/plans/subplans/DESIGN.md` — eliminado (duplicado de `docs/DESIGN.md`, 753 linhas)
+- `docs/TODO_PRIORITIES.md` — bloco ❌ SEC-09 duplicado removido; INFRA-04 corrigido de ❌ para ✅
+
+### fix(frontend): session remount *(commit `da8c6fe`)*
+
+- `app/frontend/src/pages/AppLayout.tsx` — `key={sessionKey}` no `<Outlet>` forçava remount completo ao importar/limpar sessão; páginas passam a reflectir novo estado imediatamente
+
+### fix(poi): campos condicionais — dois commits *(commits `81ba110` + `c2dc0ab`)*
+
+- `app/backend/schemas/poi.py` — `POI_IA_TipoInst2` e `POI_ATIV_TipoEdif2` tornados `Optional[Literal[...]] = None` nos 3 modelos (`POIIARequest`, `POIATIVRequest`, `POIRequest`)
+- `app/frontend/src/components/poi/PoiFactorSection.tsx` — payload filtrado por `opts.length > 0` (excluir campos getOptions sem opções; manter campos estáticos com visibleWhen); pré-actualização de module inputs CTI+POI antes do `setValues` quando muda `POI_ATIV_TipoEdif`
+- `app/frontend/src/pages/CtiPage.tsx` — `disabled={isTipoEdifSynced}` removido do campo TipoEdif; pré-actualização simétrica de module inputs ao mudar TipoEdif no CTI; sync bidirecional CTI↔ATIV funcional
+
+---
+
 ## 2026-05-27 — audit-fix-3 · SEC-04 · SEC-05 · SEC-07 · BACK-05 · BACK-06 · BACK-05d · TEST-02 · INFRA-02
 
 ### audit-fix-3 — Gaps Codex post-review *(branch `audit-fix-3`)*
