@@ -2,72 +2,13 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-27 (BACK-05d poi.py Literal types; TEST-02 pytest 12/12; INFRA-02 GitHub Actions)
-
----
-
-## Estado Atual da Arquitetura
-
-### Frontend
-
-- React
-- TypeScript
-- Vite
-- TailwindCSS
-
-### Backend
-
-- FastAPI (Python)
-
-### Base de Dados
-
-- PostgreSQL (Supabase)
-
-### Sistema de Autenticação
-
-- Starlette Session Cookies
-- Sessões server-side
-- Verificação de e-mail
-- Recuperação de palavra-passe
-- Logging de acessos
-
----
-
-## Avaliação Geral
-
-O backend atual já apresenta uma arquitetura relativamente moderna e segura.
-
-Já foram identificados:
-
-- hashing de passwords
-- proteção SQL injection
-- sessões FastAPI/Starlette
-- verificação e-mail
-- reset password
-- logging acessos
-- frontend desacoplado React
-
-A prioridade atual NÃO deve ser mudar de linguagem ou reescrever tudo.
-
-A prioridade deve ser:
-
-```text
-Hardening segurança
-+
-Melhoria arquitetura
-+
-Deployment
-+
-Testes
-+
-Monitorização
-```
+Última atualização: 2026-05-28 (SEC-04b werkzeug removido; DOCS-02 subplans uniformizados)
 
 ---
 
 ## Prefixos de ID
 
-- **`AUTH`** — Autenticação e sessões (AUTH-01…05 já concluídos — ver CHANGELOG)
+- **`AUTH`** — Autenticação e sessões (AUTH-01…05 concluídos — ver CHANGELOG)
 - **`DB`** — Base de dados e persistência
 - **`SEC`** — Segurança e hardening (não-auth)
 - **`UI`** — Interface e experiência do utilizador
@@ -76,318 +17,471 @@ Monitorização
 - **`BACK`** — Arquitetura e código backend
 - **`INFRA`** — Infraestrutura, deploy e DevOps
 - **`TEST`** — Testes e validação
+- **`DOCS`** — Documentação
 - **`MODEL`** — Modelo CHICHORRO (backlog pós-3.1)
+- **`B`** — Tarefas de manutenção/organização
 
 ---
 
-## Concluído Recentemente
+## Concluídos Recentemente (mais recente → mais antigo)
 
-### ✅ Verificação pós-deploy secção 8 + bugs de produção corrigidos (2026-05-26) `Prioridade Alta`
+### ✅ SEC-04b — Remoção do fallback werkzeug `Prioridade Alta` *(2026-05-28, `sec/remove-werkzeug-fallback`)*
 
-**CSRF split-domain** — cookie CSRF do backend (`api.*`) era ilegível pelo frontend (`chichorrofireriskapp.*`); corrigido com `cookie_domain` no `CSRFMiddleware` (parsado de `FRONTEND_URL`); confirmado nos headers HTTP em produção ✅
-
-**Supabase RLS** — Row Level Security ativo por defeito tornava todas as linhas invisíveis para `chichorro_runtime` → login sempre 401 mesmo com password correta, INSERTs em `access_log` falhavam com `InsufficientPrivilege`; desativado via SQL Editor + Alembic migration `0002_disable_rls.py` ✅
-
-**Secção 8 completa** — todos os 16 planos do ciclo de audit confirmados em produção; login com `JoaoTeixeira` funciona; endpoints `/health` e `/health/db` respondem corretamente; sistema de backups automáticos operacional ✅
+Após confirmação que ambos os utilizadores têm hashes `$argon2id`, werkzeug removido de `auth.py` e `requirements.txt`; `_verify_password` simplificada para apenas argon2id.
 
 ---
 
-### ✅ B-01 — Consolidação docs de deploy (2026-05-24) `Prioridade Baixa`
+### ✅ DOCS-02 — Uniformização dos headers dos subplans `Prioridade Baixa` *(2026-05-28, `3.1-dev`)*
 
-`docs/deploy/ENV_VARS.md` reescrito com todas as variáveis actuais ✅ · `docs/deploy/DEPLOY.md` corrigido (uvicorn, referência a `DEPLOY_PRODUCTION.md`) ✅ · `DEPLOY_CLOUD_VPS.md` apagado ✅ · **audit-fix 16/16 completo**
-
----
-
-### ✅ BACK-07 / B-02 — Naming de rotas API (2026-05-24) `Prioridade Baixa`
-
-Decisão documentada: manter paths actuais (`/POI/*`, `/CTI/*`, etc.) — subdomain `api.*` fornece contexto; prefixo `/api` seria redundante ✅ · Aliases legacy removidos (`/login`, `/logout`, `/me`, `/RI_interv`) — dead code confirmado por grep ✅ · Nginx VPS prefix-strip config documentada em `DEPLOY_PRODUCTION.md` ✅
+58 ficheiros em `docs/plans/subplans/` uniformizados com formato Estado → Data de conclusão → Branch; `DESIGN.md` duplicado removido; SEC-09 ❌ duplicado e INFRA-04 incorreto corrigidos.
 
 ---
 
-### ✅ INFRA-01 / M-04 — Observabilidade mínima (2026-05-24) `Prioridade Média`
+### ✅ BACK-05d + BACK-06 — Pydantic Literal types e JSON error handler `Prioridade Média` *(2026-05-27, `back/validation`)*
 
-M-04 (audit-fix): `X-Request-ID` middleware em `main.py` — UUID por pedido, header na resposta, tag Sentry `request_id` no exception handler ✅ · step `if: failure()` em `backup-db.yml` via Resend API para `eng.joao.pm.teixeira@gmail.com` ✅ · **Ações manuais pendentes:** UptimeRobot monitor `/health/db`, Sentry alert rule (> 10 eventos/h), `RESEND_API_KEY` GitHub Secret
-
----
-
-### ✅ DB-01 — Neon PostgreSQL — Validação em Produção `Prioridade Alta`
-
-Neon configurado no Render ✅ · Deploy verde ✅ · TEST-01 aprovado ✅
-
-### ✅ TEST-01 — Teste End-to-End em Produção `Prioridade Alta`
-
-Fluxo completo validado: registo → e-mail → verificação → login → reset password ✅
-
-### ✅ AUTH-11 — Modal de Sessão Expirada — Validação Produção `Prioridade Baixa`
-
-Modal aparece corretamente ao apagar cookie de sessão manualmente ✅
-
-### ✅ AUTH-12 — Merge `feat/access-log` → `3.1-dev` `Prioridade Alta`
-
-Merge concluído em `3.1-dev` · push para GitHub ✅ · sync docs disparado ✅
-
-### ✅ AUTH-07 — Rate Limiting nos Endpoints de Autenticação `Prioridade Alta`
-
-slowapi + Upstash Redis EU (free tier) · validado em produção dev ✅ · contadores visíveis no Data Browser Upstash ✅
-
-### ✅ AUTH-08 — Regenerar Sessão Após Login `Prioridade Alta`
-
-Sessao limpa nos pontos de login do backend FastAPI · mitigação session fixation (OWASP ASVS V3.3) ✅
-
-### ✅ AUTH-06 — Hardening de Cookies de Sessão `Prioridade Alta`
-
-HTTPONLY ✅ · SECURE via `CHICHORRO_SESSION_SECURE=1` ✅ · SAMESITE=Lax ✅ · cookie renomeado para `chichorro_session` (anti-fingerprinting) ✅
-
-### ✅ SEC-01 — CORS estrito em produção (A-01, 2026-05-22) `Prioridade Alta`
-
-`allow_headers` restringido ✅ · métodos GET/POST/OPTIONS ✅ · `max_age=86400` ✅ · fallback dev explícito ✅
-A-01 (audit-fix): sem `*`, `https://` obrigatório, `FRONTEND_URL` deve estar incluída nas origins ✅
-
-### ✅ SEC-02 — HTTPS Obrigatório em Produção (C-01 reforçado) `Prioridade Alta`
-
-Render força HTTPS no reverse proxy ✅ · `CHICHORRO_SESSION_SECURE=1` ativo ✅ · HSTS via `@app.after_request` em produção ✅
-C-01 (2026-05-21): fail-fast `FRONTEND_URL`/`BACKEND_URL` obrigatórias e https:// em produção ✅ · `app_base_url` overridden por `FRONTEND_URL` ✅ · `X-Forwarded-Host` adicionado ao nginx ✅ · Flask→FastAPI nos comentários nginx ✅
-
-### ✅ SEC-03 — Headers de Segurança `Prioridade Alta`
-
-`X-Content-Type-Options: nosniff` ✅ · `X-Frame-Options: DENY` ✅ · `Referrer-Policy: strict-origin-when-cross-origin` ✅ · CSRF coberto por camadas existentes ✅ · CSP diferida para Cloudflare Pages ✅
-
-### ✅ INFRA-05 — Cache-Control no edge e backend (M-02) `Prioridade Média`
-
-M-02 (2026-05-22): `Cache-Control: no-store` adicionado ao middleware `add_security_headers` em `main.py` ✅ · `_headers` Cloudflare Pages actualizado com `no-store` em `/*` e `public, max-age=31536000, immutable` em `/assets/*` ✅ · assets Vite fingerprintados cacheados 1 ano de forma segura ✅ · branch `audit-fix`
-
-### ✅ SEC-09 — CSP e Permissions-Policy (M-01) `Prioridade Média`
-
-M-01 (2026-05-22): `Content-Security-Policy` e `Permissions-Policy` adicionados ao middleware `add_security_headers` em `main.py` ✅ · CSP cobre Google Fonts, Sentry ingest, sem `'unsafe-inline'` ✅ · `app/frontend/public/_headers` criado para Cloudflare Pages com `connect-src` para backend + HSTS preload ✅ · branch `audit-fix`
-
-### ✅ AUTH-07 — Fail-fast Redis no Arranque (A-02) `Prioridade Alta`
-
-A-02 (2026-05-22): `_check_redis_startup()` adicionado ao lifespan em `main.py` — pinga Redis em produção antes de aceitar requests ✅ · URL inválida falha no arranque com `RuntimeError A-02` ✅ · token Redis nunca exposto nos logs (`type(exc).__name__` em vez de `str(exc)`) ✅ · sem package novo (`limits[redis]` já inclui `redis`) ✅ · branch `audit-fix`
-
-### ✅ SEC-10 — Fail-fast Secrets em Produção (C-04) `Prioridade Alta`
-
-C-04 (2026-05-21): `CHICHORRO_SECRET_KEY=dev-change-me` rejeita arranque ✅ · `DATABASE_URL` obrigatória ✅ · `CHICHORRO_CORS_ORIGINS` obrigatória ✅ · `UPSTASH_REDIS_URL` obrigatória (sem fallback `memory://` silencioso) ✅ · `RESEND_API_KEY` obrigatória ✅ · `MAIL_DEFAULT_SENDER` obrigatória ✅ · `deploy/env.production.example` e `deploy/env.development.example` criados ✅ · 8/8 testes de import aprovados ✅
-
-### ✅ AUTH-06 — Cookies Secure/SameSite atrás do proxy (C-02) `Prioridade Alta`
-
-C-02 (2026-05-21): `field_validator` restringe `CHICHORRO_SESSION_SAMESITE` a Lax/Strict ✅ · `wsgi.py` documenta start command Render com `--proxy-headers --forwarded-allow-ips='*'` ✅ · `env.production.example` documenta Render start command ✅ · nota: `ProxyHeadersMiddleware` removido no Starlette 1.0.0 — uvicorn flags são a abordagem correta ✅ · **ação pendente:** atualizar Start Command no dashboard Render
+Campos enum dos schemas DPI/ESCI/CTI/POI convertidos para `Literal[...]`; handler global 500 retorna sempre JSON `{"error":"INTERNAL_ERROR","request_id":...}`.
 
 ---
 
-## ✅ `feat/security` mergeado em `3.1-dev` (2026-05-12)
+### ✅ SEC-04 + SEC-05 + SEC-07 — Argon2id, SHA-256 tokens e magic bytes avatar `Prioridade Média` *(2026-05-27, `sec/hardening` + `sec/token-hashing`)*
 
-Auditoria de segurança e usabilidade concluída. Branch mergeado.
+Passwords migradas de werkzeug para argon2id (RFC 9106 level 1); tokens guardados como SHA-256 na BD; upload de avatar valida magic bytes reais (JPEG/PNG/WebP/GIF).
 
 ---
 
-## ✅ AUTH-09 — Editar Perfil (concluído 2026-05-13)
+### ✅ TEST-02 + INFRA-02 — pytest e GitHub Actions CI/CD `Prioridade Baixa` *(2026-05-27, `test/automated-tests` + `infra/ci-cd`)*
 
-Implementação completa em `3.1-dev`:
+12/12 testes pytest com fixture CSRF automático; workflows `test.yml` e `build.yml` com path filters para backend e frontend separados.
 
-- **AUTH-09** — Backend: 5 novas rotas (`/auth/profile/username`, `/auth/profile/email`, `/auth/verify-email-change/<token>`, `/auth/profile/password`, `/auth/profile/delete`); migração DB colunas `new_email`, `new_email_token`, `new_email_token_expires_at`; rate limit 5/hora; fix `ALTER TABLE IF NOT EXISTS` → `try/except` para compatibilidade SQLite
-- **AUTH-09a** — ProfilePage redesign: card compacto `max-w-sm`, header gradient `brand-900→brand-800`, avatar circular com initials fallback, menu accordion com ícones MDI (`mdiAccount`, `mdiLock`, `mdiAlertCircleOutline`, `mdiLogout`) e chevron animado; modal de eliminação com texto de confirmação
-- **AUTH-09b** — Avatar de utilizador: coluna `avatar TEXT` na tabela `users`, rota `POST /auth/profile/avatar` (valida `data:image/`, limite 700 KB base64, rate limit 20/hora), upload frontend com canvas resize 256×256 JPEG 0.85
-- **AUTH-09c** — ProfilePage redesign card compacto: 4 rows expansíveis inline (nome de utilizador, e-mail, palavra-passe, apagar conta); pencil overlay no avatar; sem "Zona de perigo" separada; sem botão "Sair"
+---
 
-### ✅ UI-06 — Página de Definições (concluído 2026-05-13)
+### ✅ AUTH-10 — Sistema de roles/permissões `Prioridade Média` *(2026-05-26, `auth/roles`)*
 
-- `src/lib/prefs.ts` — store de preferências em localStorage; `Prefs = {theme, warnOnExit, decimalPlaces}`; `usePrefs()` hook reactivo via `PREFS_CHANGED_EVENT`; `applyTheme()` com suporte system/claro/escuro
-- `SettingsPage.tsx` — 3 secções: Aparência (radio), Sessão (toggle), Resultados (radio casas decimais)
-- `AppLayout.tsx` — `shouldWarnOnExit` usa `prefs.warnOnExit`; sidebar username via `/auth/me`
-- `tailwind.config.js` — `darkMode: "class"`; paleta ink estendida (400, 800, 950)
-- `RiPage.tsx` + `CtiPage.tsx` — `toFixed(getPrefs().decimalPlaces)` em todos os resultados numéricos
-- Fix 405 avatar: `_serve_spa_or_asset` no backend FastAPI exclui agora `auth`, `admin`, `login`, `logout`, `me` do catch-all GET
+Coluna `role` na BD; `require_admin` em `deps.py`; rotas `/admin/*` protegidas; sidebar condicional para grupo ADMIN.
+
+---
+
+### ✅ DB-05 — Least privilege DB user `Prioridade Média` *(2026-05-24, `audit-fix`)*
+
+Alembic usa `DATABASE_URL_MIGRATIONS` (superuser); runtime usa `chichorro_runtime` com apenas DML. Ações manuais: criar role no Supabase, atualizar env vars Render e GitHub Secret.
+
+---
+
+### ✅ B-01 + BACK-07 — Consolidação docs de deploy e naming de rotas API `Prioridade Baixa` *(2026-05-24, `audit-fix`)*
+
+`ENV_VARS.md` e `DEPLOY.md` reescritos; `DEPLOY_CLOUD_VPS.md` apagado; aliases legacy `/login`, `/logout`, `/me`, `/RI_interv` removidos; decisão de manter prefixos `/POI/*`, `/CTI/*` documentada.
+
+---
+
+### ✅ INFRA-01/M-04 — X-Request-ID middleware e alerta de backup `Prioridade Média` *(2026-05-24, `audit-fix`)*
+
+`X-Request-ID` UUID por pedido com tag Sentry; `backup-db.yml` envia email de alerta via Resend em caso de falha.
+
+---
+
+### ✅ Ciclo audit-fix (16 planos) — DB-04, DB-03, SEC-09, INFRA-05, SEC-06, SEC-08, AUTH-07/A-02, SEC-10, SEC-01/A-01, AUTH-13, INFRA-04 `Prioridades Média/Alta` *(2026-05-22, `audit-fix`)*
+
+Alembic; backups automáticos; CSP+Permissions-Policy; Cache-Control; logs sem PII; fail-fast Redis e secrets; CORS restrito; hardening sessão (max_age, CSRF); endpoint `/health/db`.
+
+---
+
+### ✅ DOCS-01 + INFRA-01 — VitePress e Sentry+UptimeRobot `Prioridade Baixa/Média` *(2026-05-19~20, `3.1-dev`)*
+
+Documentação migrada para VitePress em `docs.chichorrofireriskapp.joaopmteixeira.net`; Sentry (frontend + backend) e UptimeRobot configurados.
+
+---
+
+### ✅ UI-07 — Dark mode `Prioridade Baixa` *(2026-05-18, `3.1-dev`)*
+
+Tema escuro em todas as páginas: sidebar, cards, ProfilePage, SettingsPage, RiPage, CtiPage, InterventionsPage e páginas de autenticação.
+
+---
+
+### ✅ AUTH-09 (a/b/c) + UI-06 — Editar Perfil e SettingsPage `Prioridade Média` *(2026-05-13, `3.1-dev`)*
+
+5 rotas de perfil (username, email c/ re-verificação, password, avatar, delete); ProfilePage card compacto com 4 rows expansíveis e avatar circular; SettingsPage com tema, warnOnExit e casas decimais em localStorage.
+
+---
+
+### ✅ BACK-01 + BACK-02 + BACK-04 — FastAPI, logging e deploy `Prioridade Média` *(2026-05-12~15, `feat/flask-to-fastapi`)*
+
+Migração completa Flask → FastAPI com estrutura modular; logging de acessos com user-agent e IDs; deploy no Render com gunicorn.
+
+---
+
+### ✅ feat/security — SEC-01..03, AUTH-06..08, SEC-08 `Prioridade Alta` *(2026-05-12, `feat/security`)*
+
+CORS estrito; HTTPS obrigatório; headers de segurança; cookies HTTPONLY/SECURE/SameSite; session regeneration pós-login; rate limiting slowapi; legacyLogin.ts removido.
+
+---
+
+### ✅ AUTH-11 + AUTH-12 + DB-01 + TEST-01 — Produção: modal sessão, merge, Neon, e2e `Prioridade Alta` *(2026-05-08, `feat/access-log`)*
+
+Modal de sessão expirada validado em produção; merge `feat/access-log` → `3.1-dev`; PostgreSQL Neon configurado no Render; fluxo completo registo → email → verificação → login → reset validado.
+
+---
+
+## Prioridade Alta
+
+### ✅ AUTH-06 — Hardening de cookies de sessão (concluído 2026-05-22, branch `feat/security` + `audit-fix`)
+
+Cookies com HTTPONLY, SECURE (`CHICHORRO_SESSION_SECURE=1`) e SameSite=Lax; cookie renomeado para `chichorro_session` (anti-fingerprinting); fase C-02 corrigiu interpretação de headers de proxy Render com `--proxy-headers --forwarded-allow-ips='*'`.
+
+---
+
+### ✅ AUTH-07 — Rate limiting nos endpoints /auth/* (concluído 2026-05-22, branch `feat/security` + `audit-fix`)
+
+slowapi com Upstash Redis EU (free tier) para limites globais entre workers; fail-fast `_check_redis_startup()` no lifespan rejeita arranque se Redis inválido em produção; contadores visíveis no Data Browser Upstash.
+
+---
+
+### ✅ AUTH-08 — Regeneração de sessão após login (concluído 2026-05-08, branch `feat/security`)
+
+`request.session.clear()` antes de definir `chichorro_auth=1` em todos os pontos de login — mitiga session fixation (OWASP ASVS V3.3).
+
+---
+
+### ✅ AUTH-12 — Merge feat/access-log → 3.1-dev (concluído 2026-05-08, branch `feat/access-log`)
+
+Integração do sistema de autenticação completo (AUTH-01…AUTH-08, AUTH-11, DB-01, TEST-01) no branch principal após validação e2e em produção.
+
+---
+
+### ✅ DB-01 — Neon PostgreSQL em produção (concluído 2026-05-08, branch `feat/access-log`)
+
+PostgreSQL Neon configurado no Render via `DATABASE_URL`; substituiu SQLite que só funciona em desenvolvimento.
+
+---
+
+### ✅ TEST-01 — Teste e2e em produção (concluído 2026-05-08, branch `feat/access-log`)
+
+Fluxo completo validado manualmente: registo → email Resend → verificação → login → reset password com cookies HTTPS no Render.
+
+---
+
+### ✅ SEC-01 — CORS estrito em produção (concluído 2026-05-22, branch `feat/security` + `audit-fix`)
+
+`allow_origins` sem `*`; `https://` obrigatório; `allow_headers` restringido; `max_age=86400`; `FRONTEND_URL` incluída nas origins; fallback dev explícito (A-01).
+
+---
+
+### ✅ SEC-02 — HTTPS obrigatório em produção (concluído 2026-05-12, branch `feat/security`)
+
+Render força HTTPS no reverse proxy; `CHICHORRO_SESSION_SECURE=1` ativo; HSTS via middleware; fail-fast `FRONTEND_URL`/`BACKEND_URL` obrigatórias com `https://` em produção; `app_base_url` overridden por `FRONTEND_URL` (C-01).
+
+---
+
+### ✅ SEC-03 — Headers de segurança e CSRF (concluído 2026-05-12, branch `feat/security`)
+
+`X-Content-Type-Options: nosniff`; `X-Frame-Options: DENY`; `Referrer-Policy: strict-origin-when-cross-origin`; `starlette-csrf` middleware para proteção CSRF.
+
+---
+
+### ✅ SEC-10 — Fail-fast secrets em produção (concluído 2026-05-21, branch `audit-fix`)
+
+`CHICHORRO_SECRET_KEY=dev-change-me` rejeita arranque; `DATABASE_URL`, `CHICHORRO_CORS_ORIGINS`, `UPSTASH_REDIS_URL`, `RESEND_API_KEY`, `MAIL_DEFAULT_SENDER` obrigatórias; 8/8 testes de import aprovados (C-04).
 
 ---
 
 ## Prioridade Média
 
-### ❌ UI-02 — Docs — Página de Documentação
+### ❌ UI-02 — Página de Documentação
 
 Criar página de DOCS na app com documentação e manuais de utilização.
 
-### ❌ UI-03 — Help — Página de Ajuda
+---
 
-Criar página HELP integrada na app.
+### ❌ UI-03 — Página de Ajuda
+
+Criar página HELP integrada na app com respostas rápidas às dúvidas mais comuns.
+
+---
 
 ### ❌ UI-04 — FAQs — Perguntas Frequentes
 
-Criar página de perguntas frequentes.
-
-### ❌ UI-05 — Bug Report — Sistema de Reporte
-
-Sistema de reporte de bugs na app: formulário que o utilizador submete quando encontra um problema. A definir canal de destino: e-mail, GitHub Issues ou ClickUp.
-
-### ✅ AUTH-09 — Editar Perfil *(ver secção de concluídos acima)*
-
-- ✅ AUTH-09 — backend: username, e-mail c/ re-verificação, password, apagar conta, avatar
-- ✅ AUTH-09a — ProfilePage: card layout, header gradient, accordion menu, MDI icons
-- ✅ AUTH-09b — Avatar: upload canvas resize 256×256, rota FastAPI, DB
-- ✅ AUTH-09c — ProfilePage card compacto: 4 rows expansíveis inline, pencil overlay no avatar
-
-### ✅ UI-06 — Preferências / Definições *(ver secção de concluídos acima)*
-
-### ✅ AUTH-10 — Sistema de Roles/Permissões *(concluído 2026-05-26, branch auth/roles → 3.1-dev)*
-
-Coluna `role TEXT NOT NULL DEFAULT 'engineer'` ✅ · `require_admin` em `deps.py` (401/403) ✅ · login env var → `role=admin`, login DB → role da BD ✅ · `/auth/me` devolve `role` ✅ · `/admin/users` e `/admin/log` protegidos ✅ · sidebar grupo ADMIN condicional ✅ · `AdminUsersPage` e `AdminLogPage` ✅ · viewer/demo diferidos (coluna existe, sem enforcement)
-
-### ✅ SEC-08 — Remover `legacyLogin.ts` e Limpar `.env`
-
-M-05 (2026-05-21): `legacyLogin.ts` eliminado (código morto, nunca importado) ✅ · `VITE_LOGIN_USER_1`/`VITE_LOGIN_PASS_1` removidos do `.env` local ✅ · build TypeScript 0 erros ✅ · branch `audit-fix`
-
-### ✅ BACK-05 + BACK-05d — Pydantic Literal types nos schemas de cálculo *(concluído 2026-05-27, branch back/validation)*
-
-`schemas/dpi.py`, `schemas/esci.py`, `schemas/cti.py` e `schemas/poi.py` — todos os 49+23+23+13 campos enum reescritos com `Literal` (valores extraídos dos scripts de cálculo). Payloads inválidos retornam 422. Sessions actualizadas para conformidade.
-
-### ✅ DB-05 — Least Privilege DB User *(concluído 2026-05-24, branch audit-fix)*
-
-`alembic/env.py` lê `DATABASE_URL_MIGRATIONS` primeiro (superuser postgres para migrations); `DATABASE_URL` passa a apontar para `chichorro_runtime` (apenas DML). `deploy/env.production.example` atualizado. Ações manuais pendentes: criar role no Supabase SQL Editor, atualizar env vars no Render, atualizar secret GitHub Actions.
-
-### ✅ DB-04 — Migrations Alembic *(concluído 2026-05-22, branch audit-fix)*
-
-Alembic configurado com psycopg2 puro (sem SQLAlchemy ORM). `init_db()` guardado para dev SQLite. Migration `0001_initial_schema.py` cobre schema completo atual. Release Command Render: `cd app/backend && alembic upgrade head`.
-
-### ✅ SEC-07 — Hardening do Upload de Avatar *(concluído 2026-05-27, branch sec/hardening)*
-
-`_check_avatar_magic()` valida os primeiros 12 bytes reais do ficheiro (JPEG `\xff\xd8\xff`, PNG `\x89PNG`, WebP `RIFF...WEBP`, GIF `GIF8`/`GIF9`); SVG e tipos não listados rejeitados com 400.
-
-### ❌ SEC-09 — CSP Header Completo
-
-Adicionar `Content-Security-Policy` header no backend ou proxy. Bloquear `inline scripts` e `unsafe-eval`. Pré-requisito para deploy com utilizadores externos.
-
-### ❌ INFRA-04 — Endpoint `/health/db`
-
-Health check com query real à BD. O `/health` atual responde `ok` mesmo com BD em baixo — impede restart automático no Render em caso de falha de ligação ao Supabase.
-
-### ✅ SEC-04 — Argon2id Password Hashing *(concluído 2026-05-27, branch sec/hardening)*
-
-`argon2-cffi` com RFC 9106 level 1 (`m=65536, t=3, p=4`). Upgrade-on-login automático a partir de hashes werkzeug (scrypt/pbkdf2). JoaoTeixeira migrado; Rui Sobral migra no próximo login.
-
-### ✅ SEC-05 — Hash dos Tokens de Reset/Verificação na BD *(concluído 2026-05-27, branch sec/token-hashing)*
-
-`hashlib.sha256(token.encode()).hexdigest()` (64 hex chars) guardado na BD; token em claro vai apenas no email/URL. CSRF exempt para `/auth/register`, `/auth/forgot-password`, `/auth/reset-password`.
-
-### ✅ BACK-06 — Error handler JSON normalizado *(concluído 2026-05-27, branch back/validation)*
-
-`unhandled_exception_handler` em `main.py` retorna `JSONResponse({"error":"INTERNAL_ERROR","request_id":...}, 500)`. `HTTPException` continua a ser re-lançada (FastAPI trata nativamente). Erros 5xx produzem sempre JSON estruturado.
-
-### ✅ BACK-01 — Migração Flask → FastAPI *(concluído — ver CHANGELOG)*
-
-Migracao completa do backend legado para FastAPI com estrutura modular. 11/11 PASS. Branch `feat/flask-to-fastapi`.
-
-### ✅ BACK-04 — Deploy FastAPI no Render *(concluído — ver CHANGELOG)*
-
-### ✅ BACK-02 — Melhorar Logging *(concluído — ver CHANGELOG)*
-
-### ✅ INFRA-01 — Implementar Monitorização *(concluído 2026-05-19)*
-
-Sentry (frontend + backend) + UptimeRobot `/health` a cada 5 min. Session Replay em erros.
-
-### ✅ DB-03 — Estratégia de Backups e Restore *(atualizado 2026-05-22 — A-04)*
-
-`tools/backup_db.py` (export JSON, descoberta dinâmica de tabelas), GitHub Actions
-`backup-db.yml` (cron a cada 3 dias, artifact 90 dias), `tools/restore_db.py`
-(restore com `--confirm`, rollback automático), `docs/deploy/ENV_VARS.md`,
-`server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` (secção GitHub Secrets).
+Criar página de perguntas frequentes integrada na app.
 
 ---
 
-## Prioridade Baixa / Futuro
+### ❌ UI-05 — Sistema de Reporte de Bugs
+
+Formulário de reporte de bugs na app; canal de destino a definir (email, GitHub Issues ou ClickUp).
+
+---
+
+### ✅ AUTH-10 — Sistema de roles/permissões (concluído 2026-05-26, branch `auth/roles`)
+
+Coluna `role TEXT NOT NULL DEFAULT 'engineer'`; `require_admin` em `deps.py` (401/403); login env var → `role=admin`, login DB → role da BD; `/admin/users` e `/admin/log` protegidos; sidebar grupo ADMIN condicional; `AdminUsersPage` e `AdminLogPage`.
+
+---
+
+### ✅ AUTH-13 — Hardening de segurança da sessão (concluído 2026-05-22, branch `3.1-dev`)
+
+`max_age` configurável via env var (anteriormente `None` — sessão nunca expirava); `CHICHORRO_SESSION_SECURE` com default seguro em produção; `starlette-csrf` integrado como middleware.
+
+---
+
+### ✅ AUTH-09 — Editar Perfil — backend (concluído 2026-05-13, branch `3.1-dev`)
+
+5 rotas: `/auth/profile/username`, `/auth/profile/email` (c/ re-verificação e re-login), `/auth/profile/password`, `/auth/profile/delete`, `/auth/profile/avatar`; rate limit 5/hora; migração DB colunas `new_email`, `new_email_token`, `new_email_token_expires_at`.
+
+---
+
+### ✅ AUTH-09a — ProfilePage — card layout, accordion e ícones MDI (concluído 2026-05-13, branch `3.1-dev`)
+
+Card compacto `max-w-sm`, header gradient `brand-900→brand-800`, avatar circular com initials fallback, menu accordion com ícones MDI e chevron animado; modal de eliminação com texto de confirmação.
+
+---
+
+### ✅ AUTH-09b — Avatar — upload, canvas resize e armazenamento (concluído 2026-05-13, branch `3.1-dev`)
+
+Coluna `avatar TEXT` na BD; upload frontend com canvas resize 256×256 JPEG 0.85; rota FastAPI valida `data:image/`, limite 700 KB base64, rate limit 20/hora.
+
+---
+
+### ✅ AUTH-09c — ProfilePage redesign (card compacto) (concluído 2026-05-13, branch `3.1-dev`)
+
+4 rows expansíveis inline (nome de utilizador, e-mail, palavra-passe, apagar conta); pencil overlay no avatar; sem "Zona de perigo" separada.
+
+---
+
+### ✅ UI-06 — SettingsPage (Definições) (concluído 2026-05-13, branch `3.1-dev`)
+
+`prefs.ts` store em localStorage (`theme`, `warnOnExit`, `decimalPlaces`); `usePrefs()` hook reactivo; SettingsPage com 3 secções (Aparência, Sessão, Resultados); dark mode via `darkMode: "class"` no Tailwind.
+
+---
+
+### ✅ BACK-05 + BACK-05d — Pydantic Literal types nos schemas de cálculo (concluído 2026-05-27, branch `back/validation`)
+
+49+23+23+13 campos enum em `schemas/dpi.py`, `schemas/esci.py`, `schemas/cti.py`, `schemas/poi.py` reescritos com `Literal[...]`; payloads inválidos retornam 422 automaticamente.
+
+---
+
+### ✅ BACK-06 — Error handler JSON normalizado (concluído 2026-05-27, branch `back/validation`)
+
+`unhandled_exception_handler` em `main.py` retorna `{"error":"INTERNAL_ERROR","request_id":...}` com HTTP 500; `HTTPException` continua a ser re-lançada pelo FastAPI; erros 5xx produzem sempre JSON estruturado.
+
+---
+
+### ✅ SEC-04 — Argon2id password hashing (concluído 2026-05-27, branch `sec/hardening`)
+
+`argon2-cffi` com RFC 9106 level 1 (`m=65536, t=3, p=4`); upgrade-on-login automático de hashes werkzeug; SEC-04b (2026-05-28) removeu o fallback werkzeug após todos os utilizadores migrarem.
+
+---
+
+### ✅ SEC-05 — SHA-256 dos tokens de reset/verificação (concluído 2026-05-27, branch `sec/token-hashing`)
+
+`hashlib.sha256(token.encode()).hexdigest()` (64 hex chars) guardado na BD; token em claro vai apenas no email/URL; CSRF exempt para rotas de registo, forgot-password e reset-password.
+
+---
+
+### ✅ SEC-07 — Hardening do upload de avatar (concluído 2026-05-27, branch `sec/hardening`)
+
+`_check_avatar_magic()` valida magic bytes reais: JPEG `\xff\xd8\xff`, PNG `\x89PNG`, WebP `RIFF...WEBP`, GIF `GIF8`/`GIF9`; SVG e tipos não listados rejeitados com 400.
+
+---
+
+### ✅ DB-04 — Migrations Alembic (concluído 2026-05-22, branch `audit-fix`)
+
+Alembic configurado com psycopg2 puro (sem SQLAlchemy ORM); `init_db()` guardado para dev SQLite; migration `0001_initial_schema.py` cobre schema completo; Release Command Render: `cd app/backend && alembic upgrade head`.
+
+---
+
+### ✅ DB-05 — Least privilege DB user (concluído 2026-05-24, branch `audit-fix`)
+
+`alembic/env.py` lê `DATABASE_URL_MIGRATIONS` (superuser para migrations); `DATABASE_URL` aponta para `chichorro_runtime` (apenas DML). Ações manuais pendentes: criar role no Supabase SQL Editor, atualizar env vars Render e GitHub Secret.
+
+---
+
+### ✅ INFRA-04 — Endpoint /health/db (concluído 2026-05-22, branch `audit-fix`)
+
+`SELECT 1` real à BD; retorna `{"status":"ok","db":"ok"}` ou HTTP 503; HEAD suportado para UptimeRobot; CSRF isento.
+
+---
+
+### ✅ INFRA-01 — Monitorização (Sentry + UptimeRobot) (concluído 2026-05-19, branch `3.1-dev`)
+
+Sentry no frontend e backend com Session Replay em erros; UptimeRobot a monitorizar `/health` a cada 5 min; M-04 (2026-05-24) adicionou `X-Request-ID` middleware e alerta email de falha de backup.
+
+---
+
+### ✅ INFRA-05 — Cache-Control no edge e backend (concluído 2026-05-22, branch `audit-fix`)
+
+`Cache-Control: no-store` no middleware `add_security_headers`; `_headers` Cloudflare Pages com `no-store` em `/*` e `public, max-age=31536000, immutable` em `/assets/*`; assets Vite fingerprintados cacheados 1 ano (M-02).
+
+---
+
+### ✅ SEC-09 — CSP e Permissions-Policy (concluído 2026-05-22, branch `audit-fix`)
+
+`Content-Security-Policy` e `Permissions-Policy` no middleware `add_security_headers`; CSP cobre Google Fonts e Sentry ingest, sem `'unsafe-inline'`; `app/frontend/public/_headers` para Cloudflare Pages com HSTS preload (M-01).
+
+---
+
+### ✅ BACK-01 — Migração Flask → FastAPI (concluído 2026-05-15, branch `feat/flask-to-fastapi`)
+
+Migração completa para FastAPI com estrutura modular (`routers/`, `schemas/`, `services/`); 11/11 testes PASS; Starlette sessions; dependências injetadas via `Depends`.
+
+---
+
+### ✅ BACK-02 — Melhorar logging (concluído 2026-05-12, branch `3.1-dev`)
+
+Logging de acessos com user-agent, IPs, failed logins e request IDs; tabela `access_log` na BD; rota `/admin/log` para visualização.
+
+---
+
+### ✅ BACK-04 — Deploy FastAPI no Render (concluído 2026-05-15, branch `feat/flask-to-fastapi`)
+
+Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`; variáveis de ambiente documentadas em `deploy/env.production.example`.
+
+---
+
+### ✅ DB-03 — Estratégia de backups (concluído 2026-05-22, branch `audit-fix`)
+
+`tools/backup_db.py` exporta JSON com descoberta dinâmica de tabelas; `backup-db.yml` cron a cada 3 dias com artifact 90 dias; `tools/restore_db.py` com `--confirm` e rollback automático.
+
+---
+
+### ✅ SEC-08 — Remover legacyLogin.ts e limpar .env (concluído 2026-05-22, branch `audit-fix`)
+
+`legacyLogin.ts` eliminado (código morto, nunca importado); `VITE_LOGIN_USER_1`/`VITE_LOGIN_PASS_1` removidos do `.env` local; build TypeScript 0 erros (M-05).
+
+---
+
+## Prioridade Baixa
 
 ### ❌ DB-06 — Migrar camada de dados para SQLAlchemy ORM
 
-Refactor da camada de dados: substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x.
-Desbloqueia autogenerate de migrations no Alembic, connection pooling nativo e type safety
-nos modelos `User`/`AccessLog`.
+Substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x; desbloqueia autogenerate de migrations, connection pooling nativo e type safety. Fora do âmbito do audit — a implementar em branch próprio. Ver [DB-06_UNDONE.md](plans/subplans/DB-06_UNDONE.md).
 
-Decidido fora do escopo do audit de segurança (`audit-fix`) — a ser implementado em branch
-próprio após o audit. Pode substituir DB-04 (Alembic sem ORM) se implementado primeiro.
-Ver subplan: `docs/plans/subplans/DB-06_UNDONE.md`.
+---
 
 ### ❌ INFRA-03 — Dockerfile + Compose
 
-Containerização para deploy reproduzível. Para o Render (PaaS) atual, a ausência não é bloqueante. Relevante para migração futura para VPS/Proxmox.
+Containerização para deploy reproduzível. Para o Render (PaaS) atual não é bloqueante; relevante para migração futura para VPS/Proxmox.
 
-### ✅ SEC-06 — Política de Logs — Sem PII em Produção *(concluído 2026-05-22, branch audit-fix)*
+---
 
-A-05: `_TokenPathFilter` registado no `uvicorn.access` logger — tokens em `/auth/verify/{token}` e `/auth/verify-email-change/{token}` substituídos por `[REDACTED]` nos logs do Render ✅ · guard `env != "production"` nos `print()` de `email.py` (defesa em profundidade) ✅ · Sentry `send_default_pii=False` já correto ✅
+### ✅ TEST-02 — Testes automatizados com pytest (concluído 2026-05-27, branch `test/automated-tests`)
 
-### ✅ UI-07 — Dark Mode *(concluído 2026-05-18 — ver CHANGELOG)*
+12/12 testes: health, Literal 422 (DPI/ESCI/CTI/POI), cálculo válido 200, auth login sem body 422, credenciais inválidas 401. Fixture `client` com override de auth e CSRF automático.
 
-Todas as páginas cobertas: sidebar, cards POI/DPI/ESCI, ProfilePage, SettingsPage, RiPage, CtiPage, InterventionsPage, páginas de autenticação.
+---
+
+### ✅ INFRA-02 — Pipeline CI/CD GitHub Actions (concluído 2026-05-27, branch `infra/ci-cd`)
+
+`test.yml` (Python 3.12, pytest --cov, path `app/backend/**`) + `build.yml` (Node 20, npm ci + build, path `app/frontend/**`). Sem Render Deploy Hook por agora (deploy manual).
+
+---
+
+### ✅ DOCS-02 — Uniformização dos headers dos subplans (concluído 2026-05-28, branch `3.1-dev`)
+
+58 ficheiros em `docs/plans/subplans/` com formato uniforme (Estado → Data de conclusão → Branch); `DESIGN.md` duplicado removido; SEC-09 ❌ duplicado e INFRA-04 ❌ incorreto corrigidos.
+
+---
+
+### ✅ SEC-06 — Política de logs — sem PII em produção (concluído 2026-05-22, branch `audit-fix`)
+
+`_TokenPathFilter` no `uvicorn.access` logger substitui tokens em URLs `/auth/verify/*` por `[REDACTED]`; guard `env != "production"` nos `print()` de `email.py`; `send_default_pii=False` no Sentry (A-05).
+
+---
+
+### ✅ UI-07 — Dark mode (concluído 2026-05-18, branch `3.1-dev`)
+
+Tema escuro cobrindo todas as páginas: sidebar, cards POI/DPI/ESCI, ProfilePage, SettingsPage, RiPage, CtiPage, InterventionsPage e páginas de autenticação.
+
+---
+
+### ✅ DOCS-01 — Migração para VitePress (concluído 2026-05-20, branch `3.1-dev`)
+
+VitePress ^1.6.4 em produção em `docs.chichorrofireriskapp.joaopmteixeira.net`; Cloudflare Pages via `fireriskapp-docs` (repo público); sync automático via GitHub Actions.
+
+---
+
+### ✅ AUTH-11 — Modal de sessão expirada — validação produção (concluído 2026-05-08, branch `feat/access-log`)
+
+Modal aparece corretamente ao apagar cookie de sessão manualmente em produção com cookies HTTPS.
+
+---
+
+### ✅ B-01 — Consolidação docs de deploy (concluído 2026-05-24, branch `audit-fix`)
+
+`ENV_VARS.md` reescrito com todas as variáveis atuais; `DEPLOY.md` corrigido; `DEPLOY_CLOUD_VPS.md` apagado; audit-fix 16/16 completo.
+
+---
+
+### ✅ BACK-07 — Naming de rotas API (concluído 2026-05-24, branch `audit-fix`)
+
+Decisão documentada: manter paths atuais (`/POI/*`, `/CTI/*`, etc.) — subdomain `api.*` fornece contexto; aliases legacy removidos (dead code confirmado por grep); Nginx VPS prefix-strip config documentada (B-02).
+
+---
+
+## Futuro
 
 ### ❌ FEAT-01 — Gráfico de Impacto de Intervenções
 
-No módulo de Intervenções, mostrar bar chart horizontal (tornado chart) com o impacto individual de cada intervenção selecionada: quanto reduziria o RI se fosse aplicada isoladamente.
+Bar chart horizontal (tornado chart) com impacto individual de cada intervenção. Backend: `POST /RI/interv/impact` (~34 cálculos de RI por chamada). Frontend: Recharts (já disponível no projeto).
 
-- Backend: novo endpoint `POST /RI/interv/impact`
-- Frontend: Recharts (já disponível no projeto)
-- Custo: ~34 cálculos de RI por chamada (aceitável no backend Python)
+---
 
 ### ❌ FEAT-02 — Guardar Edifício
 
-Após cálculo completo, permitir ao utilizador guardar a avaliação associada a um edifício identificado por:
+Após cálculo completo, guardar avaliação com nome, morada, código postal, Distrito/Concelho/Freguesia (dropdowns em cascata), latitude/longitude + pin no mapa. Ver [FEAT-02.md](plans/subplans/FEAT-02.md).
 
-- Nome do projeto (texto livre)
-- Morada (texto livre)
-- Código postal (formato XXXX-XXX)
-- Distrito / Concelho / Freguesia (três dropdowns em cascata; Distrito inclui Regiões Autónomas dos Açores e da Madeira)
-- Latitude / Longitude + pin interativo no mapa
-
-Os resultados (POI, CTI, DPI, ESCI, RI) ficam guardados associados ao utilizador e numa tabela geral da base de dados.
+---
 
 ### ❌ FEAT-03 — Chatbot AI
 
-Assistente de IA para ajudar os utilizadores a compreender os conceitos do CHICHORRO e a utilizar a aplicação (exclusivamente; possivelmente via Claude API ou similar).
-
-### ✅ TEST-02 — Testes Automatizados *(concluído 2026-05-27, branch `test/automated-tests`)*
-
-pytest 12/12: health, Literal 422 (DPI/ESCI/CTI/POI), cálculo válido 200, auth login sem body 422, credenciais inválidas 401. Fixture `client` com override de auth e CSRF automático.
-
-### ✅ INFRA-02 — Pipeline CI/CD *(concluído 2026-05-27, branch `infra/ci-cd`)*
-
-`test.yml` (Python 3.12, pytest --cov, path `app/backend/**`) + `build.yml` (Node 20, npm ci + build, path `app/frontend/**`). Sem Render Deploy Hook por agora (deploy permanece manual).
-
-### ✅ DOCS-01 — Migrar documentação para VitePress (FIR-31) *(concluído 2026-05-20)*
-
-VitePress ^1.6.4 em produção em `docs.chichorrofireriskapp.joaopmteixeira.net`.
-Cloudflare Pages via `fireriskapp-docs` (repo público); sync automático via GitHub Actions.
+Assistente de IA para ajudar utilizadores a compreender o CHICHORRO e usar a aplicação (via Claude API ou similar).
 
 ---
 
-## Backlog — Versão Futura (pós-3.1)
+### ❌ MODEL-01 — Método simplificado baseado no CHICHORRO 2.0
 
-Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do modelo 3.1:
-
-- ❌ MODEL-01 — Método simplificado baseado no CHICHORRO 2.0
-- ❌ MODEL-02 — Alterar ordem do Cenário 4 (CI → VVE → VHE alternativo)
-- ❌ MODEL-03 — Afinação de custos €/m² via PRONIC
-- ❌ MODEL-04 — Intervenções adicionais: Gerador, Grupo de bombagem, Cablagem, Evacuação alternativa
-- ❌ MODEL-05 — Georreferenciação e base de dados de edifícios
-- ❌ MODEL-06 — Tratamento de edifícios devolutos
-- ❌ MODEL-07 — Integração com Firecheck 2.0
+Proposta de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do modelo 3.1.
 
 ---
 
-## JWT — Notas Importantes
+### ❌ MODEL-02 — Alterar ordem do Cenário 4
+
+CI → VVE → VHE alternativo.
+
+---
+
+### ❌ MODEL-03 — Afinação de custos €/m² via PRONIC
+
+---
+
+### ❌ MODEL-04 — Intervenções adicionais
+
+Gerador, Grupo de bombagem, Cablagem, Evacuação alternativa.
+
+---
+
+### ❌ MODEL-05 — Georreferenciação e base de dados de edifícios
+
+---
+
+### ❌ MODEL-06 — Tratamento de edifícios devolutos
+
+---
+
+### ❌ MODEL-07 — Integração com Firecheck 2.0
+
+---
+
+## Notas
+
+### JWT — Notas Importantes
 
 O projeto atual NÃO usa JWT. Isto NÃO é um problema.
 
 A arquitetura atual (React + FastAPI + sessões Starlette) é totalmente válida.
 
-JWT NÃO é automaticamente:
-
-- mais moderno
-- mais seguro
-- melhor
-
-Sessões Starlette/FastAPI podem até ser mais seguras e simples neste tipo de arquitetura.
+JWT NÃO é automaticamente mais moderno, mais seguro ou melhor. Sessões Starlette/FastAPI podem até ser mais seguras e simples neste tipo de arquitetura.
 
 ---
 
 ## Arquitetura Atual Recomendada
-
-Manter:
 
 ```text
 React
