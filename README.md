@@ -23,24 +23,24 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 
 ## Projeto
 
-- [Visão Geral](PROJECT_OVERVIEW.md) — objetivos, stack, estado das fases
-- [PRD](PRD.md) — requisitos de produto, escopo, critérios de aceitação e roadmap
-- [Arquitetura](ARCHITECTURE.md) — estrutura de ficheiros, endpoints, sessionStorage
-- [Método de Cálculo](METODO_CALCULO.md) — fórmulas, fatores e subvariáveis do CHICHORRO
+- [Visão Geral](project/PROJECT_OVERVIEW.md) — objetivos, stack, estado das fases
+- [PRD](project/PRD.md) — requisitos de produto, escopo, critérios de aceitação e roadmap
+- [Arquitetura](project/ARCHITECTURE.md) — estrutura de ficheiros, endpoints, sessionStorage
+- [Método de Cálculo](method/METODO_CALCULO.md) — fórmulas, fatores e subvariáveis do CHICHORRO
 
 ## Desenvolvimento
 
-- [Serviços & APIs](SERVICES.md) — Supabase, Sentry, Render, Cloudflare
-- [Ferramentas](TOOLS.md) — scripts utilitários em `tools/`
-- [Design](DESIGN.md) — paleta, tipografia, componentes
-- [Alterações UX/UI](FRONTEND_UX_MODIFICATIONS.md) — histórico de melhorias de interface
-- [Guia de Utilização](USER_GUIDE.md) — como usar a aplicação
-- [Guidelines Backend](guidelines/BACKEND_GUIDELINES.md) — convenções FastAPI/Python
-- [Guidelines Frontend](guidelines/FRONTEND_GUIDELINES.md) — convenções React/TypeScript
+- [Serviços & APIs](project/SERVICES.md) — Supabase, Sentry, Render, Cloudflare
+- [Ferramentas](guides/TOOLS.md) — scripts utilitários em `scripts/`
+- [Design](project/DESIGN.md) — paleta, tipografia, componentes
+- [Alterações UX/UI](project/FRONTEND_UX_MODIFICATIONS.md) — histórico de melhorias de interface
+- [Guia de Utilização](guides/USER_GUIDE.md) — como usar a aplicação
+- [Guidelines Backend](guides/BACKEND_GUIDELINES.md) — convenções FastAPI/Python
+- [Guidelines Frontend](guides/FRONTEND_GUIDELINES.md) — convenções React/TypeScript
 
 ## Infraestrutura
 
-- [Opções de Hosting](HOSTING_OPTIONS.md) — comparação de plataformas
+- [Opções de Hosting](deploy/HOSTING_OPTIONS.md) — comparação de plataformas
 
 ## Planeamento
 
@@ -51,8 +51,8 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 
 ## Decisões & Histórico
 
-- [Decisões Técnicas](DECISIONS_LOG.md) — registo de decisões de arquitetura
-- [Changelog](CHANGELOG.md) — histórico de versões e alterações
+- [Decisões Técnicas](changelog/DECISIONS_LOG.md) — registo de decisões de arquitetura
+- [Changelog](changelog/CHANGELOG.md) — histórico de versões e alterações
 
 ---
 

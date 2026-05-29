@@ -1,13 +1,13 @@
 # Scripts Locais — Referência
 
-Scripts em `tools/` estão **gitignored** — existem apenas na máquina local e nunca são commitados.
+Scripts em `scripts/` — a maioria está **gitignored** (apenas locais); `backup_db.py`, `check_option_parity.py` e `pdf_to_ai_markdown.py` estão versionados.
 Este ficheiro documenta o que cada um faz e como o correr.
 
 ---
 
-## `tools/backup_db.py` — Backup da base de dados
+## `scripts/backup_db.py` — Backup da base de dados
 
-Exporta as tabelas `users` e `access_log` para ficheiros JSON em `tools/backups/<timestamp>/`.
+Exporta as tabelas `users` e `access_log` para ficheiros JSON em `scripts/backups/<timestamp>/`.
 
 **Quando usar:** antes de qualquer migração de schema, semanalmente em desenvolvimento ativo, antes de demos.
 
@@ -15,19 +15,19 @@ Exporta as tabelas `users` e `access_log` para ficheiros JSON em `tools/backups/
 
 ```powershell
 # PowerShell — com URL explícito (recomendado)
-python tools/backup_db.py --url "postgresql://postgres.[ref]:[password]@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
+python scripts/backup_db.py --url "postgresql://postgres.[ref]:[password]@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
 
 # PowerShell — com variável de ambiente
 $env:DATABASE_URL = "postgresql://..."
-python tools/backup_db.py
+python scripts/backup_db.py
 ```
 
 ```bash
 # bash
-DATABASE_URL="postgresql://..." python tools/backup_db.py
+DATABASE_URL="postgresql://..." python scripts/backup_db.py
 ```
 
-**Output gerado** em `tools/backups/YYYY-MM-DD_HH-MM-SS/`:
+**Output gerado** em `scripts/backups/YYYY-MM-DD_HH-MM-SS/`:
 
 - `users.json` — todos os campos (inclui hashes bcrypt, emails)
 - `access_log.json` — log de acessos
@@ -39,14 +39,14 @@ DATABASE_URL="postgresql://..." python tools/backup_db.py
 
 ---
 
-## `tools/create_test_user.py` — Criar utilizador de teste
+## `scripts/create_test_user.py` — Criar utilizador de teste
 
 Cria um utilizador de teste na base de dados local (SQLite) sem passar pelo fluxo de verificação de e-mail.
 
 **Pré-requisitos:** nenhum (usa SQLite local por omissão).
 
 ```powershell
-python tools/create_test_user.py
+python scripts/create_test_user.py
 ```
 
 Cria: `username=test`, `password=test`, `email=test@local.dev`, `verified=1`.
@@ -55,13 +55,13 @@ Cria: `username=test`, `password=test`, `email=test@local.dev`, `verified=1`.
 
 ---
 
-## `tools/dev-backend.ps1` — Arrancar backend em desenvolvimento
+## `scripts/dev-backend.ps1` — Arrancar backend em desenvolvimento
 
 Arranca o FastAPI em modo desenvolvimento com reload automático (porta 8000).
 Contém variáveis de ambiente locais — por isso está gitignored.
 
 ```powershell
-.\tools\dev-backend.ps1
+.\scripts\dev-backend.ps1
 ```
 
 Equivalente a:
@@ -73,7 +73,7 @@ uvicorn main:app --reload --port 8000 --app-dir app/backend
 
 ---
 
-## `tools/migrate_neon_to_supabase.py` — Migração Neon → Supabase *(histórico)*
+## `scripts/migrate_neon_to_supabase.py` — Migração Neon → Supabase *(histórico)*
 
 Script usado em DB-02 (2026-05-15) para migrar os dados de Neon para Supabase.
 Mantido para referência; a migração já foi concluída.
@@ -81,13 +81,13 @@ Mantido para referência; a migração já foi concluída.
 **Pré-requisitos:** `NEON_DATABASE_URL` e `SUPABASE_DATABASE_URL`.
 
 ```powershell
-python tools/migrate_neon_to_supabase.py
-python tools/migrate_neon_to_supabase.py --with-logs   # inclui access_log
+python scripts/migrate_neon_to_supabase.py
+python scripts/migrate_neon_to_supabase.py --with-logs   # inclui access_log
 ```
 
 ---
 
-## `tools/pdf_to_ai_markdown.py` — PDF → Markdown para IA
+## `scripts/pdf_to_ai_markdown.py` — PDF → Markdown para IA
 
 Converte PDFs de investigação (tese, artigos) para markdown otimizado para leitura por IA.
 Usado para gerar os ficheiros em `docs/research/`.
@@ -95,23 +95,23 @@ Usado para gerar os ficheiros em `docs/research/`.
 **Pré-requisitos:** `pypdf` instalado (`pip install pypdf`).
 
 ```powershell
-python tools/pdf_to_ai_markdown.py caminho/para/ficheiro.pdf
+python scripts/pdf_to_ai_markdown.py caminho/para/ficheiro.pdf
 ```
 
 ---
 
-## `tools/fix_fences.py` — Corrigir fences em markdown *(utilitário interno)*
+## `scripts/fix_fences.py` — Corrigir fences em markdown *(utilitário interno)*
 
 Processa ficheiros markdown em `docs/plans/` e corrige caracteres Unicode mal formatados
 resultantes de cópias de editores externos.
 
 ```powershell
-python tools/fix_fences.py
+python scripts/fix_fences.py
 ```
 
 ---
 
-## `tools/fix_markdown_lint.ps1` — Corrigir violações markdownlint em docs/
+## `scripts/fix_markdown_lint.ps1` — Corrigir violações markdownlint em docs/
 
 Corre `markdownlint-cli2 --fix` em todos os ficheiros `.md` dentro de `docs/`,
 corrigindo automaticamente as violações fixable e listando as que requerem
@@ -122,12 +122,12 @@ atenção manual. Usa o ficheiro de configuração `.markdownlint.json` da raiz.
 **Pré-requisitos:** Node.js / npx instalado.
 
 ```powershell
-.\tools\fix_markdown_lint.ps1
+.\scripts\fix_markdown_lint.ps1
 ```
 
 ```bash
 # bash
-pwsh tools/fix_markdown_lint.ps1
+pwsh scripts/fix_markdown_lint.ps1
 ```
 
 **Output esperado:**

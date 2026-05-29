@@ -1,6 +1,6 @@
 # Serviços e Plataformas — CHICHORRO Fire Risk App
 
-Referência operacional de todos os serviços externos usados no projeto. Para comparação de alternativas e decisões históricas, ver [HOSTING_OPTIONS.md](HOSTING_OPTIONS.md).
+Referência operacional de todos os serviços externos usados no projeto. Para comparação de alternativas e decisões históricas, ver [HOSTING_OPTIONS.md](../deploy/HOSTING_OPTIONS.md).
 
 ---
 

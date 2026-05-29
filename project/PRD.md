@@ -443,7 +443,7 @@ Estado: futuro.
 - Gestão de avaliações por edifício.
 - Eventual georreferenciação e histórico de intervenções.
 
-Para detalhe de tarefas, estado atual e itens pendentes, ver [`docs/NEXT_STEPS.md`](NEXT_STEPS.md).
+Para detalhe de tarefas, estado atual e itens pendentes, ver [`docs/NEXT_STEPS.md`](../NEXT_STEPS.md).
 
 ---
 

@@ -23,47 +23,47 @@ export default defineConfig({
     ],
     nav: [
       { text: "Início", link: "/" },
-      { text: "Projeto", link: "/PROJECT_OVERVIEW" },
-      { text: "Arquitetura", link: "/ARCHITECTURE" },
-      { text: "Método", link: "/METODO_CALCULO" },
+      { text: "Projeto", link: "/project/PROJECT_OVERVIEW" },
+      { text: "Arquitetura", link: "/project/ARCHITECTURE" },
+      { text: "Método", link: "/method/METODO_CALCULO" },
     ],
     sidebar: [
       {
         text: "Projeto",
         items: [
-          { text: "Visão Geral", link: "/PROJECT_OVERVIEW" },
-          { text: "Arquitetura Técnica", link: "/ARCHITECTURE" },
-          { text: "PRD - Requisitos", link: "/PRD" },
-          { text: "Método de Cálculo", link: "/METODO_CALCULO" },
+          { text: "Visão Geral", link: "/project/PROJECT_OVERVIEW" },
+          { text: "Arquitetura Técnica", link: "/project/ARCHITECTURE" },
+          { text: "PRD - Requisitos", link: "/project/PRD" },
+          { text: "Método de Cálculo", link: "/method/METODO_CALCULO" },
         ],
       },
       {
         text: "Utilização",
         items: [
-          { text: "Guia de Utilização", link: "/USER_GUIDE" },
+          { text: "Guia de Utilização", link: "/guides/USER_GUIDE" },
           {
             text: "Guidelines de Backend",
-            link: "/guidelines/BACKEND_GUIDELINES",
+            link: "/guides/BACKEND_GUIDELINES",
           },
           {
             text: "Guidelines de Frontend",
-            link: "/guidelines/FRONTEND_GUIDELINES",
+            link: "/guides/FRONTEND_GUIDELINES",
           },
         ],
       },
       {
         text: "Infraestrutura",
         items: [
-          { text: "Opções de Hosting", link: "/HOSTING_OPTIONS" },
-          { text: "Serviços", link: "/SERVICES" },
+          { text: "Opções de Hosting", link: "/deploy/HOSTING_OPTIONS" },
+          { text: "Serviços", link: "/project/SERVICES" },
         ],
       },
       {
         text: "Desenvolvimento",
         items: [
           { text: "Estado do Projeto", link: "/NEXT_STEPS" },
-          { text: "Decisões Técnicas", link: "/DECISIONS_LOG" },
-          { text: "Design", link: "/DESIGN" },
+          { text: "Decisões Técnicas", link: "/changelog/DECISIONS_LOG" },
+          { text: "Design", link: "/project/DESIGN" },
         ],
       },
       {
@@ -82,7 +82,7 @@ export default defineConfig({
       {
         text: "Referência",
         items: [
-          { text: "Changelog", link: "/CHANGELOG" },
+          { text: "Changelog", link: "/changelog/CHANGELOG" },
         ],
       },
     ],

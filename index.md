@@ -21,9 +21,9 @@ O resultado é classificado numa escala de 12 classes, de **A++** (risco muito b
 
 ## Documentação rápida
 
-- [Visão Geral do Projeto](PROJECT_OVERVIEW.md) — objetivos, stack, estado das fases
-- [PRD](PRD.md) — requisitos de produto, escopo, critérios de aceitação e roadmap
-- [Arquitetura](ARCHITECTURE.md) — estrutura de ficheiros, endpoints, sessionStorage
+- [Visão Geral do Projeto](project/PROJECT_OVERVIEW.md) — objetivos, stack, estado das fases
+- [PRD](project/PRD.md) — requisitos de produto, escopo, critérios de aceitação e roadmap
+- [Arquitetura](project/ARCHITECTURE.md) — estrutura de ficheiros, endpoints, sessionStorage
 - [Estado do Projeto](NEXT_STEPS.md) — tarefas em curso e concluídas
 
 ## Versão atual
