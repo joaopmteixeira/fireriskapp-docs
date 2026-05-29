@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-28 (SEC-04b werkzeug removido; DOCS-02 subplans uniformizados)
+Última atualização: 2026-05-28 (parity checker; schema fixes POI_CC_Idade + DPI_OGS_Aplica; CALC_AUDIT plan)
 
 ---
 
@@ -24,6 +24,18 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ test: parity checker + 338 testes Literal *(2026-05-28, `3.1-dev`)*
+
+`tools/check_option_parity.py` verifica paridade frontend↔backend para todos os valores Literal; detetou 2 bugs reais. `test_valid_options.py` com 338 testes parametrizados auto-gerados cobre todos os subfatores.
+
+---
+
+### ✅ fix(schemas): POI_CC_Idade sem espaços + DPI_OGS_Aplica phantom removido *(2026-05-28, `3.1-dev`)*
+
+`POI_CC_Idade`: intervalos de ano corrigidos sem espaços (`"1991-2008"`). `DPI_OGS_Aplica`: `"Nao Existe"` removido — phantom value ausente no modelo, no frontend e sem branch no cálculo.
+
+---
 
 ### ✅ fix: POI campos condicionais + sync CTI↔ATIV + CTI desbloqueado *(2026-05-28, `3.1-dev`)*
 
@@ -218,6 +230,12 @@ Criar página de perguntas frequentes integrada na app.
 ### ❌ UI-05 — Sistema de Reporte de Bugs
 
 Formulário de reporte de bugs na app; canal de destino a definir (email, GitHub Issues ou ClickUp).
+
+---
+
+### ❌ UI-08 — Ícones de informação nos subfatores
+
+Ícone ℹ️ em cada subfator POI/CTI/DPI/ESCI; painel com descrição detalhada do subfator (o que mede, valores esperados, como interpretar), tabela de valores e referência RT-SCIE. Torna a app autónoma para utilizadores sem formação prévia no modelo CHICHORRO.
 
 ---
 

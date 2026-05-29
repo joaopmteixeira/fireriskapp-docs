@@ -26,6 +26,22 @@
 - `app/frontend/src/components/poi/PoiFactorSection.tsx` — payload filtrado por `opts.length > 0` (excluir campos getOptions sem opções; manter campos estáticos com visibleWhen); pré-actualização de module inputs CTI+POI antes do `setValues` quando muda `POI_ATIV_TipoEdif`
 - `app/frontend/src/pages/CtiPage.tsx` — `disabled={isTipoEdifSynced}` removido do campo TipoEdif; pré-actualização simétrica de module inputs ao mudar TipoEdif no CTI; sync bidirecional CTI↔ATIV funcional
 
+### test: verificador de paridade + cobertura de Literals *(commit `d6a22cc`)*
+
+- `tools/check_option_parity.py` — verificador estático frontend↔backend: lê schemas Pydantic (`Literal` types) e compara com os `*Definitions.ts` do frontend; saída `[OK]`/`[FAIL]`/`[WARN]`; exit code 1 em divergências (CI-friendly); detetou 2 bugs reais (POI_CC_Idade espaços, DPI_OGS_Aplica phantom)
+- `app/backend/tests/test_valid_options.py` — 338 testes parametrizados auto-gerados de todos os schemas Pydantic; cobre cada valor `Literal` de cada campo de cada subfator; usa endpoints individuais (`/POI/IA`, etc.) para evitar TypeError no endpoint combinado
+- `.gitignore` — excepção `!tools/check_option_parity.py` adicionada à regra `tools/*`
+
+### fix(schemas): POI_CC_Idade e DPI_OGS_Aplica *(commit `6d85d77`)*
+
+- `app/backend/schemas/poi.py` — `POI_CC_Idade` corrigido em `POICCRequest` e `POIRequest`: intervalos sem espaços (`"1991-2008"` em vez de `"1991 - 2008"`)
+- `app/backend/schemas/dpi.py` — `DPI_OGS_Aplica` corrigido em `DPIOGSRequest` e `DPIRequest`: `"Nao Existe"` removido (phantom — não consta da tabela do modelo, nunca oferecido pelo frontend, sempre causaria ERRO no cálculo)
+- `app/backend/calc/Chichorro_POI.py` — comentário `POI_CC_Idade` atualizado para refletir formato sem espaços
+
+### plan: CALC_AUDIT — plano de validação do código contra a tese3.1
+
+- `docs/plans/main/CALC_AUDIT.md` criado — plano para criar ~280 golden tests que validam cada célula das tabelas de lookup POI/DPI/ESCI/CTI contra a dissertação 3.1; bloqueado até o utilizador criar os Excel da tese3.1
+
 ---
 
 ## 2026-05-27 — audit-fix-3 · SEC-04 · SEC-05 · SEC-07 · BACK-05 · BACK-06 · BACK-05d · TEST-02 · INFRA-02

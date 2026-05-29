@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-28 (SEC-04b werkzeug removido; DOCS-02 subplans uniformizados; POI 422 fix; CTI sync bidirecional; session remount fix)
+Última atualização: 2026-05-28 (SEC-04b; DOCS-02; POI fix; CTI sync; parity checker; schema fixes POI_CC_Idade + DPI_OGS_Aplica; CALC_AUDIT plan)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -53,6 +53,21 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md
 - `app/backend/schemas/poi.py` — `POI_IA_TipoInst2` e `POI_ATIV_TipoEdif2` tornados `Optional[Literal[...]] = None` nos 3 modelos
 - `app/frontend/src/components/poi/PoiFactorSection.tsx` — payload filtrado por `opts.length > 0`; pré-actualização CTI module inputs em `setField`
 - `app/frontend/src/pages/CtiPage.tsx` — `disabled={isTipoEdifSynced}` removido; pré-actualização POI module inputs em `update`; sync bidirecional funcional
+
+### ✅ test — Verificador de paridade + cobertura de Literals (338 testes)
+
+- `tools/check_option_parity.py` — verificador estático frontend↔backend; detetou 2 bugs reais
+- `app/backend/tests/test_valid_options.py` — 338 testes parametrizados auto-gerados; todos os subfatores cobertos
+
+### ✅ fix(schemas) — POI_CC_Idade sem espaços + DPI_OGS_Aplica phantom removido
+
+- `POI_CC_Idade`: `"1991 - 2008"` → `"1991-2008"` (e restantes intervalos) em `poi.py`
+- `DPI_OGS_Aplica`: `"Nao Existe"` removido de `dpi.py` (phantom — não está no modelo nem no frontend)
+
+### 📋 plan — CALC_AUDIT criado (bloqueado)
+
+- `docs/plans/main/CALC_AUDIT.md` — plano para ~280 golden tests que validam tabelas de lookup contra tese3.1
+- Bloqueado: aguarda Excel da tese3.1 pelo utilizador
 
 ---
 
@@ -490,6 +505,10 @@ Página de perguntas frequentes integrada na app.
 ### UI-05 — Bug Report
 
 Formulário de reporte de bugs na app. Canal de destino a definir: e-mail, GitHub Issues ou ClickUp.
+
+### UI-08 — Ícones de informação nos subfatores
+
+Ícone ℹ️ em cada subfator POI/CTI/DPI/ESCI. Ao clicar, abre painel com descrição detalhada do subfator — o que mede, que valores esperar, como interpretar — incluindo tabela de valores e referência ao RT-SCIE quando aplicável. Exemplo: POI_IA com Quadro 3.3 (Centrais Térmicas, Aparelhos Autónomos, Combustível Sólido × Legislação).
 
 ---
 

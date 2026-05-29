@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-28 (SEC-04b werkzeug removido; DOCS-02 subplans uniformizados; POI conditional fields fix; CTI sync bidirecional)
+Última atualização: 2026-05-28 (parity checker; schema fixes POI_CC_Idade + DPI_OGS_Aplica; CALC_AUDIT plan)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -70,6 +70,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | UI-03 | ❌ | Página de Ajuda integrada na app | — |
 | UI-04 | ❌ | FAQs — Perguntas Frequentes | — |
 | UI-05 | ❌ | Bug Report — formulário de reporte (destino: e-mail/GitHub/ClickUp) | — |
+| UI-08 | ❌ | Ícones ℹ️ nos subfatores — painel com descrição detalhada, tabela de valores e referência RT-SCIE | — |
 | UI-06 | ✅ | Preferências / Definições do utilizador — dark mode (sistema/claro/escuro), avisar antes de sair, casas decimais | 3.1-dev |
 | UI-07 | ✅ | Dark Mode — todas as páginas cobertas (RiPage, CtiPage, InterventionsPage, auth pages, sidebar, cards) — concluído 2026-05-18 | 3.1-dev |
 
@@ -135,6 +136,8 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | --- | --- | --- |
 | TEST-01 | ✅ | Teste e2e em produção: registo → e-mail → verificação → login → reset password (aprovado 2026-05-08) |
 | TEST-02 | ✅ | Testes automatizados: pytest 12/12 (health, Literal 422, calc 200, auth básico) — branch `test/automated-tests` |
+| TEST-03 | ✅ | Parity checker (`tools/check_option_parity.py`) + 338 golden tests Literal (`test_valid_options.py`) — todos os subfatores cobertos (`3.1-dev`) |
+| CALC-AUDIT | ❌ | Golden tests do código de cálculo vs. tese3.1 (~280 tests) — bloqueado até Excel tese3.1 disponíveis (`fir-XX-calc-audit`) |
 
 ---
 

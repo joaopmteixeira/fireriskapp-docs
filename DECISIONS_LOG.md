@@ -30,6 +30,21 @@ Razão: o utilizador quer poder editar CTI TipoEdif directamente; o campo estava
 Decisão `docs02-canonical-subplan-header`: formato canónico `Estado → Data de conclusão → Branch` adoptado para todos os subplans; YAML frontmatter e datas inline no H1 proibidos.
 Razão: os 58 subplans tinham 4+ formatos distintos (YAML frontmatter, `*(concluído YYYY-MM-DD)*` no H1, `**Data:**` sem "de conclusão"); uniformização facilita leitura e geração de relatórios automáticos.
 
+Decisão `parity-checker-static-tool`: `tools/check_option_parity.py` criado como verificador estático permanente frontend↔backend em vez de testes manuais por subfator.
+Razão: sem ferramenta automática, qualquer alteração a um `Literal` no schema ou a uma opção no TypeScript pode criar divergências silenciosas que só se manifestam em HTTP 422 em produção; a ferramenta corre em segundos e deteta o problema imediatamente.
+
+Decisão `tests-individual-endpoints-not-combined`: `test_valid_options.py` usa endpoints individuais (`/POI/CC`, `/POI/IA`, etc.) em vez dos endpoints combinados (`/POI`, `/DPI`).
+Razão: os endpoints combinados agregam os resultados dos subfatores e tentam `if subfator_result > 0`; quando um subfator retorna `'ERRO'` (string) para combinações matematicamente impossíveis mas Pydantic-válidas, o Python lança `TypeError: '>' not supported between 'str' and 'int'`; os endpoints individuais retornam HTTP 200 independentemente do valor calculado.
+
+Decisão `schema-poi-cc-idade-no-spaces`: `POI_CC_Idade` Literal values corrigidos sem espaços (`"1991-2008"` em vez de `"1991 - 2008"`).
+Razão: o frontend enviava os valores sem espaços; o backend Literal exigia com espaços; qualquer utilizador que selecionasse um ano entre 1951 e 2008 recebia HTTP 422 silencioso; o campo não entra no cálculo (só registo) mas o 422 bloqueava o submit.
+
+Decisão `schema-dpi-ogs-aplica-phantom-removed`: `"Nao Existe"` removido do `DPI_OGS_Aplica` Literal.
+Razão: o valor não consta da tabela do modelo (Quadro 3.5 da dissertação), nunca é oferecido pelo frontend, e o código de cálculo `DPI_OGS()` não tem branch para ele — cai sempre em `_DPI_OGS = None → return 'ERRO'`; é um phantom value que só podia causar confusão.
+
+Decisão `calc-audit-blocked-on-tese31-excel`: plano CALC_AUDIT criado mas execução bloqueada até tabelas Excel da tese3.1 estarem disponíveis.
+Razão: a fonte de verdade para validar o código v3.1 deve ser a dissertação 3.1 (Rui Sobral), não a 3.0 (João Teixeira); os Excel existentes são da tese3.0 e têm diferenças estruturais (ex. DPI_OGS com 3 sub-scores vs. tabela unificada no v3.1).
+
 ---
 
 ## 2026-04-18
