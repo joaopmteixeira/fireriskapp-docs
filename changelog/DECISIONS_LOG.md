@@ -435,3 +435,31 @@ Razão: o Render usa Python 3.12; o CI deve espelhar o ambiente de produção, n
 
 Decisão `infra02-no-render-deploy-hook`: Render Deploy Hook não incluído no INFRA-02.
 Razão: o hook URL requer acesso ao dashboard Render; deploy permanece manual por decisão do utilizador; o hook pode ser adicionado a `test.yml` numa tarefa dedicada quando o utilizador confirmar o URL.
+
+---
+
+## 2026-05-29 — Reorganização do repositório e docs/
+
+Decisão `repo-reorg-server-dissolve`: `server/` dissolvido — conteúdo (56 ficheiros Markdown) movido para `docs/audits/` (auditorias) e `docs/ai/handoffs/` (handoffs de IA).
+Razão: o nome `server/` sugeria código de servidor; os ficheiros eram exclusivamente documentação; `docs/` é a localização correta para arquivos Markdown.
+
+Decisão `repo-reorg-tools-to-scripts`: pasta `tools/` renomeada para `scripts/` via `git mv` (histórico preservado).
+Razão: `scripts/` é a convenção estabelecida para scripts utilitários de projeto; `tools/` era ambíguo e confundia com binários externos.
+
+Decisão `repo-reorg-sessions-to-var`: `sessions/` movido para `var/sessions/`; `.gitignore` atualizado de `sessions/` para `var/`.
+Razão: dados de runtime local pertencem a uma pasta isolada; `var/` segue a convenção Unix para dados variáveis/runtime; evita confusão com código de sessão de utilizador.
+
+Decisão `repo-reorg-deploy-subdirs`: `deploy/` reestruturado com subdirs `env/` e `nginx/`.
+Razão: três ficheiros planos em `deploy/` não eram escaláveis; subdirs por função (variáveis de ambiente, configuração nginx) melhoram a navegabilidade e antecipam mais configs futuras.
+
+Decisão `docs-reorg-internal-subdirs`: 15 ficheiros na raiz de `docs/` movidos para `project/`, `method/`, `guides/`, `changelog/`, `deploy/`.
+Razão: 20 ficheiros planos em `docs/` era difícil de navegar; agrupamento por função espelha a estrutura da sidebar VitePress; separação entre docs vivos (raiz) e docs de referência (subdirs).
+
+Decisão `restore-db-tracking`: `scripts/restore_db.py` adicionado ao git tracking (estava sem seguimento).
+Razão: backup e restore são um par funcional — manter apenas `backup_db.py` versionado sem o `restore_db.py` criava risco de perda do script de restore em caso de reinstalação; o par deve ser versionado em conjunto.
+
+Decisão `research-tables-gitignore`: `docs/research/tables/` adicionado ao `.gitignore`; ficheiros Excel removidos do índice git.
+Razão: ficheiros binários Excel não têm diff útil em git; são dados de investigação local não destinados ao repositório público.
+
+Decisão `research-full-gitignore`: regra expandida para `docs/research/**` (toda a pasta) e 15 ficheiros desrastreados (PDFs teses, ai.md, chunks.jsonl, Python de referência).
+Razão: toda a pasta `docs/research/` contém material local de investigação — teses, processamento AI, código de referência legado; nenhum destes ficheiros faz parte do produto nem deve estar no repositório público.

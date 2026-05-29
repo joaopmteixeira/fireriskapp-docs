@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-28 (SEC-04b; DOCS-02; POI fix; CTI sync; parity checker; schema fixes POI_CC_Idade + DPI_OGS_Aplica; CALC_AUDIT plan)
+Última atualização: 2026-05-29 (fix POI TipoEdif2; reorganização raiz repo + docs/; UI-08 adicionado)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -23,11 +23,44 @@
 | Deploy FastAPI em produção (BACK-04) | ✅ Completo — FastAPI em produção (Render + Supabase); merge em `3.1-dev` |
 | Migração Neon → Supabase (DB-02) | ✅ Completo — cold start 45s → 1.5s; per-request connections (PgBouncer) |
 | Monitorização (INFRA-01) | ✅ Completo — Sentry frontend + backend ativos; UptimeRobot com email alerts |
-| Estratégia de Backups (DB-03) | ✅ Completo — `tools/backup_db.py`, GitHub Actions workflow, `tools/restore_db.py`; A-04 (2026-05-22) |
+| Estratégia de Backups (DB-03) | ✅ Completo — `scripts/backup_db.py`, GitHub Actions workflow, `scripts/restore_db.py`; A-04 (2026-05-22) |
 | Documentação | ✅ Completo (DOCS-01 — VitePress em produção; docs.chichorrofireriskapp.joaopmteixeira.net) |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
-Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](CHANGELOG.md).
+Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-05-29)
+
+### ✅ fix(poi) — TipoEdif2 com tipo pai como primeira opção
+
+- `app/backend/schemas/poi.py` — valores pai (`Industria`, `Oficinas`, `Desporto`) adicionados como primeira opção em `POI_ATIV_TipoEdif2`; desbloqueia cálculo quando não é necessário subtipo
+- `app/frontend/src/components/poi/poiDefinitions.ts` — tipo pai como primeira entrada em cada grupo; backend `else` clauses já devolviam o valor pai correto
+
+### ✅ chore — Tabelas Excel de investigação excluídas do git
+
+- `docs/research/tables/` adicionado ao `.gitignore`; 5 ficheiros Excel removidos do índice git
+
+### ✅ refactor(repo) — Reorganização da raiz do repositório
+
+- `server/` dissolvido: 56 ficheiros Markdown → `docs/audits/security/` (13) + `docs/audits/cloud-vps/` (43) + `docs/ai/handoffs/` (2)
+- `tools/` → `scripts/` via `git mv` (histórico preservado); `.gitignore` atualizado
+- `sessions/` → `var/sessions/`; `deploy/` reestruturado com subdirs `env/` e `nginx/`
+- `README.md` criado na raiz com overview, requisitos e comandos
+
+### ✅ refactor(docs) — Reorganização interna de docs/
+
+- 15 ficheiros movidos de `docs/` root para subdirs temáticas: `project/`, `method/`, `guides/`, `changelog/`, `deploy/`
+- `docs/.vitepress/config.ts` — todos os links de nav e sidebar atualizados
+- Cross-refs em `PRD.md`, `SERVICES.md`, `BACKEND_GUIDELINES.md`, `FRONTEND_GUIDELINES.md` corrigidas
+
+### ✅ fix(repo) — Cleanup pós-reorganização (Codex review)
+
+- `README.md` raiz — 3 links quebrados corrigidos
+- `.gitignore` — `!scripts/restore_db.py` adicionado; política de tracking documentada
+- `docs/audits/cloud-vps/README.md` — nota de path histórico adicionada
+- `scripts/restore_db.py` — passado a tracked
 
 ---
 

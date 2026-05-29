@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-28 (parity checker; schema fixes POI_CC_Idade + DPI_OGS_Aplica; CALC_AUDIT plan)
+Última atualização: 2026-05-29 (tools→scripts; UI-08 adicionado; reorganização repo)
 
 ---
 
@@ -27,7 +27,7 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ### ✅ test: parity checker + 338 testes Literal *(2026-05-28, `3.1-dev`)*
 
-`tools/check_option_parity.py` verifica paridade frontend↔backend para todos os valores Literal; detetou 2 bugs reais. `test_valid_options.py` com 338 testes parametrizados auto-gerados cobre todos os subfatores.
+`scripts/check_option_parity.py` verifica paridade frontend↔backend para todos os valores Literal; detetou 2 bugs reais. `test_valid_options.py` com 338 testes parametrizados auto-gerados cobre todos os subfatores.
 
 ---
 
@@ -367,7 +367,7 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 
 ### ✅ DB-03 — Estratégia de backups (concluído 2026-05-22, branch `audit-fix`)
 
-`tools/backup_db.py` exporta JSON com descoberta dinâmica de tabelas; `backup-db.yml` cron a cada 3 dias com artifact 90 dias; `tools/restore_db.py` com `--confirm` e rollback automático.
+`scripts/backup_db.py` exporta JSON com descoberta dinâmica de tabelas; `backup-db.yml` cron a cada 3 dias com artifact 90 dias; `scripts/restore_db.py` com `--confirm` e rollback automático.
 
 ---
 

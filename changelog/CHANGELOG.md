@@ -2,6 +2,53 @@
 
 ---
 
+## 2026-05-29 — fix(poi) · chore · refactor(repo) · refactor(docs) · fix(repo)
+
+### fix(poi): TipoEdif2 — tipo pai como primeira opção *(commit `6128086`, `3.1-dev`)*
+
+- `app/backend/schemas/poi.py` — valores pai (`Industria`, `Oficinas`, `Desporto`) adicionados como primeira opção em `POI_ATIV_TipoEdif2` nos schemas `POIATIVRequest` e `POIRequest`; backend `else` clauses já devolviam os valores pai corretos
+- `app/frontend/src/components/poi/poiDefinitions.ts` — tipo pai adicionado como primeira entrada em cada grupo `TipoEdif2`; desbloqueia cálculo POI ATIV quando não é necessário subtipo
+- `docs/deploy/DEPLOY.md` — secção de dev local atualizada: flag `--hot-reload` e nota de fallback SQLite auto
+
+### chore: excluir tabelas de investigação do repositório *(commit `d3adf1a`, `3.1-dev`)*
+
+- `docs/research/tables/` adicionado ao `.gitignore`; 5 ficheiros Excel removidos do índice git (FATORES, JP_CTI, JP_DPI, JP_ESCI, JP_POI)
+
+### docs(todo): adicionar UI-08 *(commit `6b64e2a`, `3.1-dev`)*
+
+- `docs/NEXT_STEPS.md`, `docs/TODO_LIST.md`, `docs/TODO_PRIORITIES.md` — UI-08 (ícones de informação nos subfatores) adicionado como tarefa pendente de prioridade média
+
+### refactor(repo): reorganização da raiz *(commit `8bf3933`, `3.1-dev`)*
+
+- `server/` dissolvido — `security_audit_plans/` (13 .md) → `docs/audits/security/`; `cloud_vps_audit_plans/` (43 .md) → `docs/audits/cloud-vps/`; `HANDOFF_*.md` (2) → `docs/ai/handoffs/`; `server/README.md` eliminado
+- `tools/` → `scripts/` via `git mv` (histórico preservado); `.gitignore` atualizado: `tools/*` → `scripts/*` com mesmas exceções
+- `sessions/` → `var/sessions/`; `.gitignore` atualizado: `sessions/` → `var/`
+- `deploy/` reestruturado: `env.*.example` → `deploy/env/`; `nginx-chichorro.example.conf` → `deploy/nginx/`
+- `docs/guides/TOOLS.md`, `docs/deploy/DEPLOY.md`, `docs/README.md` atualizados com novos paths
+- `README.md` criado na raiz: resumo do projeto, requisitos, comandos de desenvolvimento, links para docs
+
+### refactor(docs): reorganização interna de docs/ *(commit `6d2093b`, `3.1-dev`)*
+
+- 15 ficheiros movidos de `docs/` root para subdiretorias temáticas:
+  - `docs/project/` (novo) — ARCHITECTURE, PRD, PROJECT_OVERVIEW, DESIGN, SERVICES, FRONTEND_UX_MODIFICATIONS
+  - `docs/method/` (novo) — METODO_CALCULO
+  - `docs/guides/` (novo) — USER_GUIDE, TOOLS + merge de `guidelines/` (BACKEND_GUIDELINES, FRONTEND_GUIDELINES)
+  - `docs/deploy/` (existente) — HOSTING_OPTIONS adicionado
+  - `docs/changelog/` (novo) — CHANGELOG, DECISIONS_LOG, HISTORY_AI
+- `docs/guidelines/` eliminado (vazia após merge)
+- `docs/.vitepress/config.ts` — todos os links de nav e sidebar atualizados para novos paths
+- `docs/index.md`, `docs/README.md` — ~15 links relativos corrigidos
+- Cross-refs internas em `PRD.md`, `SERVICES.md`, `BACKEND_GUIDELINES.md`, `FRONTEND_GUIDELINES.md` corrigidas
+
+### fix(repo): cleanup pós-reorganização *(commit `9878f7e`, `3.1-dev`)*
+
+- `README.md` (raiz) — 3 links quebrados corrigidos: `docs/project/`, `docs/method/`, `docs/guides/`
+- `.gitignore` — `!scripts/restore_db.py` adicionado como tracked; bloco de comentários de política de tracking adicionado
+- `docs/audits/cloud-vps/README.md` — nota de path histórico: referência a `server/cloud_vps_audit_plans/` para contexto
+- `scripts/restore_db.py` — passado a tracked (estava sem seguimento apesar de não ignorado)
+
+---
+
 ## 2026-05-28 — SEC-04b · DOCS-02 · session-remount · POI conditional fields
 
 ### SEC-04b — Remoção do fallback werkzeug *(commit direto `3.1-dev`)*
