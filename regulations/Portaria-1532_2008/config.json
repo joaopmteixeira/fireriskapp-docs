@@ -1,0 +1,10 @@
+{
+  "pdf_original": "../Portaria-1532_2008_original.pdf",
+  "total_pages": 78,
+  "chunk_size": 12,
+  "regulamento": "RT-SCIE (Portaria n.º 1532/2008)",
+  "diploma": "Portaria n.º 1532/2008",
+  "skip_to_section": "ANEXO",
+  "stop_at_section": "ANEXO I",
+  "tags": ["scie", "regulamento", "artigo"]
+}

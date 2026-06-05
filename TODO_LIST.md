@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-05-29 (tools→scripts; UI-08 adicionado; reorganização repo)
+Última atualização: 2026-06-05 (AI-02a adicionado; secção AI criada)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -25,6 +25,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
 | AUTH-09b | ✅ | Avatar de utilizador — coluna `avatar` DB, rota `POST /auth/profile/avatar`, upload frontend c/ canvas resize | 3.1-dev |
 | AUTH-09c | ✅ | ProfilePage redesign card compacto — 4 rows expansíveis inline (username, e-mail, password, apagar conta); sem modal separado | 3.1-dev |
+| AUTH-09d | ❌ | Otimização do avatar: WebP, 128 px, limite 100 KB — reduz armazenamento na BD ~80% | 3.1-dev |
 | AUTH-10 | ✅ | Sistema de roles/permissões: coluna `role`, `require_admin`, admin UI — viewer/demo diferidos | auth/roles → 3.1-dev |
 | AUTH-13 | ✅ | Hardening sessão: max_age configurável, Secure flag obrigatória em prod, CSRF protection | 3.1-dev |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
@@ -71,8 +72,10 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | UI-04 | ❌ | FAQs — Perguntas Frequentes | — |
 | UI-05 | ❌ | Bug Report — formulário de reporte (destino: e-mail/GitHub/ClickUp) | — |
 | UI-08 | ❌ | Ícones ℹ️ nos subfatores — painel com descrição detalhada, tabela de valores e referência RT-SCIE | — |
+| UI-09 | ❌ | Badge de lápis persistente no avatar — sempre visível (mobile-friendly), substitui overlay câmara hover-only | 3.1-dev |
+| UI-10 | ❌ | Sidebar direita persistente — resumo da sessão atual e valores introduzidos nos subfatores (POI/CTI/DPI/ESCI) visíveis durante o cálculo | — |
 | UI-06 | ✅ | Preferências / Definições do utilizador — dark mode (sistema/claro/escuro), avisar antes de sair, casas decimais | 3.1-dev |
-| UI-07 | ✅ | Dark Mode — todas as páginas cobertas (RiPage, CtiPage, InterventionsPage, auth pages, sidebar, cards) — concluído 2026-05-18 | 3.1-dev |
+| UI-07 | ❌ | Dark Mode — redesign e validação pendentes; implementação inicial de 2026-05-18 carece de revisão completa de todas as vistas | 3.1-dev |
 
 ---
 
@@ -83,6 +86,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | FEAT-01 | ❌ | Gráfico impacto intervenções (tornado chart, Recharts) | — |
 | FEAT-02 | ❌ | Guardar edifício — nome, morada, código postal, distrito/concelho/freguesia (cascata), GPS + mapa; resultados associados ao utilizador e em tabela geral | — |
 | FEAT-03 | ❌ | Chatbot AI assistente CHICHORRO (Claude API ou similar) | — |
+| FEAT-04 | ❌ | Geração de relatório em PDF após cálculo completo — exportar resultados RI, CTI e subfatores (POI/DPI/ESCI) para ficheiro PDF imprimível e partilhável | — |
 
 ---
 
@@ -154,6 +158,16 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 | MODEL-05 | ❌ | Georreferenciação e base de dados de edifícios |
 | MODEL-06 | ❌ | Tratamento de edifícios devolutos |
 | MODEL-07 | ❌ | Integração com Firecheck 2.0 |
+
+---
+
+## AI — AI Tooling e Knowledge Graph
+
+| ID | Estado | Descrição | Branch |
+| --- | --- | --- | --- |
+| AI-01 | ✅ | Setup Graphify — grafos backend (367 nós), frontend (346 nós), cross-stack (740 nós); CLAUDE.md com regras de refresh | 3.1-dev |
+| AI-02 | ✅ | Setup Obsidian vault — 50 notas, 27 subfatores × 8 fontes, RT-SCIE 1532/2008 + 135/2020, Backend/Frontend via registry lookup | feat/obsidian-vault |
+| AI-02a | ❌ | Curation manual — `## Definicao` (27 notas), validar "verificar" em `## Onde e mencionado`, verificar Graph View Obsidian | feat/obsidian-vault |
 
 ---
 

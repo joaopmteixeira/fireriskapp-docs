@@ -1,0 +1,437 @@
+{
+  "fatores": [
+    {
+      "codigo": "POI",
+      "nome": "Probabilidade de Ocorrência de Incêndio",
+      "formula": "POI = f(CC, IEE, IA, ICONFA, ICONSA, IVCA, ILGC, EF, EA, FA, PPP, ATIV)",
+      "calc": "app/backend/calc/Chichorro_POI.py",
+      "calc_linha": 794,
+      "schema": "app/backend/schemas/poi.py",
+      "tags": ["poi", "chichorro", "fator"]
+    },
+    {
+      "codigo": "CTI",
+      "nome": "Consequências Totais do Incêndio",
+      "formula": "CTI = f(CI, VHE, VVE)",
+      "calc": "app/backend/calc/Chichorro_CTI.py",
+      "calc_linha": 94,
+      "schema": "app/backend/schemas/cti.py",
+      "tags": ["cti", "chichorro", "fator"]
+    },
+    {
+      "codigo": "DPI",
+      "nome": "Desenvolvimento e Propagação do Incêndio",
+      "formula": "DPI = f(REIC, EI, VDGF, PE, OGS)",
+      "calc": "app/backend/calc/Chichorro_DPI.py",
+      "calc_linha": 338,
+      "schema": "app/backend/schemas/dpi.py",
+      "tags": ["dpi", "chichorro", "fator"]
+    },
+    {
+      "codigo": "ESCI",
+      "nome": "Eficácia do Socorro e Combate ao Incêndio",
+      "formula": "ESCI = f(GP, SID, AE, HE, EXT, RIA, CPB)",
+      "calc": "app/backend/calc/Chichorro_ESCI.py",
+      "calc_linha": 546,
+      "schema": "app/backend/schemas/esci.py",
+      "tags": ["esci", "chichorro", "fator"]
+    },
+    {
+      "codigo": "RI",
+      "nome": "Risco de Incêndio",
+      "formula": "RI = POI × CTI × ((DPI + ESCI) / 2)",
+      "calc": "app/backend/calc/Chichorro_RI.py",
+      "schema": "app/backend/schemas/ri.py",
+      "tags": ["ri", "chichorro", "fator"]
+    }
+  ],
+  "subfatores": [
+    {
+      "codigo": "POI_CC",
+      "nome": "Carga Combustível",
+      "fator_pai": "POI",
+      "aliases": ["CC", "carga combustível", "carga de incêndio"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 12,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 93
+      }
+    },
+    {
+      "codigo": "POI_IEE",
+      "nome": "Instalações de Energia Elétrica",
+      "fator_pai": "POI",
+      "aliases": ["IEE", "instalações elétricas", "instalação elétrica"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 55,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 137
+      }
+    },
+    {
+      "codigo": "POI_IA",
+      "nome": "Instalação de Aquecimento",
+      "fator_pai": "POI",
+      "aliases": ["IA", "aquecimento"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 105,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 188
+      }
+    },
+    {
+      "codigo": "POI_ICONFA",
+      "nome": "Instalação de Confeção com Chama",
+      "fator_pai": "POI",
+      "aliases": ["ICONFA", "confeção com chama"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 171,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 254
+      }
+    },
+    {
+      "codigo": "POI_ICONSA",
+      "nome": "Instalação de Confeção sem Chama",
+      "fator_pai": "POI",
+      "aliases": ["ICONSA", "confeção sem chama"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 250,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 307
+      }
+    },
+    {
+      "codigo": "POI_IVCA",
+      "nome": "Instalação de Ventilação e Climatização",
+      "fator_pai": "POI",
+      "aliases": ["IVCA", "ventilação", "climatização"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 276,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 332
+      }
+    },
+    {
+      "codigo": "POI_ILGC",
+      "nome": "Instalação de Líquidos e Gases Combustíveis",
+      "fator_pai": "POI",
+      "aliases": ["ILGC", "líquidos combustíveis", "gases combustíveis"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 307,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 366
+      }
+    },
+    {
+      "codigo": "POI_EF",
+      "nome": "Exposição ao Fogo",
+      "fator_pai": "POI",
+      "aliases": ["EF", "exposição ao fogo", "fachada vizinha"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 338,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 400
+      }
+    },
+    {
+      "codigo": "POI_EA",
+      "nome": "Empena e Adjacência",
+      "fator_pai": "POI",
+      "aliases": ["EA", "empena", "adjacência"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 510,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 459
+      }
+    },
+    {
+      "codigo": "POI_FA",
+      "nome": "Fachada",
+      "fator_pai": "POI",
+      "aliases": ["FA", "fachada"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 541,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 493
+      }
+    },
+    {
+      "codigo": "POI_PPP",
+      "nome": "Plano de Prevenção e Proteção",
+      "fator_pai": "POI",
+      "aliases": ["PPP", "plano de prevenção", "prevenção e proteção"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 622,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 583
+      }
+    },
+    {
+      "codigo": "POI_ATIV",
+      "nome": "Atividade / Uso",
+      "fator_pai": "POI",
+      "aliases": ["ATIV", "atividade", "uso", "utilização-tipo", "utilização tipo"],
+      "tags": ["poi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_POI.py",
+        "calc_linha": 654,
+        "schema": "app/backend/schemas/poi.py",
+        "frontend_def": "app/frontend/src/components/poi/poiDefinitions.ts",
+        "frontend_linha": 618
+      }
+    },
+    {
+      "codigo": "CTI_CI",
+      "nome": "Cenário de Incêndio",
+      "fator_pai": "CTI",
+      "aliases": ["CI", "cenário de incêndio", "cenário incêndio"],
+      "tags": ["cti", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_CTI.py",
+        "calc_linha": 94,
+        "schema": "app/backend/schemas/cti.py",
+        "frontend_def": "app/frontend/src/pages/CtiPage.tsx",
+        "frontend_nota": "parâmetro da função CTI — não tem definição em ficheiro separado"
+      }
+    },
+    {
+      "codigo": "CTI_VHE",
+      "nome": "Vias Horizontais de Evacuação",
+      "fator_pai": "CTI",
+      "aliases": ["VHE", "vias horizontais", "evacuação horizontal"],
+      "tags": ["cti", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_CTI.py",
+        "calc_linha": 94,
+        "schema": "app/backend/schemas/cti.py",
+        "frontend_def": "app/frontend/src/pages/CtiPage.tsx",
+        "frontend_nota": "parâmetro da função CTI — não tem definição em ficheiro separado"
+      }
+    },
+    {
+      "codigo": "CTI_VVE",
+      "nome": "Vias Verticais de Evacuação",
+      "fator_pai": "CTI",
+      "aliases": ["VVE", "vias verticais", "evacuação vertical", "caixas de escada"],
+      "tags": ["cti", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_CTI.py",
+        "calc_linha": 94,
+        "schema": "app/backend/schemas/cti.py",
+        "frontend_def": "app/frontend/src/pages/CtiPage.tsx",
+        "frontend_nota": "parâmetro da função CTI — não tem definição em ficheiro separado"
+      }
+    },
+    {
+      "codigo": "DPI_REIC",
+      "nome": "Resistência Estrutural e Isolamento de Construção",
+      "fator_pai": "DPI",
+      "aliases": ["REIC", "resistência estrutural", "isolamento de construção"],
+      "tags": ["dpi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_DPI.py",
+        "calc_linha": 15,
+        "schema": "app/backend/schemas/dpi.py",
+        "frontend_def": "app/frontend/src/components/dpi/dpiDefinitions.ts",
+        "frontend_linha": 5
+      }
+    },
+    {
+      "codigo": "DPI_EI",
+      "nome": "Estanquidade e Isolamento",
+      "fator_pai": "DPI",
+      "aliases": ["EI", "estanquidade", "isolamento"],
+      "tags": ["dpi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_DPI.py",
+        "calc_linha": 114,
+        "schema": "app/backend/schemas/dpi.py",
+        "frontend_def": "app/frontend/src/components/dpi/dpiDefinitions.ts",
+        "frontend_linha": 74
+      }
+    },
+    {
+      "codigo": "DPI_VDGF",
+      "nome": "Vãos, Diedros e Guarda-fogo",
+      "fator_pai": "DPI",
+      "aliases": ["VDGF", "vãos", "diedros", "guarda-fogo"],
+      "tags": ["dpi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_DPI.py",
+        "calc_linha": 162,
+        "schema": "app/backend/schemas/dpi.py",
+        "frontend_def": "app/frontend/src/components/dpi/dpiDefinitions.ts",
+        "frontend_linha": 118
+      }
+    },
+    {
+      "codigo": "DPI_PE",
+      "nome": "Parede Exterior",
+      "fator_pai": "DPI",
+      "aliases": ["PE", "parede exterior", "paredes exteriores"],
+      "tags": ["dpi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_DPI.py",
+        "calc_linha": 213,
+        "schema": "app/backend/schemas/dpi.py",
+        "frontend_def": "app/frontend/src/components/dpi/dpiDefinitions.ts",
+        "frontend_linha": 172
+      }
+    },
+    {
+      "codigo": "DPI_OGS",
+      "nome": "Organização e Gestão de Segurança",
+      "fator_pai": "DPI",
+      "aliases": ["OGS", "organização de segurança", "gestão de segurança", "plano de emergência"],
+      "tags": ["dpi", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_DPI.py",
+        "calc_linha": 261,
+        "schema": "app/backend/schemas/dpi.py",
+        "frontend_def": "app/frontend/src/components/dpi/dpiDefinitions.ts",
+        "frontend_linha": 217
+      }
+    },
+    {
+      "codigo": "ESCI_GP",
+      "nome": "Guarnição e Prontidão",
+      "fator_pai": "ESCI",
+      "aliases": ["GP", "guarnição", "prontidão", "bombeiros"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 12,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 5
+      }
+    },
+    {
+      "codigo": "ESCI_SID",
+      "nome": "Sinalização, Iluminação e Deteção",
+      "fator_pai": "ESCI",
+      "aliases": ["SID", "sinalização", "iluminação de emergência", "deteção", "deteção de incêndio"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 117,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 50
+      }
+    },
+    {
+      "codigo": "ESCI_AE",
+      "nome": "Acessibilidade Exterior",
+      "fator_pai": "ESCI",
+      "aliases": ["AE", "acessibilidade", "acesso bombeiros", "acessibilidade exterior"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 226,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 92
+      }
+    },
+    {
+      "codigo": "ESCI_HE",
+      "nome": "Hidrantes Exteriores",
+      "fator_pai": "ESCI",
+      "aliases": ["HE", "hidrantes", "hidrantes exteriores", "marcos de água"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 264,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 118
+      }
+    },
+    {
+      "codigo": "ESCI_EXT",
+      "nome": "Extintores",
+      "fator_pai": "ESCI",
+      "aliases": ["EXT", "extintores"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 294,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 145
+      }
+    },
+    {
+      "codigo": "ESCI_RIA",
+      "nome": "Rede Interior de Incêndio Armada",
+      "fator_pai": "ESCI",
+      "aliases": ["RIA", "rede interior", "carretéis", "rede armada"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 375,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 191
+      }
+    },
+    {
+      "codigo": "ESCI_CPB",
+      "nome": "Corpo Privado de Bombeiros",
+      "fator_pai": "ESCI",
+      "aliases": ["CPB", "corpo privado de bombeiros", "bombeiros privados"],
+      "tags": ["esci", "chichorro", "subfator"],
+      "code_refs": {
+        "calc": "app/backend/calc/Chichorro_ESCI.py",
+        "calc_linha": 518,
+        "schema": "app/backend/schemas/esci.py",
+        "frontend_def": "app/frontend/src/components/esci/esciDefinitions.ts",
+        "frontend_linha": 246
+      }
+    }
+  ],
+  "fontes": [
+    {"id": "tese30", "nome": "Tese 3.0 (JPT)", "ficheiro": "docs/research/tese3.0-jt/tese3.0.ai.md"},
+    {"id": "tese31", "nome": "Tese 3.1 (RS)",  "ficheiro": "docs/research/tese3.1-rs/tese3.1.ai.md"},
+    {"id": "tese40", "nome": "Tese 4.0 (IC)",  "ficheiro": "docs/research/tese4.0-ic/tese4.0.ai.md"},
+    {"id": "rtscie", "nome": "RT-SCIE 1532-2008", "ficheiro": "docs/regulations/Portaria-1532_2008/articles/"},
+    {"id": "rtscie2020", "nome": "RT-SCIE 135-2020", "ficheiro": "docs/regulations/Portaria-135_2020/articles/", "nota": "Regulamento consolidado (substitui 1532/2008)"},
+    {"id": "backend", "nome": "Backend (FastAPI)", "ficheiro": "app/backend/"},
+    {"id": "frontend", "nome": "Frontend (React)", "ficheiro": "app/frontend/src/"}
+  ]
+}

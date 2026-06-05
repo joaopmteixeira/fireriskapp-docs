@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-05-29 (tools→scripts; UI-08 adicionado; reorganização repo)
+Última atualização: 2026-06-05 (AI-02a adicionado — curation manual vault)
 
 ---
 
@@ -19,11 +19,24 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 - **`TEST`** — Testes e validação
 - **`DOCS`** — Documentação
 - **`MODEL`** — Modelo CHICHORRO (backlog pós-3.1)
+- **`AI`** — AI tooling e knowledge graph (Graphify, Obsidian, RAG)
 - **`B`** — Tarefas de manutenção/organização
 
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ AI-02 — Setup Obsidian vault — knowledge graph da metodologia CHICHORRO *(2026-06-05, `feat/obsidian-vault`)* [FIR-35]
+
+Pipeline completo: docling converteu 3 dissertações (600+ páginas); 309 artigos RT-SCIE 1532/2008 versionados; RT-SCIE 135/2020 convertido (302 artigos, tabelas preservadas, delta 1532→135 extraído); `chichorro-registry.json` (5 fatores, 27 subfatores, 8 fontes documentais); `build_vault.py` gerou 50 notas; `map_sources.py` preencheu 27 subfatores × 7 fontes (incl. Backend FastAPI e Frontend React via registry lookup); `build_vault.py --force` preserva secção `## Onde e mencionado`.
+
+---
+
+### ✅ AI-01 — Setup Graphify — knowledge graph do código *(2026-06-01, `3.1-dev`)* [FIR-34]
+
+Graphify instalado (`pip install graphifyy`); CLAUDE.md criado com regras de refresh; `.gitignore` atualizado. 3 grafos gerados: backend (367 nós), frontend (346 nós), cross-stack `./app` (740 nós · 1657 arestas · 44 comunidades). God nodes: `_get_db()`, `getAppStorage()`. Hyperedges identificam pipeline RI e fluxo auth.
+
+---
 
 ### ✅ test: parity checker + 338 testes Literal *(2026-05-28, `3.1-dev`)*
 
@@ -239,6 +252,28 @@ Formulário de reporte de bugs na app; canal de destino a definir (email, GitHub
 
 ---
 
+### ❌ AUTH-09d — Otimização do avatar: WebP, 128 px, limite 100 KB
+
+Avatar atualmente guardado como base64 JPEG 256×256 q0.85 (até 700 KB/utilizador). A 50k utilizadores, o tamanho acumulado pode exceder o limite free do Supabase. Reduzir para WebP 128×128 q0.80 e limite de 100 KB — redução estimada de ~80% no armazenamento.
+
+Ver [AUTH-09d.md](plans/subplans/AUTH-09d.md).
+
+---
+
+### ❌ UI-09 — Badge de lápis persistente no avatar
+
+O ícone de câmara no avatar é apenas visível no hover (`opacity-0 group-hover:opacity-100`) — invisível em mobile. Substituir por um badge circular persistente com `mdiPencil` no canto inferior-direito, sempre visível, seguindo o padrão Gmail/LinkedIn.
+
+Ver [UI-09.md](plans/subplans/UI-09.md).
+
+---
+
+### ❌ UI-10 — Sidebar direita — resumo de sessão e subfatores
+
+Painel lateral direito persistente, colapsável, com resumo da sessão atual: valores introduzidos nos subfatores (POI/CTI/DPI/ESCI), resultado RI calculado e estado dos campos em falta. Visível durante o preenchimento e o cálculo para referência rápida sem necessidade de navegar entre páginas.
+
+---
+
 ### ✅ AUTH-10 — Sistema de roles/permissões (concluído 2026-05-26, branch `auth/roles`)
 
 Coluna `role TEXT NOT NULL DEFAULT 'engineer'`; `require_admin` em `deps.py` (401/403); login env var → `role=admin`, login DB → role da BD; `/admin/users` e `/admin/log` protegidos; sidebar grupo ADMIN condicional; `AdminUsersPage` e `AdminLogPage`.
@@ -379,6 +414,20 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 
 ## Prioridade Baixa
 
+### ✅ AI-02 — Setup Obsidian vault — knowledge graph da metodologia CHICHORRO *(2026-06-05, `feat/obsidian-vault`)* [FIR-35]
+
+50 notas geradas por `build_vault.py`; 27 subfatores × 7 fontes preenchidos por `map_sources.py` (incl. RT-SCIE 135/2020 e Backend/Frontend). Ver secção "Concluídos Recentemente" acima.
+
+---
+
+### ❌ AI-02a — Curation manual do vault Obsidian
+
+Trabalho manual residual do [AI-02](plans/subplans/AI-02.md): (1) preencher `## Definicao` nas 27 notas de subfator; (2) validar entradas "verificar" em `## Onde e mencionado` (confirmar Sim/Não e correr `map_sources.py` para limpar); (3) abrir vault no Obsidian e verificar Graph View e cores por tipo de nó.
+
+Ver [AI-02a.md](plans/subplans/AI-02a.md).
+
+---
+
 ### ❌ DB-06 — Migrar camada de dados para SQLAlchemy ORM
 
 Substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x; desbloqueia autogenerate de migrations, connection pooling nativo e type safety. Fora do âmbito do audit — a implementar em branch próprio. Ver [DB-06_UNDONE.md](plans/subplans/DB-06_UNDONE.md).
@@ -477,7 +526,7 @@ CI → VVE → VHE alternativo.
 
 ---
 
-### ❌ MODEL-03 — Afinação de custos €/m² via PRONIC
+### ❌ MODEL-03 — Afinação de custos €/m² via "PRONIC" ou similar com atualização automática de base de dados de custos
 
 ---
 

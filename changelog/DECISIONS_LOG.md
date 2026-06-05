@@ -4,6 +4,32 @@
 
 ---
 
+## 2026-06-01 — AI-01 · Graphify setup · AI tooling strategy
+
+Decisão `graphify-local-only-artifacts`: artefactos do Graphify (`graph.html`, `graph.json`, `GRAPH_REPORT.md`, `.graphify/`, `graphify-out/`) e `docs/vault/` adicionados ao `.gitignore` como local-only.
+Razão: ficheiros gerados automaticamente, dezenas de MB, sem valor em CI ou para colegas que não usem estas ferramentas localmente.
+
+Decisão `graphify-refresh-rules-documented`: regras de quando refrescar vs. não refrescar documentadas em `CLAUDE.md` na raiz.
+Razão: sem regras explícitas, o Graphify tenderia a ser recorrido em qualquer edição; as regras restringem o refresh a mudanças estruturais.
+
+Decisão `ai-tooling-prefix-ai`: tarefas de IA separadas com prefixo `AI-NN` em vez de misturar com BACK/UI/etc.
+Razão: as ferramentas de IA são categoria distinta (suporte ao desenvolvimento, não features da aplicação); prefixo próprio facilita triagem no Linear.
+
+Decisão `obsidian-vault-handoff-first`: vault Obsidian documentado em `HANDOFF_OBSIDIAN_VAULT.md` antes de implementar.
+Razão: implementação envolve múltiplos scripts e decisões de schema; documentar primeiro reduz erros e facilita retoma após pausa.
+
+---
+
+## 2026-05-31 — docs(ai) · estratégia IA
+
+Decisão `ai-strategy-three-layers`: estratégia de IA do projeto definida em três camadas sequenciais: Graphify (grafo do código) → Obsidian (base de conhecimento) → RAG (assistente de perguntas).
+Razão: cada camada valida a anterior; não faz sentido construir RAG sem as fontes estruturadas que o Obsidian vai fornecer.
+
+Decisão `rag-blocked-on-obsidian`: plano RAG (AI-03) documentado em `docs/research/RAG_FUTURE.md` mas não iniciado até AI-02 (Obsidian) validado.
+Razão: o RAG precisa de um corpus bem estruturado; o vault Obsidian é esse corpus; implementar RAG antes seria construir sobre areia.
+
+---
+
 ## 2026-05-28 — SEC-04b · session-remount · POI conditional fields · DOCS-02
 
 Decisão `sec04b-remove-werkzeug-confirmed`: werkzeug removido do `_verify_password` após confirmação visual na BD Supabase que ambos os utilizadores ativos têm hashes `$argon2id`.
@@ -463,3 +489,25 @@ Razão: ficheiros binários Excel não têm diff útil em git; são dados de inv
 
 Decisão `research-full-gitignore`: regra expandida para `docs/research/**` (toda a pasta) e 15 ficheiros desrastreados (PDFs teses, ai.md, chunks.jsonl, Python de referência).
 Razão: toda a pasta `docs/research/` contém material local de investigação — teses, processamento AI, código de referência legado; nenhum destes ficheiros faz parte do produto nem deve estar no repositório público.
+
+---
+
+## 2026-06-02 — AI-02: pipeline de investigacao + vault Obsidian
+
+Decisao `ai02-docling-over-pypdf`: docling em vez de pypdf para converter as 3 dissertacoes.
+Razao: dissertacoes CHICHORRO têm tabelas de calculo coloridas (Tabela 5.4/5.5/5.6, Figura 3.33) que pypdf garble; docling produz markdown table legivel; textos single-column sao equivalentes em ambas.
+
+Decisao `ai02-vault-root-docs`: vault Obsidian root em `docs/` em vez de `docs/vault/`.
+Razao: os ficheiros `.ai.md` das teses estao em `docs/research/` e os artigos RT-SCIE em `docs/regulations/`; mover o vault root para `docs/` torna-os acessiveis sem duplicar ficheiros; os links `[[art_xxx_...]]` gerados pelo `map_sources.py` passam a resolver (deixam de ser orfaos no Graph View); nao ha alteracao a estrutura das notas em `docs/vault/`.
+
+Decisao `ai02-fonte-notes-direct-edit`: notas fonte das teses editadas diretamente em vez de regenerar com `--force`.
+Razao: `build_vault.py --force` regeneraria todas as 48 notas, incluindo as 27 de subfatores preenchidas por `map_sources.py`; editar apenas as 3 notas fonte afetadas e mais cirurgico e preserva o conteudo gerado.
+
+Decisao `ai02-onde-mencionado-no-accent`: header `## Onde e mencionado` sem acento em `e`.
+Razao: `map_sources.py` usa o string literal `"## Onde e mencionado"` para localizar a seccao nas notas; inconsistencia de acento causaria falha silenciosa.
+
+Decisao `ai02-gitignore-both-obsidian-paths`: `.gitignore` com `docs/.obsidian/` e `docs/vault/.obsidian/` ambos ignorados.
+Razao: ao mover o vault root de `docs/vault/` para `docs/`, o Obsidian cria `docs/.obsidian/`; o `docs/vault/.obsidian/` (config do vault anterior) tambem existe localmente; ambos sao state local do Obsidian e nao devem ser commitados.
+
+Decisao `ai02-page-markers-chunk-level`: marcadores `<!-- page: N -->` sao ao nivel do chunk (N = primeira pagina do chunk), nao por pagina individual.
+Razao: docling processa PDFs em chunks de 12 paginas; granularidade exacta por pagina nao e necessaria — citacoes aproximadas (pag. +-12) sao suficientes para orientar a leitura.

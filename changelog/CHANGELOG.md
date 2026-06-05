@@ -2,6 +2,73 @@
 
 ---
 
+## 2026-06-02 — AI-02 · pipeline investigação + vault Obsidian CHICHORRO
+
+### feat(regulations): add RT-SCIE Portaria 1532/2008 *(commit `7fbe5aa`, `feat/research-organization`)*
+
+- `docs/regulations/Portaria-1532_2008/` — PDF original, 309 artigos em `articles/art_*.md` com frontmatter YAML (título, epígrafe, página, artigo)
+- `docs/regulations/_pipeline/` — scripts genéricos `convert.py`, `split.py`, `worker.py`; novo regulamento adicionado via `config.json` sem duplicar scripts
+
+### feat(ai): add chichorro-registry.json — fonte única de verdade *(commit `d909d27`, `feat/research-organization`)*
+
+- `docs/vault/_data/chichorro-registry.json` — 5 fatores, 27 subfatores com `calc_linha`/`frontend_linha`, 9 fontes
+- Referências de código verificadas a 2026-06-01 (backend + frontend)
+
+### docs(research): pipeline de conversão de dissertações com docling *(commits `5c84e5f`, `68c6b7f`)*
+
+- `scripts/thesis_convert.py` — orquestrador: chunks de 12 páginas → `.ai.md` + `.chunks.jsonl` com marcadores `<!-- page: N -->`
+- `scripts/thesis_worker.py` — worker por chunk (paramétrico, aceita `pdf_path`)
+- Tese 4.0 IC (366 págs, 112 chunks), Tese 3.0 JPT (250 págs, 194 chunks), Tese 3.1 RS (140 págs, 104 chunks) convertidas
+
+### feat(scripts): add map_sources.py — heading-aware subfactor source mapper *(commit `8fc1429`)*
+
+- `scripts/map_sources.py` — percorre `.ai.md` com `heading_stack` + `current_page`; popula `## Onde e mencionado` com subcapítulo + página; cria `[[art_xxx_...|Artigo N - epígrafe]]` para o RT-SCIE
+- 27 notas de subfatores preenchidas com referências das 3 teses + artigos RT-SCIE
+
+### feat(ai): add build_vault.py + generate Obsidian vault (48 notes) *(commit `68f1c1f`, `feat/obsidian-vault`)*
+
+- `scripts/build_vault.py` — idempotente; lê `chichorro-registry.json`; gera 5 fatores, 27 subfatores, 9 fontes, 6 conceitos, `Indice.md`; frontmatter YAML + `[[wiki-links]]`; flag `--force`
+- `docs/vault/fatores/`, `subfatores/`, `fontes/`, `conceitos/`, `Indice.md` — 48 notas geradas
+
+### docs(ai): expand vault root to docs/ — thesis .ai.md files accessible *(commit `1c805e3`, `feat/obsidian-vault`)*
+
+- Vault root movido de `docs/vault/` para `docs/` — teses `.ai.md` e artigos RT-SCIE ficam acessíveis no Obsidian
+- Notas fonte das 3 teses com `[[tese3.0.ai|Abrir conteudo]]` para navegação directa
+- Links `[[art_xxx_...]]` resolvem agora (deixam de ser órfãos no Graph View)
+- `.gitignore`: `docs/.obsidian/` e `docs/vault/.obsidian/` ambos ignorados
+
+---
+
+## 2026-06-01 — AI-01 · setup Graphify (execução) + AI strategy formalizada
+
+### feat(ai): install Graphify + generate cross-stack knowledge graph *(AI-01 / FIR-34)*
+
+- Graphify instalado (manual — auto-installer bloqueado por classificador supply chain)
+- Grafos gerados: backend (367 nós), frontend (346 nós), cross-stack (740 nós / 1657 arestas / 44 comunidades)
+- God nodes: `_get_db()` (21 arestas), `getAppStorage()` (24), `Request` (20)
+- Hyperedges: pipeline RI = f(POI,CTI,DPI,ESCI); factor definitions; session state via `resultsStore`; auth flow; parity test suite
+- `CLAUDE.md` criado na raiz (gitignored): mapa rápido arquitetura, comandos de dev, regras de refresh do grafo
+- `.gitignore` expandido: `graphify-out/`, `graph.html`, `graph.json`, `GRAPH_REPORT.md`, `.graphify/`, `docs/vault/`
+
+### docs(ai): AI strategy + AI-02 handoff *(commits `087e387`, `19da190`)*
+
+- `HANDOFF_OBSIDIAN_VAULT.md` — handoff detalhado para AI-02: estrutura do vault (5 fatores, 27 subfatores, 9 fontes), scripts necessários, schema YAML frontmatter
+- `docs/TODO_LIST.md` — secção "AI Tooling" adicionada: AI-01 ✅, AI-02 ❌, AI-03 🔮
+- `docs/TODO_PRIORITIES.md` — prefixo AI adicionado; AI-01 marcado concluído
+- `docs/plans/subplans/AI-01.md` — subplan com stats do grafo, god nodes, hyperedges, referências FIR-34/FIR-35
+
+---
+
+## 2026-05-31 — docs(ai) · estratégia IA documentada
+
+### docs(ai): add Graphify setup, Obsidian vault guide and RAG future plan *(commit `2bd5607`)*
+
+- `docs/ai/SETUP_GRAPHIFY.md` — guia completo de instalação Graphify: passos, blocos CLAUDE.md, adições .gitignore, regras de refresh (quando correr vs. não)
+- `docs/ai/OBSIDIAN_SETUP.md` — estrutura do vault com subfactores reais CHICHORRO (POI_CC, POI_IEE, DPI_REIC, ESCI_GP, etc.), passos de conversão PDF, lista plugins
+- `docs/research/RAG_FUTURE.md` — arquitetura para assistente RAG futuro com pgvector + Claude API; a implementar após validação do Obsidian
+
+---
+
 ## 2026-05-29 — fix(poi) · chore · refactor(repo) · refactor(docs) · fix(repo)
 
 ### fix(poi): TipoEdif2 — tipo pai como primeira opção *(commit `6128086`, `3.1-dev`)*

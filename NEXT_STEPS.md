@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-05-29 (fix POI TipoEdif2; reorganização raiz repo + docs/; UI-08 adicionado)
+Última atualização: 2026-06-05 (AI-02a adicionado — curation manual vault)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -15,7 +15,7 @@
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
 | Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/05d/06 ✅) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
-| Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) |
+| Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) · ❌ AUTH-09d pendente (avatar WebP 128px) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
 | Dark Mode (UI-07) | ✅ Completo — todas as páginas cobertas (commit `d2d6492`) |
 | Migração Flask → FastAPI (BACK-01) | ✅ Completo — 11/11 PASS (`feat/flask-to-fastapi`) |
@@ -25,9 +25,54 @@
 | Monitorização (INFRA-01) | ✅ Completo — Sentry frontend + backend ativos; UptimeRobot com email alerts |
 | Estratégia de Backups (DB-03) | ✅ Completo — `scripts/backup_db.py`, GitHub Actions workflow, `scripts/restore_db.py`; A-04 (2026-05-22) |
 | Documentação | ✅ Completo (DOCS-01 — VitePress em produção; docs.chichorrofireriskapp.joaopmteixeira.net) |
+| AI Tooling (AI-02) | ✅ Vault Obsidian completo — 8 fontes, 27 subfatores, RT-SCIE 135/2020, Backend/Frontend (`feat/obsidian-vault`) |
+| AI Tooling (AI-02a) | ❌ Curation manual pendente — `## Definicao` (27 notas), validação "verificar", Graph View Obsidian |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-05)
+
+### ✅ AI-02 Passo 8 (FIR-35) — RT-SCIE 135/2020 + Backend/Frontend fontes
+
+- RT-SCIE Portaria 135/2020 convertida: 302 artigos em `docs/regulations/Portaria-135_2020/articles/` com tabelas markdown preservadas; `delta_1532_to_135.md` (3851 linhas de alterações)
+- `map_sources.py` — `scan_rtscie()` reutilizado para `rtscie2020`; Backend/Frontend populados via registry lookup (27 subfatores cada)
+- 27 subfatores × 8 fontes preenchidos; 190 artigos RT-SCIE com backlinks `## Subfatores relacionados`
+- `build_vault.py --force` preserva agora a secção `## Onde e mencionado` (fix bug validações)
+
+---
+
+## Concluído Recentemente (2026-06-02)
+
+### ✅ AI-02 (FIR-35) — Pipeline de investigação + Vault Obsidian CHICHORRO
+
+**Pipeline de investigação (`feat/research-organization` → mergeado em `3.1-dev`):**
+
+- RT-SCIE Portaria 1532/2008 — PDF original + 309 artigos em `docs/regulations/Portaria-1532_2008/articles/` com frontmatter YAML; `_pipeline/` genérico para novos regulamentos
+- `scripts/thesis_convert.py` + `thesis_worker.py` — converter docling com chunks de 12 páginas e marcadores `<!-- page: N -->`; teses 4.0 IC (366 págs, 112 chunks), 3.0 JPT (250 págs, 194 chunks), 3.1 RS (140 págs, 104 chunks) convertidas
+- `docs/vault/_data/chichorro-registry.json` — fonte única: 5 fatores, 27 subfatores com `calc_linha`/`frontend_linha`, 9 fontes
+- `scripts/map_sources.py` — heading-aware; mantém `heading_stack` + `current_page`; popula `## Onde e mencionado` com subcapítulo + página + links `[[art_xxx_...]]` para RT-SCIE
+- `scripts/build_vault.py` — 48 notas geradas (idempotente, `--force` para regenerar); frontmatter YAML com `tipo`, `codigo`, `aliases`, `tags`; `[[wiki-links]]`
+- Vault root expandido de `docs/vault/` para `docs/` — teses `.ai.md` e artigos RT-SCIE acessíveis no Obsidian; links `[[art_xxx_...]]` resolvem no Graph View
+- Graph View configurado: fator=verde, subfator=azul, fonte=laranja, conceito=cinza
+
+---
+
+## Concluído Recentemente (2026-06-01)
+
+### ✅ AI-01 (FIR-34) — Setup Graphify
+
+- Graphify instalado (manual — auto-installer bloqueado por classificador supply chain)
+- Grafo cross-stack: 740 nós / 1657 arestas / 44 comunidades — backend (367), frontend (346); god nodes: `_get_db()`, `getAppStorage()`, `Request`
+- `CLAUDE.md` criado na raiz com mapa de arquitetura + regras de refresh do grafo
+- `.gitignore` expandido: artefactos Graphify + `docs/vault/`
+- `docs/TODO_LIST.md` + `docs/TODO_PRIORITIES.md` — secção AI Tooling formalizada (AI-NN)
+- `docs/plans/subplans/AI-01.md` criado; FIR-34 fechado no Linear
+- `docs/ai/OBSIDIAN_VAULT.md` — plano detalhado AI-02; FIR-35 criado
+
+*(Trabalho de 2026-05-31 — documentação da estratégia IA — incorporado nesta sessão: `docs/ai/SETUP_GRAPHIFY.md`, `docs/ai/OBSIDIAN_SETUP.md`, `docs/research/RAG_FUTURE.md`)*
 
 ---
 
@@ -542,6 +587,29 @@ Formulário de reporte de bugs na app. Canal de destino a definir: e-mail, GitHu
 ### UI-08 — Ícones de informação nos subfatores
 
 Ícone ℹ️ em cada subfator POI/CTI/DPI/ESCI. Ao clicar, abre painel com descrição detalhada do subfator — o que mede, que valores esperar, como interpretar — incluindo tabela de valores e referência ao RT-SCIE quando aplicável. Exemplo: POI_IA com Quadro 3.3 (Centrais Térmicas, Aparelhos Autónomos, Combustível Sólido × Legislação).
+
+---
+
+### AUTH-09d — Otimização do avatar: WebP, 128 px, limite 100 KB
+
+Avatar guardado como base64 JPEG 256×256 q0.85 (até 700 KB/utilizador). Com escala de
+utilizadores, o tamanho acumulado na coluna `users.avatar` pode exceder o limite free do
+Supabase (500 MB). Reduzir para WebP 128×128 q0.80 e limite de 100 KB — redução estimada
+de ~80% no armazenamento, sem perda de qualidade percetível a esta dimensão.
+
+Ficheiros: `app/frontend/src/pages/ProfilePage.tsx`, `app/backend/routers/auth.py`.
+Ver plano detalhado em [AUTH-09d.md](plans/subplans/AUTH-09d.md).
+
+---
+
+### UI-09 — Badge de lápis persistente no avatar
+
+O ícone de câmara no avatar só é visível no hover — invisível em dispositivos móveis.
+Substituir por um badge circular persistente com ícone de lápis (`mdiPencil`) no canto
+inferior-direito, sempre visível, seguindo o padrão Gmail/LinkedIn.
+
+Ficheiro: `app/frontend/src/pages/ProfilePage.tsx`.
+Ver plano detalhado em [UI-09.md](plans/subplans/UI-09.md).
 
 ---
 

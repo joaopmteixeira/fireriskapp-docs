@@ -1,0 +1,26 @@
+---
+numero: 82
+epigrafe: "Ventilação e evacuação de efluentes de combustão"
+titulo: "Título V — Condições gerais das instalações técnicas"
+capitulo: "Capítulo III — Instalações de aquecimento"
+seccao: "Secção I — Centrais térmicas"
+regulamento: "RT-SCIE (Portaria n.º 1532/2008)"
+source: "Portaria-1532_2008_original.pdf"
+tags: [scie, regulamento, artigo]
+---
+
+# Artigo 82.º — Ventilação e evacuação de efluentes de combustão
+
+## Ventilação e evacuação de efluentes de combustão
+
+- 1 - As centrais térmicas devem dispor de sistemas de ventilação permanente, devidamente dimensionados, compreendendo bocas de admissão de ar novo e bocas de extracção do ar ambiente, convenientemente localizadas.
+- 2 - A extracção dos efluentes dos aparelhos de combustão deve processar-se em conformidade com o estabelecido no presente regulamento para condutas de evacuação e aberturas de escape de efluentes de combustão.
+
+---
+[[art_081_aparelhos_de_producao_de_calor|◀ Anterior]] · [[index|Índice]] · [[art_083_dispositivos_de_corte_de_emergencia|Seguinte ▶]]
+
+## Subfatores relacionados
+
+- [[POI_IA]] -- Instalação de Aquecimento
+- [[POI_IVCA]] -- Instalação de Ventilação e Climatização
+
