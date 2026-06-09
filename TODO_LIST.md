@@ -3,9 +3,27 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-05 (AI-02a adicionado; secção AI criada)
+Última atualização: 2026-06-08 (AI-03 adicionado)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
+
+---
+
+## Prefixos de ID
+
+- **`AUTH`** — Autenticação e sessões (AUTH-01…05 concluídos — ver CHANGELOG)
+- **`DB`** — Base de dados e persistência
+- **`SEC`** — Segurança e hardening (não-auth)
+- **`UI`** — Interface e experiência do utilizador
+- **`UX`** — Micro-melhorias de experiência (UX-01…08 concluídos — ver CHANGELOG)
+- **`FEAT`** — Funcionalidades novas da aplicação
+- **`BACK`** — Arquitetura e código backend
+- **`INFRA`** — Infraestrutura, deploy e DevOps
+- **`TEST`** — Testes e validação
+- **`DOCS`** — Documentação
+- **`MODEL`** — Modelo CHICHORRO (backlog pós-3.1)
+- **`AI`** — AI tooling e knowledge graph (Graphify, Obsidian, RAG)
+- **`B`** — Tarefas de manutenção/organização
 
 ---
 
@@ -168,6 +186,7 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 | AI-01 | ✅ | Setup Graphify — grafos backend (367 nós), frontend (346 nós), cross-stack (740 nós); CLAUDE.md com regras de refresh | 3.1-dev |
 | AI-02 | ✅ | Setup Obsidian vault — 50 notas, 27 subfatores × 8 fontes, RT-SCIE 1532/2008 + 135/2020, Backend/Frontend via registry lookup | feat/obsidian-vault |
 | AI-02a | ❌ | Curation manual — `## Definicao` (27 notas), validar "verificar" em `## Onde e mencionado`, verificar Graph View Obsidian | feat/obsidian-vault |
+| AI-03 | ❌ | RAG — pgvector + `routers/rag.py` + botão "Explicar" por subfator; implementar após AI-02a concluído | — |
 
 ---
 

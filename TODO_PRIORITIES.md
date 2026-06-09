@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-05 (AI-02a adicionado — curation manual vault)
+Última atualização: 2026-06-08 (DB-06 e INFRA-03 → Alta; AI-03 → Média; Concluídos reformulados)
 
 ---
 
@@ -26,139 +26,151 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ## Concluídos Recentemente (mais recente → mais antigo)
 
-### ✅ AI-02 — Setup Obsidian vault — knowledge graph da metodologia CHICHORRO *(2026-06-05, `feat/obsidian-vault`)* [FIR-35]
+### ✅ AI-02 — Setup Obsidian vault `Prioridade Baixa` *(2026-06-05, `feat/obsidian-vault`)* [FIR-35]
 
-Pipeline completo: docling converteu 3 dissertações (600+ páginas); 309 artigos RT-SCIE 1532/2008 versionados; RT-SCIE 135/2020 convertido (302 artigos, tabelas preservadas, delta 1532→135 extraído); `chichorro-registry.json` (5 fatores, 27 subfatores, 8 fontes documentais); `build_vault.py` gerou 50 notas; `map_sources.py` preencheu 27 subfatores × 7 fontes (incl. Backend FastAPI e Frontend React via registry lookup); `build_vault.py --force` preserva secção `## Onde e mencionado`.
-
----
-
-### ✅ AI-01 — Setup Graphify — knowledge graph do código *(2026-06-01, `3.1-dev`)* [FIR-34]
-
-Graphify instalado (`pip install graphifyy`); CLAUDE.md criado com regras de refresh; `.gitignore` atualizado. 3 grafos gerados: backend (367 nós), frontend (346 nós), cross-stack `./app` (740 nós · 1657 arestas · 44 comunidades). God nodes: `_get_db()`, `getAppStorage()`. Hyperedges identificam pipeline RI e fluxo auth.
+50 notas Obsidian; 27 subfatores × 8 fontes (incl. RT-SCIE 135/2020 e Backend/Frontend); merge em `3.1-dev`.
 
 ---
 
-### ✅ test: parity checker + 338 testes Literal *(2026-05-28, `3.1-dev`)*
+### ✅ AI-01 — Setup Graphify `Prioridade Baixa` *(2026-06-01, `3.1-dev`)* [FIR-34]
 
-`scripts/check_option_parity.py` verifica paridade frontend↔backend para todos os valores Literal; detetou 2 bugs reais. `test_valid_options.py` com 338 testes parametrizados auto-gerados cobre todos os subfatores.
+Graphify instalado; 3 grafos: backend (367 nós), frontend (346 nós), cross-stack (740 nós · 1657 arestas · 44 comunidades); CLAUDE.md com regras de refresh.
 
 ---
 
-### ✅ fix(schemas): POI_CC_Idade sem espaços + DPI_OGS_Aplica phantom removido *(2026-05-28, `3.1-dev`)*
+### ✅ test: parity checker + 338 testes Literal `Prioridade Baixa` *(2026-05-28, `3.1-dev`)*
 
-`POI_CC_Idade`: intervalos de ano corrigidos sem espaços (`"1991-2008"`). `DPI_OGS_Aplica`: `"Nao Existe"` removido — phantom value ausente no modelo, no frontend e sem branch no cálculo.
+`check_option_parity.py` verifica paridade frontend↔backend; `test_valid_options.py` com 338 testes parametrizados; detetou 2 bugs reais.
+
+---
+
+### ✅ fix(schemas): POI_CC_Idade sem espaços + DPI_OGS_Aplica phantom *(2026-05-28, `3.1-dev`)*
+
+`POI_CC_Idade` intervalos sem espaços; `DPI_OGS_Aplica "Nao Existe"` removido — phantom value ausente no modelo.
 
 ---
 
 ### ✅ fix: POI campos condicionais + sync CTI↔ATIV + CTI desbloqueado *(2026-05-28, `3.1-dev`)*
 
-`POI_IA_TipoInst2` e `POI_ATIV_TipoEdif2` tornados `Optional` no backend; payload filtrado por `opts.length > 0` (fix correto após tentativa com visibleWhen); CTI TipoEdif desbloqueado; sync bidirecional CTI↔ATIV via module inputs. Resolve HTTP 422 em POI IA e POI ATIV.
+`POI_IA_TipoInst2`/`POI_ATIV_TipoEdif2` tornados `Optional`; sync bidirecional CTI↔ATIV via module inputs.
 
 ---
 
 ### ✅ fix: session remount no AppLayout *(2026-05-28, `3.1-dev`)*
 
-`key={sessionKey}` no `<Outlet>` força remount ao importar/limpar sessão — páginas reflectem novo estado imediatamente sem reload manual.
+`key={sessionKey}` no `<Outlet>` força remount ao importar/limpar sessão sem reload manual.
 
 ---
 
 ### ✅ SEC-04b — Remoção do fallback werkzeug `Prioridade Alta` *(2026-05-28, `3.1-dev`)*
 
-Após confirmação que ambos os utilizadores têm hashes `$argon2id`, werkzeug removido de `auth.py` e `requirements.txt`; `_verify_password` simplificada para apenas argon2id.
+Werkzeug removido de `auth.py` e `requirements.txt` após confirmação que todos os hashes são `$argon2id`.
 
 ---
 
 ### ✅ DOCS-02 — Uniformização dos headers dos subplans `Prioridade Baixa` *(2026-05-28, `3.1-dev`)*
 
-58 ficheiros em `docs/plans/subplans/` uniformizados com formato Estado → Data de conclusão → Branch; `DESIGN.md` duplicado removido; SEC-09 ❌ duplicado e INFRA-04 incorreto corrigidos.
+58 subplans uniformizados (Estado → Data → Branch); `DESIGN.md` duplicado removido.
 
 ---
 
 ### ✅ BACK-05d + BACK-06 — Pydantic Literal types e JSON error handler `Prioridade Média` *(2026-05-27, `back/validation`)*
 
-Campos enum dos schemas DPI/ESCI/CTI/POI convertidos para `Literal[...]`; handler global 500 retorna sempre JSON `{"error":"INTERNAL_ERROR","request_id":...}`.
+Pydantic `Literal` em todos os schemas (DPI/ESCI/CTI/POI); handler 500 retorna sempre JSON `{"error":"INTERNAL_ERROR","request_id":...}`.
 
 ---
 
 ### ✅ SEC-04 + SEC-05 + SEC-07 — Argon2id, SHA-256 tokens e magic bytes avatar `Prioridade Média` *(2026-05-27, `sec/hardening` + `sec/token-hashing`)*
 
-Passwords migradas de werkzeug para argon2id (RFC 9106 level 1); tokens guardados como SHA-256 na BD; upload de avatar valida magic bytes reais (JPEG/PNG/WebP/GIF).
+Argon2id RFC 9106 level 1; tokens SHA-256 na BD; magic bytes validados no upload de avatar.
 
 ---
 
 ### ✅ TEST-02 + INFRA-02 — pytest e GitHub Actions CI/CD `Prioridade Baixa` *(2026-05-27, `test/automated-tests` + `infra/ci-cd`)*
 
-12/12 testes pytest com fixture CSRF automático; workflows `test.yml` e `build.yml` com path filters para backend e frontend separados.
+12/12 testes pytest; workflows `test.yml` + `build.yml` com path filters.
 
 ---
 
 ### ✅ AUTH-10 — Sistema de roles/permissões `Prioridade Média` *(2026-05-26, `auth/roles`)*
 
-Coluna `role` na BD; `require_admin` em `deps.py`; rotas `/admin/*` protegidas; sidebar condicional para grupo ADMIN.
+Coluna `role`, `require_admin` em `deps.py`, rotas `/admin/*` protegidas, sidebar ADMIN condicional.
 
 ---
 
 ### ✅ DB-05 — Least privilege DB user `Prioridade Média` *(2026-05-24, `audit-fix`)*
 
-Alembic usa `DATABASE_URL_MIGRATIONS` (superuser); runtime usa `chichorro_runtime` com apenas DML. Ações manuais: criar role no Supabase, atualizar env vars Render e GitHub Secret.
+`chichorro_runtime` com apenas DML; `DATABASE_URL_MIGRATIONS` para Alembic superuser.
 
 ---
 
 ### ✅ B-01 + BACK-07 — Consolidação docs de deploy e naming de rotas API `Prioridade Baixa` *(2026-05-24, `audit-fix`)*
 
-`ENV_VARS.md` e `DEPLOY.md` reescritos; `DEPLOY_CLOUD_VPS.md` apagado; aliases legacy `/login`, `/logout`, `/me`, `/RI_interv` removidos; decisão de manter prefixos `/POI/*`, `/CTI/*` documentada.
+`ENV_VARS.md` e `DEPLOY.md` reescritos; aliases legacy removidos; audit-fix 16/16 completo.
 
 ---
 
 ### ✅ INFRA-01/M-04 — X-Request-ID middleware e alerta de backup `Prioridade Média` *(2026-05-24, `audit-fix`)*
 
-`X-Request-ID` UUID por pedido com tag Sentry; `backup-db.yml` envia email de alerta via Resend em caso de falha.
+`X-Request-ID` UUID por pedido com tag Sentry; email de alerta via Resend em caso de falha do backup.
 
 ---
 
-### ✅ Ciclo audit-fix (16 planos) — DB-04, DB-03, SEC-09, INFRA-05, SEC-06, SEC-08, AUTH-07/A-02, SEC-10, SEC-01/A-01, AUTH-13, INFRA-04 `Prioridades Média/Alta` *(2026-05-22, `audit-fix`)*
+### ✅ Ciclo audit-fix (16 planos) `Prioridades Média/Alta` *(2026-05-22, `audit-fix`)*
 
-Alembic; backups automáticos; CSP+Permissions-Policy; Cache-Control; logs sem PII; fail-fast Redis e secrets; CORS restrito; hardening sessão (max_age, CSRF); endpoint `/health/db`.
+16 planos concluídos: Alembic, backups automáticos, CSP, CORS estrito, CSRF, fail-fast Redis e secrets, `/health/db`.
 
 ---
 
 ### ✅ DOCS-01 + INFRA-01 — VitePress e Sentry+UptimeRobot `Prioridade Baixa/Média` *(2026-05-19~20, `3.1-dev`)*
 
-Documentação migrada para VitePress em `docs.chichorrofireriskapp.joaopmteixeira.net`; Sentry (frontend + backend) e UptimeRobot configurados.
+VitePress em `docs.chichorrofireriskapp.joaopmteixeira.net`; Sentry frontend+backend; UptimeRobot ativo.
 
 ---
 
 ### ✅ UI-07 — Dark mode `Prioridade Baixa` *(2026-05-18, `3.1-dev`)*
 
-Tema escuro em todas as páginas: sidebar, cards, ProfilePage, SettingsPage, RiPage, CtiPage, InterventionsPage e páginas de autenticação.
+Tema escuro em todas as páginas: sidebar, cards, auth, RiPage, CtiPage, InterventionsPage.
 
 ---
 
 ### ✅ AUTH-09 (a/b/c) + UI-06 — Editar Perfil e SettingsPage `Prioridade Média` *(2026-05-13, `3.1-dev`)*
 
-5 rotas de perfil (username, email c/ re-verificação, password, avatar, delete); ProfilePage card compacto com 4 rows expansíveis e avatar circular; SettingsPage com tema, warnOnExit e casas decimais em localStorage.
+5 rotas de perfil; ProfilePage card compacto com avatar; SettingsPage (tema, warnOnExit, casas decimais).
 
 ---
 
 ### ✅ BACK-01 + BACK-02 + BACK-04 — FastAPI, logging e deploy `Prioridade Média` *(2026-05-12~15, `feat/flask-to-fastapi`)*
 
-Migração completa Flask → FastAPI com estrutura modular; logging de acessos com user-agent e IDs; deploy no Render com gunicorn.
+Migração completa Flask → FastAPI; logging de acessos; deploy no Render com Supabase.
 
 ---
 
 ### ✅ feat/security — SEC-01..03, AUTH-06..08, SEC-08 `Prioridade Alta` *(2026-05-12, `feat/security`)*
 
-CORS estrito; HTTPS obrigatório; headers de segurança; cookies HTTPONLY/SECURE/SameSite; session regeneration pós-login; rate limiting slowapi; legacyLogin.ts removido.
+CORS estrito, HTTPS obrigatório, headers de segurança, cookies hardened, rate limiting, `legacyLogin.ts` removido.
 
 ---
 
 ### ✅ AUTH-11 + AUTH-12 + DB-01 + TEST-01 — Produção: modal sessão, merge, Neon, e2e `Prioridade Alta` *(2026-05-08, `feat/access-log`)*
 
-Modal de sessão expirada validado em produção; merge `feat/access-log` → `3.1-dev`; PostgreSQL Neon configurado no Render; fluxo completo registo → email → verificação → login → reset validado.
+Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo aprovado em produção.
 
 ---
 
 ## Prioridade Alta
+
+### ❌ DB-06 — Migrar camada de dados para SQLAlchemy ORM
+
+Substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x; desbloqueia autogenerate de migrations, connection pooling nativo e type safety. Pré-requisito para INFRA-03 e deploy VPS. Ver [DB-06_UNDONE.md](plans/subplans/DB-06_UNDONE.md).
+
+---
+
+### ❌ INFRA-03 — Dockerfile + Compose
+
+Containerização para deploy reproduzível em VPS/Proxmox. Depende de DB-06 (SQLAlchemy) para pooling correto em ambiente containerizado.
+
+---
 
 ### ✅ AUTH-06 — Hardening de cookies de sessão (concluído 2026-05-22, branch `feat/security` + `audit-fix`)
 
@@ -274,6 +286,12 @@ Painel lateral direito persistente, colapsável, com resumo da sessão atual: va
 
 ---
 
+### ❌ AI-03 — RAG — botão "Explicar" por subfator
+
+pgvector + `routers/rag.py` + botão "Explicar" em cada subfator POI/CTI/DPI/ESCI. Permite ao utilizador obter uma explicação contextual do subfator com base nas dissertações e no RT-SCIE, sem sair da app. Implementar após AI-02a concluído.
+
+---
+
 ### ✅ AUTH-10 — Sistema de roles/permissões (concluído 2026-05-26, branch `auth/roles`)
 
 Coluna `role TEXT NOT NULL DEFAULT 'engineer'`; `require_admin` em `deps.py` (401/403); login env var → `role=admin`, login DB → role da BD; `/admin/users` e `/admin/log` protegidos; sidebar grupo ADMIN condicional; `AdminUsersPage` e `AdminLogPage`.
@@ -354,7 +372,7 @@ Alembic configurado com psycopg2 puro (sem SQLAlchemy ORM); `init_db()` guardado
 
 ### ✅ DB-05 — Least privilege DB user (concluído 2026-05-24, branch `audit-fix`)
 
-`alembic/env.py` lê `DATABASE_URL_MIGRATIONS` (superuser para migrations); `DATABASE_URL` aponta para `chichorro_runtime` (apenas DML). Ações manuais pendentes: criar role no Supabase SQL Editor, atualizar env vars Render e GitHub Secret.
+`alembic/env.py` lê `DATABASE_URL_MIGRATIONS` (superuser para migrations); `DATABASE_URL` aponta para `chichorro_runtime` (apenas DML).
 
 ---
 
@@ -414,9 +432,15 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 
 ## Prioridade Baixa
 
-### ✅ AI-02 — Setup Obsidian vault — knowledge graph da metodologia CHICHORRO *(2026-06-05, `feat/obsidian-vault`)* [FIR-35]
+### ✅ AI-02 — Setup Obsidian vault (concluído 2026-06-05, branch `feat/obsidian-vault`) [FIR-35]
 
-50 notas geradas por `build_vault.py`; 27 subfatores × 7 fontes preenchidos por `map_sources.py` (incl. RT-SCIE 135/2020 e Backend/Frontend). Ver secção "Concluídos Recentemente" acima.
+50 notas geradas por `build_vault.py`; 27 subfatores × 8 fontes preenchidos por `map_sources.py` (incl. RT-SCIE 135/2020 e Backend/Frontend).
+
+---
+
+### ✅ AI-01 — Setup Graphify (concluído 2026-06-01, branch `3.1-dev`) [FIR-34]
+
+Graphify instalado; CLAUDE.md com regras de refresh; 3 grafos: backend (367 nós), frontend (346 nós), cross-stack (740 nós · 1657 arestas · 44 comunidades).
 
 ---
 
@@ -425,18 +449,6 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 Trabalho manual residual do [AI-02](plans/subplans/AI-02.md): (1) preencher `## Definicao` nas 27 notas de subfator; (2) validar entradas "verificar" em `## Onde e mencionado` (confirmar Sim/Não e correr `map_sources.py` para limpar); (3) abrir vault no Obsidian e verificar Graph View e cores por tipo de nó.
 
 Ver [AI-02a.md](plans/subplans/AI-02a.md).
-
----
-
-### ❌ DB-06 — Migrar camada de dados para SQLAlchemy ORM
-
-Substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x; desbloqueia autogenerate de migrations, connection pooling nativo e type safety. Fora do âmbito do audit — a implementar em branch próprio. Ver [DB-06_UNDONE.md](plans/subplans/DB-06_UNDONE.md).
-
----
-
-### ❌ INFRA-03 — Dockerfile + Compose
-
-Containerização para deploy reproduzível. Para o Render (PaaS) atual não é bloqueante; relevante para migração futura para VPS/Proxmox.
 
 ---
 
@@ -511,6 +523,12 @@ Após cálculo completo, guardar avaliação com nome, morada, código postal, D
 ### ❌ FEAT-03 — Chatbot AI
 
 Assistente de IA para ajudar utilizadores a compreender o CHICHORRO e usar a aplicação (via Claude API ou similar).
+
+---
+
+### ❌ FEAT-04 — Geração de relatório em PDF
+
+Exportar resultados RI, CTI e subfatores (POI/DPI/ESCI) para ficheiro PDF imprimível e partilhável após cálculo completo.
 
 ---
 

@@ -2,6 +2,34 @@
 
 ---
 
+## 2026-06-05 — AI-02 encerrado + merge feat/obsidian-vault → 3.1-dev
+
+### docs(brain): mark AI-02 complete — Passo 8 results *(commit `4268b6a`, `feat/obsidian-vault`)*
+
+- `docs/plans/subplans/AI-02.md` — estado `✅ Concluído`, data `2026-06-05`, Passo 8 documentado com tabela de resultados (7 fontes × subfatores)
+- `docs/TODO_PRIORITIES.md` — entrada AI-02 atualizada com RT-SCIE 135/2020 + Backend/Frontend
+
+### docs: incorporate PR #2 and PR #4 into feat/obsidian-vault *(commits `9e47b8f`, `f0a1a8b`)*
+
+- `docs/plans/subplans/AUTH-09d.md` — otimização avatar: WebP 128 px, limite 100 KB, redução ~80% armazenamento
+- `docs/plans/subplans/UI-09.md` — badge lápis persistente no avatar (substitui overlay câmara hover-only)
+- `docs/deploy/VPS_CONSOLIDATION.md` — guia de referência para migração para VPS única (Hetzner CX32 ~€6.80/mês)
+- `docs/NEXT_STEPS.md`, `docs/TODO_LIST.md`, `docs/TODO_PRIORITIES.md` — AUTH-09d, UI-09, UI-10 adicionados como ❌ Prioridade Média
+- PRs #2 e #4 fechados no GitHub (incorporados manualmente)
+
+### docs(brain): add AI-02a subplan *(commit `d32bf38`, `feat/obsidian-vault`)*
+
+- `docs/plans/subplans/AI-02a.md` — 3 tarefas manuais residuais do AI-02: (1) preencher `## Definicao` nas 27 notas de subfator; (2) validar entradas "verificar" em `## Onde e mencionado`; (3) verificar Graph View Obsidian
+- `docs/TODO_LIST.md` — secção AI com AI-02a ❌ adicionada
+- `docs/TODO_PRIORITIES.md` — AI-02a em Prioridade Baixa
+
+### merge(feat/obsidian-vault): AI-02 Obsidian vault + RT-SCIE 135/2020 *(commit `a14c1f5`, `3.1-dev`)*
+
+- 35 commits de `feat/obsidian-vault` mergeados em `3.1-dev` com `--no-ff`
+- Push para `origin/3.1-dev` (`3a2f190..a14c1f5`)
+
+---
+
 ## 2026-06-02 — AI-02 · pipeline investigação + vault Obsidian CHICHORRO
 
 ### feat(regulations): add RT-SCIE Portaria 1532/2008 *(commit `7fbe5aa`, `feat/research-organization`)*

@@ -511,3 +511,22 @@ Razao: ao mover o vault root de `docs/vault/` para `docs/`, o Obsidian cria `doc
 
 Decisao `ai02-page-markers-chunk-level`: marcadores `<!-- page: N -->` sao ao nivel do chunk (N = primeira pagina do chunk), nao por pagina individual.
 Razao: docling processa PDFs em chunks de 12 paginas; granularidade exacta por pagina nao e necessaria — citacoes aproximadas (pag. +-12) sao suficientes para orientar a leitura.
+
+---
+
+## 2026-06-05 - AI-02 encerramento + /plans-missing
+
+Decisao `ai02-prs-manual-checkout`: PRs #2 e #4 incorporados via `git checkout origin/<branch> -- <file>` em vez de merge das branches.
+Razao: as branches dos PRs tinham conflitos logicos com a versao local (TODO_PRIORITIES.md tinha AI-02 Passo 8 que o PR nao conhecia); incorporacao seletiva de ficheiros preserva ambos os conjuntos de alteracoes sem conflitos git.
+
+Decisao `ai02a-separate-subplan`: curation manual do vault documentada num subplan proprio (AI-02a) em vez de ficar como nota dentro do AI-02.
+Razao: o AI-02 esta concluido a nivel tecnico; a curation e trabalho continuo sem prazo definido; um subplan proprio permite rastrear progresso independentemente e aparece no /plans-missing.
+
+Decisao `plans-missing-command-not-skill`: /plans-missing implementado como Claude Code custom command em `.claude/commands/plans-missing.md` (nao como skill em `~/.claude/skills/`).
+Razao: o utilizador pediu explicitamente "command"; commands sao ficheiros .md simples sem estrutura de pasta adicional; o conteudo e a instrucao direta enviada ao Claude ao invocar o comando.
+
+Decisao `plans-missing-local-only`: `.claude/commands/` esta no `.gitignore` do projeto (consistente com outros comandos existentes).
+Razao: configuracao local-only do Claude Code nao deve ser versionada; outros comandos (checkpoint, good-morning, update-brain) ja seguem o mesmo padrao; o comando funciona imediatamente apos criacao sem necessidade de commit.
+
+Decisao `feat-obsidian-vault-merge-now`: feat/obsidian-vault mergeado em 3.1-dev em 2026-06-05.
+Razao: utilizador pediu explicitamente o merge; todos os passos do AI-02 estavam concluidos; AI-02a documenta o trabalho manual residual mas nao bloqueia o merge.
