@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-08 (DB-06 e INFRA-03 → Alta; AI-03 → Média; Concluídos reformulados)
+Última atualização: 2026-06-09 (DB-06 concluído → Concluídos Recentemente; INFRA-03 desbloqueado)
 
 ---
 
@@ -25,6 +25,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ DB-06 — Migrar camada de dados para SQLAlchemy ORM `Prioridade Alta` *(2026-06-09, `refactor/db06-sqlalchemy` → `3.1-dev`)*
+
+SQLAlchemy 2.x com `DeclarativeBase`/`mapped_column`; `NullPool` para Neon PgBouncer; `migrate_sqlite()` para evolução de schema em dev; WAL pragma; Alembic autogenerate wired a `Base.metadata`. Code review high effort (6 findings F1-F6 corrigidos): IntegrityError handler, None guards, column projection em admin, WAL. 342 testes pass; verificação `/health/db` e registo concorrente → 409 OK.
+
+---
 
 ### ✅ AI-02 — Setup Obsidian vault `Prioridade Baixa` *(2026-06-05, `feat/obsidian-vault`)* [FIR-35]
 
@@ -159,12 +165,6 @@ Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo a
 ---
 
 ## Prioridade Alta
-
-### ❌ DB-06 — Migrar camada de dados para SQLAlchemy ORM
-
-Substituir `_PGConn` (psycopg2 manual) por SQLAlchemy 2.x; desbloqueia autogenerate de migrations, connection pooling nativo e type safety. Pré-requisito para INFRA-03 e deploy VPS. Ver [DB-06_UNDONE.md](plans/subplans/DB-06_UNDONE.md).
-
----
 
 ### ❌ INFRA-03 — Dockerfile + Compose
 

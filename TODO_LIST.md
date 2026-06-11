@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-08 (AI-03 adicionado)
+Última atualização: 2026-06-09 (DB-06 concluído)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -60,7 +60,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | DB-03 | ✅ | Estratégia de backups — `scripts/backup_db.py`, GitHub Actions workflow, `scripts/restore_db.py`, subplan (A-04: descoberta dinâmica + restore + DEPLOY_PRODUCTION.md) | 3.1-dev + audit-fix |
 | DB-04 | ✅ | Migrations Alembic — versioning de schema, rollback, remover DDL do arranque da app | audit-fix |
 | DB-05 | ✅ | Least privilege DB — utilizador `chichorro_runtime` criado; `DATABASE_URL_MIGRATIONS` para Alembic; ações manuais Supabase/Render/GitHub pendentes | audit-fix |
-| DB-06 | ❌ | Migrar camada de dados para SQLAlchemy ORM — autogenerate Alembic, connection pooling, remover psycopg2 custom wrapper | — |
+| DB-06 | ✅ | Migrar camada de dados para SQLAlchemy ORM — autogenerate Alembic, connection pooling, remover psycopg2 custom wrapper | 2026-06-09 |
 
 ---
 

@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-05 (AI-02a adicionado — curation manual vault)
+Última atualização: 2026-06-09 (DB-06 concluído — SQLAlchemy ORM mergeado em 3.1-dev)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -27,9 +27,23 @@
 | Documentação | ✅ Completo (DOCS-01 — VitePress em produção; docs.chichorrofireriskapp.joaopmteixeira.net) |
 | AI Tooling (AI-02) | ✅ Vault Obsidian completo — 8 fontes, 27 subfatores, RT-SCIE 135/2020, Backend/Frontend (`feat/obsidian-vault`) |
 | AI Tooling (AI-02a) | ❌ Curation manual pendente — `## Definicao` (27 notas), validação "verificar", Graph View Obsidian |
+| SQLAlchemy ORM (DB-06) | ✅ Completo — SQLAlchemy 2.x; NullPool Neon; migrate_sqlite; WAL; code review F1-F6 ✅ |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-09)
+
+### ✅ DB-06 — Migração SQLAlchemy ORM (`refactor/db06-sqlalchemy` → `3.1-dev`)
+
+- `app/backend/models.py` — `DeclarativeBase` + `User` + `AccessLog` com `Mapped`/`mapped_column`
+- `app/backend/database.py` — engine `NullPool` (Neon PgBouncer); `migrate_sqlite()` per-coluna; WAL pragma listener; `get_db()` como context manager `Session`
+- `app/backend/main.py` — `lifespan` com `create_all` + `migrate_sqlite` em dev
+- `app/backend/alembic/env.py` — `target_metadata = Base.metadata` para autogenerate
+- Code review high effort: 6 findings F1-F6 corrigidos (IntegrityError handler, None guards, column projection admin, WAL)
+- 342 testes pass; `/health/db` ✅; registo concorrente → 409 ✅ (sem 500)
 
 ---
 
