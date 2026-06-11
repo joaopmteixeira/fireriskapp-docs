@@ -562,3 +562,22 @@ Razao: SessionMiddleware armazena os dados na propria cookie (assinada com SECRE
 
 Decisao `infra03-docker-non-root`: imagem Docker usa utilizador `appuser` nao-root.
 Razao: boas praticas de seguranca para containers em producao; reduz superficie de ataque em caso de comprometimento da aplicacao.
+
+---
+
+## 2026-06-11 — INFRA-03 Python 3.12 + INFRA-07 env setup + Proxmox staging
+
+Decisao `infra03-python-312`: Dockerfile migrado de Python 3.14-slim para Python 3.12-slim.
+Razao: Python 3.14 nao tem imagem Docker estavel; Python 3.12 e a versao LTS com imagem slim disponivel e suportada; Dockerfile e test.yml actualizados em sincronia.
+
+Decisao `infra03-split-dev-deps`: pytest e pytest-cov movidos para `requirements-dev.txt` separado.
+Razao: dependencias de teste nao devem entrar na imagem de producao; Dockerfile usa apenas `requirements.txt`; reduz tamanho e superficie de ataque da imagem.
+
+Decisao `infra07-env-file-required-false`: `env_file` no docker-compose.yml com `required: false`.
+Razao: garante que o compose funciona em CI e em producao sem ficheiro `.env` local; apenas dev local precisa do ficheiro.
+
+Decisao `infra07-proxmox-staging-vm`: VM Debian 13 no Proxmox ("chichorro-staging", 192.168.0.7) usada como ambiente de staging Docker.
+Razao: permite testar deploy containerizado antes de migrar producao para VPS; estrategia dual-track (Render+Cloudflare producao + Proxmox staging) definida em ROADMAP_SELF_HOSTED_VPS.md.
+
+Decisao `infra07-portainer-staging`: Portainer Community Edition instalado na VM chichorro-staging (:9000).
+Razao: interface web para monitorizar contentores sem acesso SSH para operacoes rotineiras; facilita verificacao visual de estado (healthy/running) e logs.

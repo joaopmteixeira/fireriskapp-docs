@@ -2,6 +2,27 @@
 
 ---
 
+## 2026-06-11 — INFRA-03 verificacao + INFRA-07 env + deploy Proxmox
+
+### feat(infra): verify INFRA-03 — Python 3.12, split dev deps, 342 tests [INFRA-03] *(commit `237cc51`)*
+
+- `Dockerfile` — Python 3.14-slim → Python 3.12-slim (imagem estavel)
+- `app/backend/requirements-dev.txt` — criado com pytest + pytest-cov; removidos de requirements.txt
+- `app/backend/requirements.txt` — dependencias de producao apenas
+- `scripts/requirements-scripts.txt` — criado com pypdf; docling comentado (opcional, ~2 GB)
+- `.github/workflows/test.yml` — Python 3.12
+- `docs/plans/subplans/INFRA-03.md` — resumo de verificacao: /health OK, /health/db OK, 342 testes, imagem 526 MB
+
+### feat(infra): add .env setup + Proxmox deploy guide — INFRA-07 [INFRA-07] *(commits `459839e`, `80f10e3`)*
+
+- `.env.example` — template com todas as variaveis documentadas (commitado; .env gitignored)
+- `docker-compose.yml` — `env_file` com `required: false` (CI-safe)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — guia Docker Debian 13: instalacao, clone, .env, arranque, acesso
+- `docs/plans/subplans/INFRA-07.md` — subplan criado e fechado
+- Deploy verificado em chichorro-staging (VM Proxmox Debian 13, 192.168.0.7): /health OK, /health/db OK, calculo OK
+
+---
+
 ## 2026-06-09 — DB-06 SQLAlchemy ORM + INFRA-03 Docker
 
 ### refactor(db): migrate to SQLAlchemy 2.x ORM — DB-06 *(commits `04447d9`, `2ab2556`, `efade57`, `3979f15`)*
