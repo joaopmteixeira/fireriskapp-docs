@@ -2,6 +2,40 @@
 
 ---
 
+## 2026-06-09 — DB-06 SQLAlchemy ORM + INFRA-03 Docker
+
+### refactor(db): migrate to SQLAlchemy 2.x ORM — DB-06 *(commits `04447d9`, `2ab2556`, `efade57`, `3979f15`)*
+
+- `app/backend/models.py` — DeclarativeBase + `User` + `AccessLog` com `Mapped`/`mapped_column` (SQLAlchemy 2.x)
+- `app/backend/database.py` — engine com `NullPool` (Neon PgBouncer); `get_db()` context manager; `migrate_sqlite()` por coluna com `try/except`; WAL pragma listener no connect event
+- `app/backend/routers/auth.py` — F1: `IntegrityError` → 409 no registo; F2: guard `target=None` → 401; F3: guard `row.new_email=None` no verify-email-change
+- `app/backend/routers/admin.py` — F5: projecao de colunas com `select()`, sem `avatar`/`hash` em `admin_users`
+- `app/backend/alembic/env.py` — integrado com `Base.metadata` do SQLAlchemy
+- `docs/plans/subplans/DB-06.md` — estado `Concluido`, resumo de implementacao + F1-F6
+- `docs/TODO_LIST.md`, `docs/TODO_PRIORITIES.md`, `docs/NEXT_STEPS.md` — DB-06 marcado como concluido
+
+### feat(infra): add Dockerfile + docker-compose — INFRA-03 *(commits `c399f1e`, `d8d5e6e`)*
+
+- `Dockerfile` — imagem Python 3.14-slim, gunicorn + uvicorn workers, utilizador nao-root `appuser`
+- `docker-compose.yml` — servicos `backend` + `db` (PostgreSQL 16), volumes e env vars
+- `.dockerignore` — exclui `__pycache__`, `*.pyc`, `.env`, `docs/`
+- `docs/plans/subplans/INFRA-03.md` — subplan criado
+
+---
+
+## 2026-06-08 — Planeamento VPS + gestao de tarefas
+
+### docs(planning): create ROADMAP_SELF_HOSTED_VPS.md *(commit `7b3f78a`)*
+
+- `docs/plans/main/ROADMAP_SELF_HOSTED_VPS.md` — roadmap de 12 fases para migracao Render+Supabase para VPS auto-alojado; novos IDs: REL-01, INFRA-07, DB-07, DB-08, SEC-11, SEC-12, INFRA-08, TEST-04
+
+### docs(todos): add AI-03 + prefix legend + reorganize priorities *(commits `c033951`, `2e87c98`, `cf9f09e`, `b02527c`)*
+
+- `docs/TODO_LIST.md` — AI-03 adicionado; seccao "Prefixos de ID" com 13 definicoes; FEAT-04 verificado
+- `docs/TODO_PRIORITIES.md` — DB-06 + INFRA-03 para Prioridade Alta; AI-03 para Prioridade Media; AI-01 em Prioridade Baixa; "Concluidos Recentemente" condensados para 1-2 linhas; FEAT-04 em Futuro
+
+---
+
 ## 2026-06-05 — AI-02 encerrado + merge feat/obsidian-vault → 3.1-dev
 
 ### docs(brain): mark AI-02 complete — Passo 8 results *(commit `4268b6a`, `feat/obsidian-vault`)*

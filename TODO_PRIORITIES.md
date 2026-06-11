@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-09 (DB-06 concluído → Concluídos Recentemente; INFRA-03 desbloqueado)
+Última atualização: 2026-06-09 (DB-06 + INFRA-03 concluídos → Prioridade Alta)
 
 ---
 
@@ -29,6 +29,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ### ✅ DB-06 — Migrar camada de dados para SQLAlchemy ORM `Prioridade Alta` *(2026-06-09, `refactor/db06-sqlalchemy` → `3.1-dev`)*
 
 SQLAlchemy 2.x com `DeclarativeBase`/`mapped_column`; `NullPool` para Neon PgBouncer; `migrate_sqlite()` para evolução de schema em dev; WAL pragma; Alembic autogenerate wired a `Base.metadata`. Code review high effort (6 findings F1-F6 corrigidos): IntegrityError handler, None guards, column projection em admin, WAL. 342 testes pass; verificação `/health/db` e registo concorrente → 409 OK.
+
+---
+
+### ✅ INFRA-03 — Dockerfile + Compose `Prioridade Alta` *(2026-06-09, `3.1-dev`)*
+
+Dockerfile Python 3.14-slim + docker-compose.yml (backend + PostgreSQL 16); `.dockerignore`; utilizador `appuser` não-root.
 
 ---
 
@@ -166,9 +172,9 @@ Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo a
 
 ## Prioridade Alta
 
-### ❌ INFRA-03 — Dockerfile + Compose
+### ✅ INFRA-03 — Dockerfile + Compose (concluído 2026-06-09, branch `3.1-dev`)
 
-Containerização para deploy reproduzível em VPS/Proxmox. Depende de DB-06 (SQLAlchemy) para pooling correto em ambiente containerizado.
+Dockerfile Python 3.14-slim + docker-compose.yml (backend + PostgreSQL 16); `.dockerignore`; utilizador `appuser` não-root.
 
 ---
 

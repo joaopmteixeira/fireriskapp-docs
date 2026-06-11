@@ -530,3 +530,35 @@ Razao: configuracao local-only do Claude Code nao deve ser versionada; outros co
 
 Decisao `feat-obsidian-vault-merge-now`: feat/obsidian-vault mergeado em 3.1-dev em 2026-06-05.
 Razao: utilizador pediu explicitamente o merge; todos os passos do AI-02 estavam concluidos; AI-02a documenta o trabalho manual residual mas nao bloqueia o merge.
+
+---
+
+## 2026-06-08 — Roadmap VPS + organizacao de tarefas
+
+Decisao `roadmap-vps-dual-track`: manter Render+Cloudflare como producao activa enquanto se constroi VM Proxmox local como staging; migrar para VPS apenas quando staging estiver validado.
+Razao: nao faz sentido migrar producao antes de ter staging validado; Render+Cloudflare continuam a funcionar sem custo extra durante a transicao.
+
+Decisao `roadmap-vps-12-phases`: roadmap de migracao estruturado em 12 fases sequenciais com prereqs explicitos entre fases (REL-01 → DB-06 → INFRA-03 → INFRA-07 → DB-07/08 → staging → SEC → monitoring → testes → features).
+Razao: phasing permite validar cada componente antes do proximo; cada fase tem entregaveis claros e pode ser pausada sem perder estado.
+
+Decisao `infra03-db06-as-alta-priority`: INFRA-03 e DB-06 promovidos de Prioridade Baixa para Prioridade Alta nos TODOs.
+Razao: sao pre-requisitos directos para o roadmap VPS e para o staging Proxmox; estavam mal classificados.
+
+---
+
+## 2026-06-09 — DB-06 SQLAlchemy ORM + INFRA-03 Docker
+
+Decisao `db06-sqlalchemy-nullpool`: engine SQLAlchemy configurado com `NullPool` (sem pool de conexoes na aplicacao).
+Razao: Neon usa PgBouncer em modo transaction; connection pooling na aplicacao conflitua com o PgBouncer e causa erros de transacao; o PgBouncer faz o pooling externo.
+
+Decisao `db06-migrate-sqlite-try-except`: `migrate_sqlite()` usa `try/except` por coluna em vez de verificar `IF NOT EXISTS`.
+Razao: SQLite nao suporta `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`; try/except e o padrao correcto para migracao incremental sem reset de base de dados.
+
+Decisao `db06-code-review-6-fixes`: 6 fixes (F1-F6) aplicados apos code review ao DB-06.
+Razao: F1 (IntegrityError → 409), F2 (guard target=None → 401), F3 (guard new_email=None) e F5 (projecao de colunas sem hash/avatar) sao correccoes de seguranca e robustez; F4/F6 sao limpeza de imports e logs.
+
+Decisao `starlette-sessions-no-redis`: Starlette SessionMiddleware nao precisa de Redis para escala horizontal.
+Razao: SessionMiddleware armazena os dados na propria cookie (assinada com SECRET_KEY), sem estado no servidor; qualquer replica pode servir qualquer pedido; Redis e apenas para rate limiting (slowapi/Upstash), nao para sessoes.
+
+Decisao `infra03-docker-non-root`: imagem Docker usa utilizador `appuser` nao-root.
+Razao: boas praticas de seguranca para containers em producao; reduz superficie de ataque em caso de comprometimento da aplicacao.

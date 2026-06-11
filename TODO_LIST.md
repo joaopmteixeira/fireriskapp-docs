@@ -145,7 +145,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | --- | --- | --- | --- |
 | INFRA-01 | ✅ | Monitorização: Sentry (frontend + backend) + UptimeRobot `/health`; M-04 (audit-fix): X-Request-ID middleware, backup failure email Resend, UptimeRobot `/health/db` (manual) | 3.1-dev + audit-fix |
 | INFRA-02 | ✅ | Pipeline CI/CD: GitHub Actions test.yml (pytest) + build.yml (npm build), path filters | infra/ci-cd |
-| INFRA-03 | ❌ | Dockerfile + Compose local/prod — containerização para deploy reproduzível | — |
+| INFRA-03 | ✅ | Dockerfile + Compose local/prod — containerização para deploy reproduzível | 3.1-dev |
 | INFRA-04 | ✅ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação (A-06) | audit-fix |
 | INFRA-05 | ✅ | Cache-Control headers: `no-store` no backend + `_headers` Cloudflare Pages; `/assets/*` com `immutable` (M-02) | audit-fix |
 | INFRA-06 | ❌ | VPS hardening operacional (diferido) — apenas relevante se arquitetura mudar de Render para VPS/Proxmox | — |

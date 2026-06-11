@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-09 (DB-06 concluído — SQLAlchemy ORM mergeado em 3.1-dev)
+Última atualização: 2026-06-09 (DB-06 + INFRA-03 concluídos — SQLAlchemy ORM + Docker)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -28,6 +28,7 @@
 | AI Tooling (AI-02) | ✅ Vault Obsidian completo — 8 fontes, 27 subfatores, RT-SCIE 135/2020, Backend/Frontend (`feat/obsidian-vault`) |
 | AI Tooling (AI-02a) | ❌ Curation manual pendente — `## Definicao` (27 notas), validação "verificar", Graph View Obsidian |
 | SQLAlchemy ORM (DB-06) | ✅ Completo — SQLAlchemy 2.x; NullPool Neon; migrate_sqlite; WAL; code review F1-F6 ✅ |
+| Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.14-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
@@ -44,6 +45,15 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `app/backend/alembic/env.py` — `target_metadata = Base.metadata` para autogenerate
 - Code review high effort: 6 findings F1-F6 corrigidos (IntegrityError handler, None guards, column projection admin, WAL)
 - 342 testes pass; `/health/db` ✅; registo concorrente → 409 ✅ (sem 500)
+
+---
+
+### ✅ INFRA-03 — Dockerfile + Compose (`3.1-dev`)
+
+- `Dockerfile` — Python 3.14-slim, gunicorn+uvicorn, utilizador `appuser` não-root
+- `docker-compose.yml` — serviços `backend` + `db` (PostgreSQL 16), volumes e env vars
+- `.dockerignore` — exclui caches e docs
+- `docs/plans/subplans/INFRA-03.md` — subplan documentado
 
 ---
 
@@ -629,9 +639,9 @@ Ver plano detalhado em [UI-09.md](plans/subplans/UI-09.md).
 
 ## Pendente — Prioridade Baixa / Futuro
 
-### INFRA-03 — Dockerfile + Compose
+### ✅ INFRA-03 — Dockerfile + Compose (`3.1-dev`, 2026-06-09)
 
-Containerização para deploy reproduzível. Para o Render (PaaS) atual, a ausência não é bloqueante. Relevante para migração futura para VPS/Proxmox.
+Dockerfile Python 3.14-slim + docker-compose.yml (backend + PostgreSQL 16); appuser não-root.
 
 ### FEAT-01 — Gráfico de Impacto de Intervenções
 
