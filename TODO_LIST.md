@@ -149,6 +149,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | INFRA-04 | ✅ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação (A-06) | audit-fix |
 | INFRA-05 | ✅ | Cache-Control headers: `no-store` no backend + `_headers` Cloudflare Pages; `/assets/*` com `immutable` (M-02) | audit-fix |
 | INFRA-06 | ❌ | VPS hardening operacional (diferido) — apenas relevante se arquitetura mudar de Render para VPS/Proxmox | — |
+| INFRA-07 | ✅ | Separação de ambientes + deploy Proxmox/Debian 13: `.env` + `.env.example` + guia deploy Docker | feat/infra07-env-proxmox |
 
 ---
 

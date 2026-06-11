@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-09 (DB-06 + INFRA-03 concluídos → Prioridade Alta)
+Última atualização: 2026-06-11 (INFRA-07 concluído — env separation + deploy Proxmox/Debian 13)
 
 ---
 
@@ -25,6 +25,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 `Prioridade Alta` *(2026-06-11, `feat/infra07-env-proxmox` → `3.1-dev`)*
+
+`.env` + `.env.example` + `docker-compose.yml` com `env_file`; guia de deploy `DEPLOY_PROXMOX_DEBIAN.md`; credenciais de admin injetadas via env file.
+
+---
 
 ### ✅ DB-06 — Migrar camada de dados para SQLAlchemy ORM `Prioridade Alta` *(2026-06-09, `refactor/db06-sqlalchemy` → `3.1-dev`)*
 
@@ -171,6 +177,15 @@ Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo a
 ---
 
 ## Prioridade Alta
+
+### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 (concluído 2026-06-11, branch `feat/infra07-env-proxmox` → `3.1-dev`)
+
+- `.env` (gitignored) com credenciais de admin para dev local e Proxmox
+- `.env.example` (commitado) com template documentado de todas as variáveis
+- `docker-compose.yml` com `env_file` (`required: false` para CI)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — guia de instalação Docker em Debian 13 e deploy da app
+
+---
 
 ### ✅ INFRA-03 — Dockerfile + Compose (concluído 2026-06-09, branch `3.1-dev`)
 

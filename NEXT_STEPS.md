@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-09 (DB-06 + INFRA-03 concluídos — SQLAlchemy ORM + Docker)
+Última atualização: 2026-06-11 (INFRA-07 concluído — env separation + deploy Proxmox/Debian 13)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -29,9 +29,21 @@
 | AI Tooling (AI-02a) | ❌ Curation manual pendente — `## Definicao` (27 notas), validação "verificar", Graph View Obsidian |
 | SQLAlchemy ORM (DB-06) | ✅ Completo — SQLAlchemy 2.x; NullPool Neon; migrate_sqlite; WAL; code review F1-F6 ✅ |
 | Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.14-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
+| Env separation (INFRA-07) | ✅ Completo — `.env` + `.env.example` + guia deploy Proxmox/Debian 13; deploy verificado em chichorro-staging |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-11)
+
+### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 (`feat/infra07-env-proxmox` → `3.1-dev`)
+
+- `.env` (gitignored) — credenciais de admin para dev local e Proxmox
+- `.env.example` (commitado) — template documentado de todas as variáveis
+- `docker-compose.yml` — `env_file` com `required: false` (CI-safe)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — guia de instalação Docker em Debian 13 e deploy
 
 ---
 
