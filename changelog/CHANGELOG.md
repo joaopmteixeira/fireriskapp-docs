@@ -2,6 +2,18 @@
 
 ---
 
+## 2026-06-12 — AUTH-09d avatar WebP 128 px + migração de existentes
+
+### perf(auth): optimize avatar to WebP 128px, 100 KB limit + migration script — AUTH-09d
+
+- `app/frontend/src/pages/ProfilePage.tsx` — `resizeToDataUrl` default `maxPx` 256→128; `toDataURL` JPEG q0.85→WebP q0.80; chamada com argumento explícito removida; mensagem `AVATAR_TOO_LARGE` atualizada para 100 KB
+- `app/backend/routers/auth.py` — `_AVATAR_MAX_BYTES` 700 000→100 000
+- `scripts/migrate_avatars_to_webp.py` — script one-shot para converter avatares JPEG/PNG/GIF existentes para WebP 128 px (skip se já WebP; suporte --dry-run)
+- `scripts/requirements-scripts.txt` — `Pillow>=10.0,<11` adicionado
+- `docs/plans/subplans/AUTH-09d.md` — marcado concluído
+
+---
+
 ## 2026-06-11 — INFRA-03 verificacao + INFRA-07 env + deploy Proxmox
 
 ### feat(infra): verify INFRA-03 — Python 3.12, split dev deps, 342 tests [INFRA-03] *(commit `237cc51`)*

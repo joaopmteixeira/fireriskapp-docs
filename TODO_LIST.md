@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-09 (DB-06 concluído)
+Última atualização: 2026-06-12 (AUTH-09d concluído; REL-01/DB-07/DB-08/SEC-11/SEC-12/INFRA-08/TEST-04 adicionados)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -11,6 +11,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
 ## Prefixos de ID
 
+- **`REL`** — Releases e versionamento
 - **`AUTH`** — Autenticação e sessões (AUTH-01…05 concluídos — ver CHANGELOG)
 - **`DB`** — Base de dados e persistência
 - **`SEC`** — Segurança e hardening (não-auth)
@@ -24,6 +25,14 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 - **`MODEL`** — Modelo CHICHORRO (backlog pós-3.1)
 - **`AI`** — AI tooling e knowledge graph (Graphify, Obsidian, RAG)
 - **`B`** — Tarefas de manutenção/organização
+
+---
+
+## REL — Releases e Versionamento
+
+| ID | Estado | Descrição | Branch |
+| --- | --- | --- | --- |
+| REL-01 | ❌ | Release baseline v3.1.0 — tag git, release notes, snapshot estável pré-infra | — |
 
 ---
 
@@ -43,7 +52,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-09a | ✅ | ProfilePage redesign — card layout c/ header gradient, menu accordion, ícones MDI | 3.1-dev |
 | AUTH-09b | ✅ | Avatar de utilizador — coluna `avatar` DB, rota `POST /auth/profile/avatar`, upload frontend c/ canvas resize | 3.1-dev |
 | AUTH-09c | ✅ | ProfilePage redesign card compacto — 4 rows expansíveis inline (username, e-mail, password, apagar conta); sem modal separado | 3.1-dev |
-| AUTH-09d | ❌ | Otimização do avatar: WebP, 128 px, limite 100 KB — reduz armazenamento na BD ~80% | 3.1-dev |
+| AUTH-09d | ✅ | Otimização do avatar: WebP, 128 px, limite 100 KB — reduz armazenamento na BD ~80% | 3.1-dev |
 | AUTH-10 | ✅ | Sistema de roles/permissões: coluna `role`, `require_admin`, admin UI — viewer/demo diferidos | auth/roles → 3.1-dev |
 | AUTH-13 | ✅ | Hardening sessão: max_age configurável, Secure flag obrigatória em prod, CSRF protection | 3.1-dev |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
@@ -61,6 +70,8 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | DB-04 | ✅ | Migrations Alembic — versioning de schema, rollback, remover DDL do arranque da app | audit-fix |
 | DB-05 | ✅ | Least privilege DB — utilizador `chichorro_runtime` criado; `DATABASE_URL_MIGRATIONS` para Alembic; ações manuais Supabase/Render/GitHub pendentes | audit-fix |
 | DB-06 | ✅ | Migrar camada de dados para SQLAlchemy ORM — autogenerate Alembic, connection pooling, remover psycopg2 custom wrapper | 2026-06-09 |
+| DB-07 | ❌ | Backups PostgreSQL local — script diário, restore testado, alertas em falha | — |
+| DB-08 | ❌ | Runbook migração Supabase → PostgreSQL local — dump, restore, validação, rollback | — |
 
 ---
 
@@ -78,6 +89,8 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | SEC-08 | ✅ | Remover `legacyLogin.ts` e limpar variáveis `VITE_LOGIN_*` do `.env` local (M-05) | audit-fix |
 | SEC-09 | ✅ | CSP + Permissions-Policy no backend (`add_security_headers`) e Cloudflare Pages (`_headers`) (M-01) | audit-fix |
 | SEC-10 | ✅ | Fail-fast secrets em produção — `CHICHORRO_SECRET_KEY` e outros secrets obrigatórios; sem arranque silencioso com defaults inseguros (C-04) | audit-fix |
+| SEC-11 | ❌ | Gestão de secrets — política de env vars, backup seguro, rotação (JWT, DB, Resend, Sentry) | — |
+| SEC-12 | ❌ | Proteção pgAdmin — evitar exposição pública (VPN / Tailscale / IP allowlist / Basic Auth) | — |
 
 ---
 
@@ -148,8 +161,9 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | INFRA-03 | ✅ | Dockerfile + Compose local/prod — containerização para deploy reproduzível | 3.1-dev |
 | INFRA-04 | ✅ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação (A-06) | audit-fix |
 | INFRA-05 | ✅ | Cache-Control headers: `no-store` no backend + `_headers` Cloudflare Pages; `/assets/*` com `immutable` (M-02) | audit-fix |
-| INFRA-06 | ❌ | VPS hardening operacional (diferido) — apenas relevante se arquitetura mudar de Render para VPS/Proxmox | — |
+| INFRA-06 | ❌ | Staging Proxmox completo — Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-07) | — |
 | INFRA-07 | ✅ | Separação de ambientes + deploy Proxmox/Debian 13: `.env` + `.env.example` + guia deploy Docker | feat/infra07-env-proxmox |
+| INFRA-08 | ❌ | Monitorização self-hosted — Docker logs, PostgreSQL health, disco, CPU, RAM, alertas de backup | — |
 
 ---
 
@@ -160,6 +174,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | TEST-01 | ✅ | Teste e2e em produção: registo → e-mail → verificação → login → reset password (aprovado 2026-05-08) |
 | TEST-02 | ✅ | Testes automatizados: pytest 12/12 (health, Literal 422, calc 200, auth básico) — branch `test/automated-tests` |
 | TEST-03 | ✅ | Parity checker (`scripts/check_option_parity.py`) + 338 golden tests Literal (`test_valid_options.py`) — todos os subfatores cobertos (`3.1-dev`) |
+| TEST-04 | ❌ | Smoke tests Docker Compose — `/health`, `/health/db`, login, logout, sessão, CSRF, frontend build |
 | CALC-AUDIT | ❌ | Golden tests do código de cálculo vs. tese3.1 (~280 tests) — bloqueado até Excel tese3.1 disponíveis (`fir-XX-calc-audit`) |
 
 ---

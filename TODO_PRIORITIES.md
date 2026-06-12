@@ -2,12 +2,13 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-11 (INFRA-07 concluído — env separation + deploy Proxmox/Debian 13)
+Última atualização: 2026-06-12 (AUTH-09d concluído; REL-01/DB-07/DB-08/SEC-11/SEC-12/INFRA-08/TEST-04 adicionados)
 
 ---
 
 ## Prefixos de ID
 
+- **`REL`** — Releases e versionamento
 - **`AUTH`** — Autenticação e sessões (AUTH-01…05 concluídos — ver CHANGELOG)
 - **`DB`** — Base de dados e persistência
 - **`SEC`** — Segurança e hardening (não-auth)
@@ -25,6 +26,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ AUTH-09d — Otimização do avatar: WebP 128 px, 100 KB `Prioridade Média` *(2026-06-12, `3.1-dev`)*
+
+WebP 128 px q0.80 com limite 100 KB; `scripts/migrate_avatars_to_webp.py` para conversão de avatares existentes (Pillow); redução estimada ~80% no armazenamento por utilizador.
+
+---
 
 ### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 `Prioridade Alta` *(2026-06-11, `feat/infra07-env-proxmox` → `3.1-dev`)*
 
@@ -178,6 +185,14 @@ Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo a
 
 ## Prioridade Alta
 
+### ❌ REL-01 — Release baseline v3.1.0
+
+Criar tag git `v3.1.0` e escrever release notes antes de avançar com alterações estruturais de infraestrutura. Snapshot estável como ponto de rollback conhecido.
+
+Ver [REL-01.md](plans/subplans/REL-01.md).
+
+---
+
 ### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 (concluído 2026-06-11, branch `feat/infra07-env-proxmox` → `3.1-dev`)
 
 - `.env` (gitignored) com credenciais de admin para dev local e Proxmox
@@ -255,6 +270,38 @@ Render força HTTPS no reverse proxy; `CHICHORRO_SESSION_SECURE=1` ativo; HSTS v
 
 ## Prioridade Média
 
+### ❌ INFRA-06 — Staging Proxmox completo
+
+Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-07). Passo seguinte na migração para self-hosted.
+
+Ver [INFRA-06.md](plans/subplans/INFRA-06.md).
+
+---
+
+### ❌ DB-07 — Backups PostgreSQL local
+
+Script de backup diário do PostgreSQL local na VM Proxmox, restore testado e alertas em caso de falha.
+
+Ver [DB-07.md](plans/subplans/DB-07.md).
+
+---
+
+### ❌ DB-08 — Runbook migração Supabase → PostgreSQL local
+
+Procedimento completo: dump Supabase, restore PostgreSQL local, validação, rollback. Prerequisito para abandonar Supabase em produção.
+
+Ver [DB-08.md](plans/subplans/DB-08.md).
+
+---
+
+### ❌ TEST-04 — Smoke tests Docker Compose
+
+Suite mínima de testes pós-deploy: `/health`, `/health/db`, login, logout, sessão, CSRF, frontend build. Gate de qualidade para cada deploy.
+
+Ver [TEST-04.md](plans/subplans/TEST-04.md).
+
+---
+
 ### ❌ UI-02 — Página de Documentação
 
 Criar página de DOCS na app com documentação e manuais de utilização.
@@ -282,14 +329,6 @@ Formulário de reporte de bugs na app; canal de destino a definir (email, GitHub
 ### ❌ UI-08 — Ícones de informação nos subfatores
 
 Ícone ℹ️ em cada subfator POI/CTI/DPI/ESCI; painel com descrição detalhada do subfator (o que mede, valores esperados, como interpretar), tabela de valores e referência RT-SCIE. Torna a app autónoma para utilizadores sem formação prévia no modelo CHICHORRO.
-
----
-
-### ❌ AUTH-09d — Otimização do avatar: WebP, 128 px, limite 100 KB
-
-Avatar atualmente guardado como base64 JPEG 256×256 q0.85 (até 700 KB/utilizador). A 50k utilizadores, o tamanho acumulado pode exceder o limite free do Supabase. Reduzir para WebP 128×128 q0.80 e limite de 100 KB — redução estimada de ~80% no armazenamento.
-
-Ver [AUTH-09d.md](plans/subplans/AUTH-09d.md).
 
 ---
 
@@ -452,6 +491,30 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 ---
 
 ## Prioridade Baixa
+
+### ❌ SEC-11 — Gestão de secrets
+
+Política de env vars, backup seguro de secrets e procedimento de rotação (JWT, DB passwords, Resend, Sentry).
+
+Ver [SEC-11.md](plans/subplans/SEC-11.md).
+
+---
+
+### ❌ SEC-12 — Proteção pgAdmin
+
+Impedir acesso público ao pgAdmin: VPN, Tailscale, IP allowlist ou Basic Auth. Critério: pgAdmin não acessível anonimamente.
+
+Ver [SEC-12.md](plans/subplans/SEC-12.md).
+
+---
+
+### ❌ INFRA-08 — Monitorização self-hosted
+
+Stack de observabilidade para a VM Proxmox: Docker logs, PostgreSQL health, espaço em disco, CPU, RAM, estado de backups. Deteção precoce de falhas.
+
+Ver [INFRA-08.md](plans/subplans/INFRA-08.md).
+
+---
 
 ### ✅ AI-02 — Setup Obsidian vault (concluído 2026-06-05, branch `feat/obsidian-vault`) [FIR-35]
 
