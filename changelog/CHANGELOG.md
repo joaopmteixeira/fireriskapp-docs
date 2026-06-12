@@ -4,7 +4,7 @@
 
 ## [v3.1.0] — 2026-06-12
 
-Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infraestrutura self-hosted (INFRA-06, DB-07/08).
+Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infraestrutura self-hosted (INFRA-07, DB-07/08).
 
 ### Funcionalidades principais
 
@@ -60,11 +60,11 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 - `app/backend/routers/auth.py` — `_AVATAR_MAX_BYTES` 700 000→100 000
 - `scripts/migrate_avatars_to_webp.py` — script one-shot para converter avatares JPEG/PNG/GIF existentes para WebP 128 px (skip se já WebP; suporte --dry-run)
 - `scripts/requirements-scripts.txt` — `Pillow>=10.0,<11` adicionado
-- `docs/plans/subplans/AUTH-09d.md` — marcado concluído
+- `docs/plans/subplans/AUTH/AUTH-09d.md` — marcado concluído
 
 ---
 
-## 2026-06-11 — INFRA-03 verificacao + INFRA-07 env + deploy Proxmox
+## 2026-06-11 — INFRA-03 verificacao + INFRA-06 env + deploy Proxmox
 
 ### feat(infra): verify INFRA-03 — Python 3.12, split dev deps, 342 tests [INFRA-03] *(commit `237cc51`)*
 
@@ -73,14 +73,14 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 - `app/backend/requirements.txt` — dependencias de producao apenas
 - `scripts/requirements-scripts.txt` — criado com pypdf; docling comentado (opcional, ~2 GB)
 - `.github/workflows/test.yml` — Python 3.12
-- `docs/plans/subplans/INFRA-03.md` — resumo de verificacao: /health OK, /health/db OK, 342 testes, imagem 526 MB
+- `docs/plans/subplans/INFRA/INFRA-03.md` — resumo de verificacao: /health OK, /health/db OK, 342 testes, imagem 526 MB
 
-### feat(infra): add .env setup + Proxmox deploy guide — INFRA-07 [INFRA-07] *(commits `459839e`, `80f10e3`)*
+### feat(infra): add .env setup + Proxmox deploy guide — INFRA-06 [INFRA-06] *(commits `459839e`, `80f10e3`)* *(branch original: feat/infra07-env-proxmox)*
 
 - `.env.example` — template com todas as variaveis documentadas (commitado; .env gitignored)
 - `docker-compose.yml` — `env_file` com `required: false` (CI-safe)
 - `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — guia Docker Debian 13: instalacao, clone, .env, arranque, acesso
-- `docs/plans/subplans/INFRA-07.md` — subplan criado e fechado
+- `docs/plans/subplans/INFRA/INFRA-06.md` — subplan criado e fechado
 - Deploy verificado em chichorro-staging (VM Proxmox Debian 13, 192.168.0.7): /health OK, /health/db OK, calculo OK
 
 ---
@@ -94,7 +94,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 - `app/backend/routers/auth.py` — F1: `IntegrityError` → 409 no registo; F2: guard `target=None` → 401; F3: guard `row.new_email=None` no verify-email-change
 - `app/backend/routers/admin.py` — F5: projecao de colunas com `select()`, sem `avatar`/`hash` em `admin_users`
 - `app/backend/alembic/env.py` — integrado com `Base.metadata` do SQLAlchemy
-- `docs/plans/subplans/DB-06.md` — estado `Concluido`, resumo de implementacao + F1-F6
+- `docs/plans/subplans/DB/DB-06.md` — estado `Concluido`, resumo de implementacao + F1-F6
 - `docs/TODO_LIST.md`, `docs/TODO_PRIORITIES.md`, `docs/NEXT_STEPS.md` — DB-06 marcado como concluido
 
 ### feat(infra): add Dockerfile + docker-compose — INFRA-03 *(commits `c399f1e`, `d8d5e6e`)*
@@ -102,7 +102,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 - `Dockerfile` — imagem Python 3.14-slim, gunicorn + uvicorn workers, utilizador nao-root `appuser`
 - `docker-compose.yml` — servicos `backend` + `db` (PostgreSQL 16), volumes e env vars
 - `.dockerignore` — exclui `__pycache__`, `*.pyc`, `.env`, `docs/`
-- `docs/plans/subplans/INFRA-03.md` — subplan criado
+- `docs/plans/subplans/INFRA/INFRA-03.md` — subplan criado
 
 ---
 
@@ -110,7 +110,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 
 ### docs(planning): create ROADMAP_SELF_HOSTED_VPS.md *(commit `7b3f78a`)*
 
-- `docs/plans/main/ROADMAP_SELF_HOSTED_VPS.md` — roadmap de 12 fases para migracao Render+Supabase para VPS auto-alojado; novos IDs: REL-01, INFRA-07, DB-07, DB-08, SEC-11, SEC-12, INFRA-08, TEST-04
+- `docs/plans/main/ROADMAP_SELF_HOSTED_VPS.md` — roadmap de 12 fases para migracao Render+Supabase para VPS auto-alojado; novos IDs: REL-01, INFRA-06, DB-07, DB-08, SEC-11, SEC-12, INFRA-08, TEST-04
 
 ### docs(todos): add AI-03 + prefix legend + reorganize priorities *(commits `c033951`, `2e87c98`, `cf9f09e`, `b02527c`)*
 
@@ -123,20 +123,20 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 
 ### docs(brain): mark AI-02 complete — Passo 8 results *(commit `4268b6a`, `feat/obsidian-vault`)*
 
-- `docs/plans/subplans/AI-02.md` — estado `✅ Concluído`, data `2026-06-05`, Passo 8 documentado com tabela de resultados (7 fontes × subfatores)
+- `docs/plans/subplans/AI/AI-02.md` — estado `✅ Concluído`, data `2026-06-05`, Passo 8 documentado com tabela de resultados (7 fontes × subfatores)
 - `docs/TODO_PRIORITIES.md` — entrada AI-02 atualizada com RT-SCIE 135/2020 + Backend/Frontend
 
 ### docs: incorporate PR #2 and PR #4 into feat/obsidian-vault *(commits `9e47b8f`, `f0a1a8b`)*
 
-- `docs/plans/subplans/AUTH-09d.md` — otimização avatar: WebP 128 px, limite 100 KB, redução ~80% armazenamento
-- `docs/plans/subplans/UI-09.md` — badge lápis persistente no avatar (substitui overlay câmara hover-only)
+- `docs/plans/subplans/AUTH/AUTH-09d.md` — otimização avatar: WebP 128 px, limite 100 KB, redução ~80% armazenamento
+- `docs/plans/subplans/UI/UI-09.md` — badge lápis persistente no avatar (substitui overlay câmara hover-only)
 - `docs/deploy/VPS_CONSOLIDATION.md` — guia de referência para migração para VPS única (Hetzner CX32 ~€6.80/mês)
 - `docs/NEXT_STEPS.md`, `docs/TODO_LIST.md`, `docs/TODO_PRIORITIES.md` — AUTH-09d, UI-09, UI-10 adicionados como ❌ Prioridade Média
 - PRs #2 e #4 fechados no GitHub (incorporados manualmente)
 
 ### docs(brain): add AI-02a subplan *(commit `d32bf38`, `feat/obsidian-vault`)*
 
-- `docs/plans/subplans/AI-02a.md` — 3 tarefas manuais residuais do AI-02: (1) preencher `## Definicao` nas 27 notas de subfator; (2) validar entradas "verificar" em `## Onde e mencionado`; (3) verificar Graph View Obsidian
+- `docs/plans/subplans/AI/AI-02a.md` — 3 tarefas manuais residuais do AI-02: (1) preencher `## Definicao` nas 27 notas de subfator; (2) validar entradas "verificar" em `## Onde e mencionado`; (3) verificar Graph View Obsidian
 - `docs/TODO_LIST.md` — secção AI com AI-02a ❌ adicionada
 - `docs/TODO_PRIORITIES.md` — AI-02a em Prioridade Baixa
 
@@ -200,7 +200,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 - `HANDOFF_OBSIDIAN_VAULT.md` — handoff detalhado para AI-02: estrutura do vault (5 fatores, 27 subfatores, 9 fontes), scripts necessários, schema YAML frontmatter
 - `docs/TODO_LIST.md` — secção "AI Tooling" adicionada: AI-01 ✅, AI-02 ❌, AI-03 🔮
 - `docs/TODO_PRIORITIES.md` — prefixo AI adicionado; AI-01 marcado concluído
-- `docs/plans/subplans/AI-01.md` — subplan com stats do grafo, god nodes, hyperedges, referências FIR-34/FIR-35
+- `docs/plans/subplans/AI/AI-01.md` — subplan com stats do grafo, god nodes, hyperedges, referências FIR-34/FIR-35
 
 ---
 
@@ -267,7 +267,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 
 - `app/backend/routers/auth.py` — `_verify_password` simplificada: apenas `_PH.verify` (argon2id); bloco werkzeug e upgrade-on-login removidos
 - `app/backend/requirements.txt` — `werkzeug>=3.0,<4` removido
-- `docs/plans/subplans/SEC-04.md` — secção SEC-04b adicionada com data/branch
+- `docs/plans/subplans/SEC/SEC-04.md` — secção SEC-04b adicionada com data/branch
 
 ### DOCS-02 — Uniformização headers dos subplans *(commit direto `3.1-dev`)*
 
@@ -325,7 +325,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 
 - `app/backend/routers/auth.py` — `_check_avatar_magic()` decodifica os primeiros 12 bytes base64 e valida assinatura: JPEG `\xff\xd8\xff`, PNG `\x89PNG`, WebP `RIFF…WEBP`, GIF `GIF8`/`GIF9`
 - SVG e qualquer tipo fora da lista rejeitados com HTTP 400
-- `docs/plans/subplans/SEC-04.md` e `SEC-07.md` actualizados
+- `docs/plans/subplans/SEC/SEC-04.md` e `SEC-07.md` actualizados
 
 ### SEC-05 — SHA-256 dos tokens de verificação/reset/email-change *(branch `sec/token-hashing`)*
 
@@ -333,7 +333,7 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 - 3 stores (register, forgot-password, profile/email-change) guardam o hash; token em claro apenas no e-mail/URL
 - 3 lookups (verify, reset-password, verify-email-change) fazem `WHERE` pelo hash
 - `app/backend/main.py` — `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` adicionados a `_CSRF_EXEMPT`
-- `docs/plans/subplans/SEC-05.md` actualizado
+- `docs/plans/subplans/SEC/SEC-05.md` actualizado
 
 ### BACK-05 — Pydantic Literal types em dpi, esci, cti *(branch `back/validation`)*
 
@@ -346,14 +346,14 @@ Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infra
 
 - `app/backend/main.py` — `unhandled_exception_handler` retorna `JSONResponse({"error":"INTERNAL_ERROR","request_id":...}, 500)` em vez de re-raise
 - `HTTPException` continua a ser re-lançada (FastAPI trata nativamente)
-- `docs/plans/subplans/BACK-05.md` e `BACK-06.md` criados
+- `docs/plans/subplans/BACK/BACK-05.md` e `BACK-06.md` criados
 
 ### BACK-05d — Pydantic Literal types em poi.py *(branch `back/validation`)*
 
 - `app/backend/schemas/poi.py` — 49 campos `str` livres → `Literal[...]` em 12 sub-modelos + `POIRequest`
 - Import `from typing import Literal`; sem `model_validator` (valores literais directos das condicionais de `Chichorro_POI.py`)
 - `POI_ATIV_TipoEdif2`: union flat de 19 valores (dependência runtime não suportada por Literal cruzado)
-- `docs/plans/subplans/BACK-05.md` actualizado com secção BACK-05d
+- `docs/plans/subplans/BACK/BACK-05.md` actualizado com secção BACK-05d
 - Validado: `POICCRequest(POI_CC_Comb="Talvez", ...)` → `ValidationError: literal_error` ✅
 
 ### TEST-02 — Infraestrutura pytest *(branch `test/automated-tests`)*
@@ -434,7 +434,7 @@ Branch criada a partir de `3.1-dev`. Merge `--no-ff` em `3.1-dev` em 2026-05-26.
 
 ### Documentação *(commits `04cee5c`, `37410f1`)*
 
-- `docs/plans/subplans/AUTH-10.md` — consolidado com toda a informação de implementação
+- `docs/plans/subplans/AUTH/AUTH-10.md` — consolidado com toda a informação de implementação
 - `server/cloud_vps_audit_plans/AUTH-10_CLAUDE.md` — removido (conteúdo integrado no subplan)
 - Finding #7 (CSP Sentry) adicionado a `CODEX_REVIEW_ANALYSIS_CLAUDE.md`
 
@@ -529,7 +529,7 @@ audit Codex vão para esta branch única; merge em `3.1-dev` no final do ciclo c
 - `.github/scripts/backup_db.py` — `TABLES` estático substituído por `discover_tables()` via `information_schema.tables`; `alembic_version` excluída
 - `tools/restore_db.py` (local, gitignored) — restore de JSON com `--confirm` obrigatório; transação única; rollback automático em erro
 - `server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md` — renomeado de `docs/deploy/DEPLOY_RENDER_CLOUDFLARE.md`; secção GitHub Secrets adicionada (`DATABASE_URL` para `backup-db.yml`)
-- `docs/plans/subplans/DB-03.md` — secções de backup automático externo, descoberta dinâmica e restore completo adicionadas
+- `docs/plans/subplans/DB/DB-03.md` — secções de backup automático externo, descoberta dinâmica e restore completo adicionadas
 - **Ação manual pendente:** secret `DATABASE_URL` em GitHub → Settings → Secrets → Actions
 
 #### DB-06 — Backlog: SQLAlchemy ORM (decidido 2026-05-22)

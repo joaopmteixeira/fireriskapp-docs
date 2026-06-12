@@ -161,8 +161,8 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | INFRA-03 | ✅ | Dockerfile + Compose local/prod — containerização para deploy reproduzível | 3.1-dev |
 | INFRA-04 | ✅ | Endpoint `/health/db` — health check com query à BD para deteção de falha de ligação (A-06) | audit-fix |
 | INFRA-05 | ✅ | Cache-Control headers: `no-store` no backend + `_headers` Cloudflare Pages; `/assets/*` com `immutable` (M-02) | audit-fix |
-| INFRA-06 | ❌ | Staging Proxmox completo — Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-07) | — |
-| INFRA-07 | ✅ | Separação de ambientes + deploy Proxmox/Debian 13: `.env` + `.env.example` + guia deploy Docker | feat/infra07-env-proxmox |
+| INFRA-06 | ✅ | Separação de ambientes + deploy Proxmox/Debian 13: `.env` + `.env.example` + guia deploy Docker | feat/infra07-env-proxmox |
+| INFRA-07 | ❌ | Staging Proxmox completo — Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-06) | — |
 | INFRA-08 | ❌ | Monitorização self-hosted — Docker logs, PostgreSQL health, disco, CPU, RAM, alertas de backup | — |
 
 ---

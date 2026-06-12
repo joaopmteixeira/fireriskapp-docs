@@ -377,7 +377,7 @@ Razão: estes utilizadores não têm entrada na tabela `users`; a BD não é con
 Decisão `auth10-frontend-role-ux-only`: o frontend usa o role apenas para UX (esconder links admin no sidebar); o controlo de acesso real é exclusivamente no backend via `require_admin`.
 Razão: princípio de defesa em profundidade — o frontend pode ser contornado; o `require_admin` é a única garantia válida.
 
-Decisão `auth10-consolidate-subplan`: `AUTH-10_CLAUDE.md` em `server/cloud_vps_audit_plans/` removido; conteúdo integrado em `docs/plans/subplans/AUTH-10.md`.
+Decisão `auth10-consolidate-subplan`: `AUTH-10_CLAUDE.md` em `server/cloud_vps_audit_plans/` removido; conteúdo integrado em `docs/plans/subplans/AUTH/AUTH-10.md`.
 Razão: evitar duplicação entre dois ficheiros; o subplan em `docs/plans/` é o local canónico para documentação de implementação.
 
 Decisão `audit-fix-2-branch`: findings 2-7 do Codex review tratados numa branch dedicada `audit-fix-2` após o merge de `auth/roles`.
@@ -538,7 +538,7 @@ Razao: utilizador pediu explicitamente o merge; todos os passos do AI-02 estavam
 Decisao `roadmap-vps-dual-track`: manter Render+Cloudflare como producao activa enquanto se constroi VM Proxmox local como staging; migrar para VPS apenas quando staging estiver validado.
 Razao: nao faz sentido migrar producao antes de ter staging validado; Render+Cloudflare continuam a funcionar sem custo extra durante a transicao.
 
-Decisao `roadmap-vps-12-phases`: roadmap de migracao estruturado em 12 fases sequenciais com prereqs explicitos entre fases (REL-01 → DB-06 → INFRA-03 → INFRA-07 → DB-07/08 → staging → SEC → monitoring → testes → features).
+Decisao `roadmap-vps-12-phases`: roadmap de migracao estruturado em 12 fases sequenciais com prereqs explicitos entre fases (REL-01 → DB-06 → INFRA-03 → INFRA-06 → DB-07/08 → staging → SEC → monitoring → testes → features).
 Razao: phasing permite validar cada componente antes do proximo; cada fase tem entregaveis claros e pode ser pausada sem perder estado.
 
 Decisao `infra03-db06-as-alta-priority`: INFRA-03 e DB-06 promovidos de Prioridade Baixa para Prioridade Alta nos TODOs.
@@ -565,7 +565,7 @@ Razao: boas praticas de seguranca para containers em producao; reduz superficie 
 
 ---
 
-## 2026-06-11 — INFRA-03 Python 3.12 + INFRA-07 env setup + Proxmox staging
+## 2026-06-11 — INFRA-03 Python 3.12 + INFRA-06 env setup + Proxmox staging
 
 Decisao `infra03-python-312`: Dockerfile migrado de Python 3.14-slim para Python 3.12-slim.
 Razao: Python 3.14 nao tem imagem Docker estavel; Python 3.12 e a versao LTS com imagem slim disponivel e suportada; Dockerfile e test.yml actualizados em sincronia.

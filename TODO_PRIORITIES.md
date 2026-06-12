@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-12 (AUTH-09d concluído; REL-01/DB-07/DB-08/SEC-11/SEC-12/INFRA-08/TEST-04 adicionados)
+Última atualização: 2026-06-12 (REL-01 marcado concluído; hook UserPromptSubmit adicionado)
 
 ---
 
@@ -33,7 +33,13 @@ WebP 128 px q0.80 com limite 100 KB; `scripts/migrate_avatars_to_webp.py` para c
 
 ---
 
-### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 `Prioridade Alta` *(2026-06-11, `feat/infra07-env-proxmox` → `3.1-dev`)*
+### ✅ REL-01 — Release baseline v3.1.0 `Prioridade Alta` *(2026-06-12, `3.1-dev`)*
+
+Tag `v3.1.0` criada no GitHub; release notes publicadas em CHANGELOG.md com sumário completo das funcionalidades 3.1 (modelo, autenticação, segurança, infraestrutura Docker/Proxmox).
+
+---
+
+### ✅ INFRA-06 — Separação de ambientes + deploy Proxmox/Debian 13 `Prioridade Alta` *(2026-06-11, `feat/infra07-env-proxmox` → `3.1-dev`)*
 
 `.env` + `.env.example` + `docker-compose.yml` com `env_file`; guia de deploy `DEPLOY_PROXMOX_DEBIAN.md`; credenciais de admin injetadas via env file.
 
@@ -185,15 +191,7 @@ Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo a
 
 ## Prioridade Alta
 
-### ❌ REL-01 — Release baseline v3.1.0
-
-Criar tag git `v3.1.0` e escrever release notes antes de avançar com alterações estruturais de infraestrutura. Snapshot estável como ponto de rollback conhecido.
-
-Ver [REL-01.md](plans/subplans/REL-01.md).
-
----
-
-### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 (concluído 2026-06-11, branch `feat/infra07-env-proxmox` → `3.1-dev`)
+### ✅ INFRA-06 — Separação de ambientes + deploy Proxmox/Debian 13 (concluído 2026-06-11, branch `feat/infra07-env-proxmox` → `3.1-dev`)
 
 - `.env` (gitignored) com credenciais de admin para dev local e Proxmox
 - `.env.example` (commitado) com template documentado de todas as variáveis
@@ -270,11 +268,11 @@ Render força HTTPS no reverse proxy; `CHICHORRO_SESSION_SECURE=1` ativo; HSTS v
 
 ## Prioridade Média
 
-### ❌ INFRA-06 — Staging Proxmox completo
+### ❌ INFRA-07 — Staging Proxmox completo
 
-Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-07). Passo seguinte na migração para self-hosted.
+Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-06). Passo seguinte na migração para self-hosted.
 
-Ver [INFRA-06.md](plans/subplans/INFRA-06.md).
+Ver [INFRA-07.md](plans/subplans/INFRA-07.md).
 
 ---
 

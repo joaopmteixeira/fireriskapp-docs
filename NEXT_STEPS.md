@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-11 (INFRA-07 concluído — env separation + deploy Proxmox/Debian 13)
+Última atualização: 2026-06-11 (INFRA-06 concluído — env separation + deploy Proxmox/Debian 13)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -29,7 +29,7 @@
 | AI Tooling (AI-02a) | ❌ Curation manual pendente — `## Definicao` (27 notas), validação "verificar", Graph View Obsidian |
 | SQLAlchemy ORM (DB-06) | ✅ Completo — SQLAlchemy 2.x; NullPool Neon; migrate_sqlite; WAL; code review F1-F6 ✅ |
 | Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.14-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
-| Env separation (INFRA-07) | ✅ Completo — `.env` + `.env.example` + guia deploy Proxmox/Debian 13; deploy verificado em chichorro-staging |
+| Env separation (INFRA-06) | ✅ Completo — `.env` + `.env.example` + guia deploy Proxmox/Debian 13; deploy verificado em chichorro-staging |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
@@ -38,7 +38,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 
 ## Concluído Recentemente (2026-06-11)
 
-### ✅ INFRA-07 — Separação de ambientes + deploy Proxmox/Debian 13 (`feat/infra07-env-proxmox` → `3.1-dev`)
+### ✅ INFRA-06 — Separação de ambientes + deploy Proxmox/Debian 13 (`feat/infra07-env-proxmox` → `3.1-dev`)
 
 - `.env` (gitignored) — credenciais de admin para dev local e Proxmox
 - `.env.example` (commitado) — template documentado de todas as variáveis
@@ -65,7 +65,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `Dockerfile` — Python 3.14-slim, gunicorn+uvicorn, utilizador `appuser` não-root
 - `docker-compose.yml` — serviços `backend` + `db` (PostgreSQL 16), volumes e env vars
 - `.dockerignore` — exclui caches e docs
-- `docs/plans/subplans/INFRA-03.md` — subplan documentado
+- `docs/plans/subplans/INFRA/INFRA-03.md` — subplan documentado
 
 ---
 
@@ -105,7 +105,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `CLAUDE.md` criado na raiz com mapa de arquitetura + regras de refresh do grafo
 - `.gitignore` expandido: artefactos Graphify + `docs/vault/`
 - `docs/TODO_LIST.md` + `docs/TODO_PRIORITIES.md` — secção AI Tooling formalizada (AI-NN)
-- `docs/plans/subplans/AI-01.md` criado; FIR-34 fechado no Linear
+- `docs/plans/subplans/AI/AI-01.md` criado; FIR-34 fechado no Linear
 - `docs/ai/OBSIDIAN_VAULT.md` — plano detalhado AI-02; FIR-35 criado
 
 *(Trabalho de 2026-05-31 — documentação da estratégia IA — incorporado nesta sessão: `docs/ai/SETUP_GRAPHIFY.md`, `docs/ai/OBSIDIAN_SETUP.md`, `docs/research/RAG_FUTURE.md`)*
@@ -233,7 +233,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `schemas/poi.py` — 49 campos `str` livres substituídos por `Literal[...]` em 12 sub-modelos + `POIRequest` completo
 - Valores extraídos directamente de `calc/Chichorro_POI.py`; sem `model_validator` (valores literais directos)
 - `POI_ATIV_TipoEdif2` usa union flat dos 19 valores possíveis — sem cross-field validation, mas rejeita valores completamente inválidos
-- `docs/plans/subplans/BACK-05.md` actualizado com secção BACK-05d
+- `docs/plans/subplans/BACK/BACK-05.md` actualizado com secção BACK-05d
 - Branch `back/validation` (fresca); validado localmente (`ValidationError: literal_error` ✅)
 
 ### ✅ TEST-02 — Infraestrutura pytest e testes iniciais
@@ -362,7 +362,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `app/backend/alembic/env.py`: `db_url = os.environ.get("DATABASE_URL_MIGRATIONS") or settings.database_url` — Alembic usa superuser (`postgres`) para migrations; app runtime usa `chichorro_runtime` (só DML)
 - `deploy/env.production.example`: `DATABASE_URL_MIGRATIONS` documentada com comentário explicativo
 - `DEPLOY_PRODUCTION.md`: secção Supabase SQL completa, checklists, ordem de atualização de env vars no Render
-- `docs/plans/subplans/DB-05.md`: subplan criado
+- `docs/plans/subplans/DB/DB-05.md`: subplan criado
 - **Ações manuais pendentes (por esta ordem):**
   1. Supabase SQL Editor — criar role `chichorro_runtime` + GRANTs (SQL em DEPLOY_PRODUCTION.md)
   2. Render — copiar `DATABASE_URL` atual; atualizar para URL de `chichorro_runtime`; adicionar `DATABASE_URL_MIGRATIONS` com URL de `postgres`
@@ -383,7 +383,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
   obrigatório; transação única com rollback automático em erro
 - `server/cloud_vps_audit_plans/DEPLOY_PRODUCTION.md`: secção GitHub Secrets
   adicionada — secret `DATABASE_URL` para o workflow `backup-db.yml`
-- `docs/plans/subplans/DB-03.md`: secções de backup automático externo e restore
+- `docs/plans/subplans/DB/DB-03.md`: secções de backup automático externo e restore
   adicionadas; instrução de Alembic pré-restore documentada
 - **Ação manual pendente:** adicionar secret `DATABASE_URL` em GitHub →
   Settings → Secrets and variables → Actions
@@ -480,7 +480,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `app/backend/config.py`: novos campos `env`, `frontend_url`, `backend_url`; `model_validator` fail-fast em produção (FRONTEND_URL/BACKEND_URL obrigatórias e https://); `app_base_url` overridden por `FRONTEND_URL` em produção
 - `deploy/nginx-chichorro.example.conf`: Flask→FastAPI nos comentários; `X-Forwarded-Host $host` adicionado
 - 5/5 testes de import Python aprovados (3 falham esperadamente em produção, 2 passam)
-- Novos IDs criados: SEC-10, INFRA-05, INFRA-06, BACK-07, DB-05 (planos C-04, M-02, M-03, B-02, C-03)
+- Novos IDs criados: SEC-10, INFRA-05, INFRA-07, BACK-07, DB-05 (planos C-04, M-02, M-03, B-02, C-03)
 - Inconsistência corrigida: `TODO_PRIORITIES.md` agora diz PostgreSQL (Supabase) em vez de (Neon)
 
 ---
@@ -506,7 +506,7 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 
 - `tools/backup_db.py` — exporta `users` e `access_log` para JSON timestamped em `tools/backups/` (gitignored); usa psycopg2, sem dependência de pg_dump
 - `docs/deploy/ENV_VARS.md` — referência completa de todas as env vars (backend + frontend) por serviço, com indicação de onde obter cada valor
-- `docs/plans/subplans/DB-03.md` — subplan com limitações do Supabase free tier e frequência de backup recomendada
+- `docs/plans/subplans/DB/DB-03.md` — subplan com limitações do Supabase free tier e frequência de backup recomendada
 
 ### ✅ INFRA-01 — Monitorização completa (concluído 2026-05-19)
 
