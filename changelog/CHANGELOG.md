@@ -2,6 +2,56 @@
 
 ---
 
+## [v3.1.0] — 2026-06-12
+
+Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infraestrutura self-hosted (INFRA-06, DB-07/08).
+
+### Funcionalidades principais
+
+**Modelo CHICHORRO 3.1**
+
+- CTI — `VHE_Dispositivos`/`VVE_Dispositivos` distintos por cenario
+- DPI_OGS — 7→4 campos reformulados
+- ESCI_GP — deteção automatica; ESCI_EXT — campo Formação; ESCI_RIA+CS — campos Formação e CS
+- RI — escala de 12 classes (A++ a F); aceitabilidade por `POI_CC_Idade` (RI_RIA)
+- Intervencoes — 34 ativas/passivas + conjuntos predefinidos + custo €/m²
+
+**Autenticação e sessoes** (AUTH-01..13)
+
+- Registo com verificação de e-mail (Resend); recuperação de palavra-passe
+- Perfil de utilizador com avatar WebP 128 px; pagina de definicoes (dark mode, casas decimais)
+- CSRF protection (starlette-csrf); sessoes com expiração configuravel (8 h)
+- Sistema de roles: `engineer` (padrao) e `admin`; paginas AdminUsers e AdminLog
+
+**Segurança** (SEC-01..10, AUTH-06..08)
+
+- Argon2id (RFC 9106 level 1); SHA-256 em tokens de reset/verificação
+- CORS estrito, HTTPS obrigatorio, security headers (CSP, HSTS, X-Frame-Options)
+- Rate limiting via slowapi + Upstash Redis; fail-fast de secrets em producao
+- Pydantic `Literal` em todos os schemas de calculo (422 em payloads invalidos)
+
+**Backend** (BACK-01..07)
+
+- Migracao Flask → FastAPI com routers modulares; SQLAlchemy 2.x ORM
+- Alembic migrations (4 versoes); dual-mode SQLite (dev) / PostgreSQL (producao)
+- Error handler JSON normalizado (5xx retorna `{"error":"INTERNAL_ERROR","request_id":...}`)
+
+**Infraestrutura** (INFRA-01..07, DB-01..06)
+
+- Deploy: Cloudflare Pages (frontend) + Render (backend) + Supabase PostgreSQL
+- Sentry frontend + backend + Session Replay em erros; UptimeRobot a 5 min
+- Backups JSON via GitHub Actions (a cada 3 dias, artifact 90 dias)
+- GitHub Actions CI/CD: `test.yml` (Python 3.12, pytest) + `build.yml` (Node 20)
+- Docker: Dockerfile Python 3.12-slim + docker-compose; staging Proxmox/Debian 13 operacional
+
+**Documentacao e AI tooling**
+
+- VitePress em `docs.chichorrofireriskapp.joaopmteixeira.net`
+- Graphify: 740 nos / 1657 arestas / 44 comunidades (backend + frontend + cross-stack)
+- Obsidian vault: 50 notas, 27 subfatores × 8 fontes, RT-SCIE 135/2020
+
+---
+
 ## 2026-06-12 — AUTH-09d avatar WebP 128 px + migração de existentes
 
 ### perf(auth): optimize avatar to WebP 128px, 100 KB limit + migration script — AUTH-09d
