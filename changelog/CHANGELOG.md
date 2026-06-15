@@ -2,6 +2,18 @@
 
 ---
 
+## [Unreleased]
+
+### 2026-06-15 — INFRA-07
+
+- `infra/nginx/nginx.conf` — Nginx reverse proxy porta 80 → backend :8000; headers `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`
+- `docker-compose.staging.yml` — stack completa para staging: PostgreSQL 16-alpine + app (ENV=staging) + Nginx; healthchecks encadeados; volume `postgres_data`
+- `.env.example` — variável `POSTGRES_PASSWORD` documentada
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção "Stack completa (INFRA-07)": comandos, ufw, tabela dev vs staging
+- VM `chichorro-staging` (192.168.0.7): operacional — `/health/db` → `{"status":"ok","db":"ok"}`
+
+---
+
 ## [v3.1.0] — 2026-06-12
 
 Release baseline do CHICHORRO 3.1. Snapshot estavel antes de avançar para infraestrutura self-hosted (INFRA-07, DB-07/08).

@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-12 (AUTH-09d e REL-01 concluidos; subplans reorganizados em 13 pastas; IDs INFRA-06/07 corrigidos)
+Última atualização: 2026-06-15 (INFRA-07 concluído — stack staging Nginx + PostgreSQL local operacional na VM Proxmox)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -30,9 +30,23 @@
 | SQLAlchemy ORM (DB-06) | ✅ Completo — SQLAlchemy 2.x; NullPool Neon; migrate_sqlite; WAL; code review F1-F6 ✅ |
 | Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.12-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
 | Env separation (INFRA-06) | ✅ Completo — `.env` + `.env.example` + guia deploy Proxmox/Debian 13; deploy verificado em chichorro-staging |
+| Staging Proxmox completo (INFRA-07) | ✅ Completo — Nginx reverse proxy + PostgreSQL local; `docker-compose.staging.yml`; stack operacional em 192.168.0.7 |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-15)
+
+### ✅ INFRA-07 — Stack staging Proxmox completa (`3.1-dev`)
+
+- `infra/nginx/nginx.conf` — reverse proxy porta 80 → app:8000; headers `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`
+- `docker-compose.staging.yml` — stack completa: `db` (PostgreSQL 16-alpine) + `app` (ENV=staging) + `nginx`; healthchecks encadeados
+- `.env.example` — `POSTGRES_PASSWORD` documentada
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção INFRA-07 com tabela comparativa dev vs staging
+- Nota operacional: passwords com caracteres especiais (`@`, `.`) devem ser geradas com `python3 -c "import secrets; print(secrets.token_hex(32))"`
+- VM `chichorro-staging` (192.168.0.7): SSH key do utilizador `deploy` adicionada ao GitHub; `/opt/chichorro` clonado via SSH sem credenciais; `/health/db` → `{"status":"ok","db":"ok"}`
 
 ---
 

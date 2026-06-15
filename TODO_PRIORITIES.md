@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-12 (REL-01 marcado concluído; hook UserPromptSubmit adicionado)
+Última atualização: 2026-06-15 (INFRA-07 concluído — stack staging Nginx + PostgreSQL operacional)
 
 ---
 
@@ -26,6 +26,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ INFRA-07 — Staging Proxmox completo (Nginx + PostgreSQL local) `Prioridade Alta` *(2026-06-15, `3.1-dev`)*
+
+`docker-compose.staging.yml` com `db` (PostgreSQL 16) + `app` (ENV=staging) + `nginx` (porta 80); `infra/nginx/nginx.conf` reverse proxy com headers proxy correctos; stack operacional em chichorro-staging (192.168.0.7); `/health/db` → ok.
+
+---
 
 ### ✅ AUTH-09d — Otimização do avatar: WebP 128 px, 100 KB `Prioridade Média` *(2026-06-12, `3.1-dev`)*
 
@@ -267,12 +273,6 @@ Render força HTTPS no reverse proxy; `CHICHORRO_SESSION_SECURE=1` ativo; HSTS v
 ---
 
 ## Prioridade Média
-
-### ❌ INFRA-07 — Staging Proxmox completo
-
-Nginx reverse proxy + PostgreSQL local na VM Debian 13 (desbloqueado por INFRA-06). Passo seguinte na migração para self-hosted.
-
-Ver [INFRA-07.md](plans/subplans/INFRA-07.md).
 
 ---
 
