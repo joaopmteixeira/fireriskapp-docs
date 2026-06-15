@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-15 (INFRA-07 concluído — stack staging Nginx + PostgreSQL local operacional na VM Proxmox)
+Última atualização: 2026-06-15 (INFRA-09 concluído — Cloudflare Tunnel para chichorro.joaopmteixeira.net)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -31,6 +31,9 @@
 | Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.12-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
 | Env separation (INFRA-06) | ✅ Completo — `.env` + `.env.example` + guia deploy Proxmox/Debian 13; deploy verificado em chichorro-staging |
 | Staging Proxmox completo (INFRA-07) | ✅ Completo — Nginx reverse proxy + PostgreSQL local; `docker-compose.staging.yml`; stack operacional em 192.168.0.7 |
+| Backups PostgreSQL local (DB-07) | ✅ Completo — serviço Docker `backup` com cron diário 02:00 UTC; retenção 7 dumps; validado em staging |
+| Migração Supabase → local (DB-08) | ✅ Completo — `scripts/migrate_supabase_to_local.sh`; runbook operacional; validado em staging |
+| Cloudflare Tunnel (INFRA-09) | ✅ Completo — `chichorro.joaopmteixeira.net` acessível via HTTPS; `cloudflared` systemd na VM |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
@@ -38,6 +41,26 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 ---
 
 ## Concluído Recentemente (2026-06-15)
+
+### ✅ INFRA-09 — Cloudflare Tunnel para chichorro.joaopmteixeira.net (`feat/infra09-cloudflare-tunnel`)
+
+- `infra/cloudflare/config.yml` — template de configuração do tunnel (`cloudflared`)
+- `docker-compose.staging.yml` — `CHICHORRO_CORS_ORIGINS` e `APP_BASE_URL` atualizados com o domínio público
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção INFRA-09 com runbook completo de 7 passos
+- `cloudflared` instalado na VM como serviço systemd; CNAME criado automaticamente no Cloudflare
+- Validado: `https://chichorro.joaopmteixeira.net/health/db` → `{"status":"ok","db":"ok"}`
+
+### ✅ DB-07 — Backups PostgreSQL local (`feat/db07-db08-backups`)
+
+- Serviço Docker `backup` (postgres:17-alpine) com cron diário 02:00 UTC via `pg_dump -F c`
+- Retenção 7 dumps; `infra/backup/backup.sh` + `infra/backup/restore.sh`; volume `backup_dumps`
+- Validado em staging: dump criado, restore OK, `/health/db` → ok
+
+### ✅ DB-08 — Runbook migração Supabase → PostgreSQL local (`feat/db07-db08-backups`)
+
+- `scripts/migrate_supabase_to_local.sh` — pg_dump + drop/recreate + pg_restore + validação de contagens
+- `docs/deploy/RUNBOOK_MIGRATION_SUPABASE_TO_LOCAL.md` — 5 passos, plano de fallback 7 dias, rollback
+- Validado em staging: 65 access_log + 2 users migrados, login e cálculo POI→RI OK
 
 ### ✅ INFRA-07 — Stack staging Proxmox completa (`3.1-dev`)
 
