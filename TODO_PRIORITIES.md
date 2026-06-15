@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-15 (INFRA-07 concluído — stack staging Nginx + PostgreSQL operacional)
+Última atualização: 2026-06-15 (DB-07 e DB-08 concluídos — backups PostgreSQL local e runbook migração Supabase)
 
 ---
 
@@ -26,6 +26,18 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ DB-08 — Runbook migração Supabase → PostgreSQL local `Prioridade Alta` *(2026-06-15, `feat/db07-db08-backups`)*
+
+Script `scripts/migrate_supabase_to_local.sh` (pg_dump + drop/recreate + pg_restore + validação de contagens); runbook operacional completo `docs/deploy/RUNBOOK_MIGRATION_SUPABASE_TO_LOCAL.md` com 5 passos, plano de fallback 7 dias, rollback e migração de produção. Validado em staging: 65 access_log + 2 users migrados, login e cálculo POI→RI OK.
+
+---
+
+### ✅ DB-07 — Backups PostgreSQL local `Prioridade Alta` *(2026-06-15, `feat/db07-db08-backups`)*
+
+Serviço Docker `backup` (postgres:17-alpine) com cron diário 02:00 UTC via `pg_dump -F c`; retenção 7 dumps; `infra/backup/backup.sh` + `infra/backup/restore.sh`; volume `backup_dumps`; healthcheck falha se dump > 25h; secção operacional em `DEPLOY_PROXMOX_DEBIAN.md`. Validado em staging: dump criado, restore OK, `/health/db` → ok.
+
+---
 
 ### ✅ INFRA-07 — Staging Proxmox completo (Nginx + PostgreSQL local) `Prioridade Alta` *(2026-06-15, `3.1-dev`)*
 
