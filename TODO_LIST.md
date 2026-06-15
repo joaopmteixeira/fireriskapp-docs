@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-15 (DB-07 e DB-08 concluídos — backups PostgreSQL local e runbook migração Supabase)
+Última atualização: 2026-06-15 (INFRA-09 concluído — Cloudflare Tunnel para chichorro.joaopmteixeira.net)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -164,6 +164,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | INFRA-06 | ✅ | Separação de ambientes + deploy Proxmox/Debian 13: `.env` + `.env.example` + guia deploy Docker | feat/infra07-env-proxmox |
 | INFRA-07 | ✅ | Staging Proxmox completo — Nginx reverse proxy + PostgreSQL local na VM Debian 13 | 2026-06-15 |
 | INFRA-08 | ❌ | Monitorização self-hosted — Docker logs, PostgreSQL health, disco, CPU, RAM, alertas de backup | — |
+| INFRA-09 | ✅ | Cloudflare Tunnel — expor chichorro.joaopmteixeira.net via tunnel sem abrir portas no router | feat/infra09-cloudflare-tunnel |
 
 ---
 

@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-15 (DB-07 e DB-08 concluídos — backups PostgreSQL local e runbook migração Supabase)
+Última atualização: 2026-06-15 (INFRA-09 concluído — Cloudflare Tunnel para chichorro.joaopmteixeira.net)
 
 ---
 
@@ -26,6 +26,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ INFRA-09 — Cloudflare Tunnel para chichorro.joaopmteixeira.net `Prioridade Alta` *(2026-06-15, `feat/infra09-cloudflare-tunnel`)*
+
+`infra/cloudflare/config.yml` (template tunnel); `docker-compose.staging.yml` com `CHICHORRO_CORS_ORIGINS` e `APP_BASE_URL` atualizados; runbook INFRA-09 em `DEPLOY_PROXMOX_DEBIAN.md`; `cloudflared` instalado na VM como serviço systemd. Validado: `https://chichorro.joaopmteixeira.net/health/db` → ok.
+
+---
 
 ### ✅ DB-08 — Runbook migração Supabase → PostgreSQL local `Prioridade Alta` *(2026-06-15, `feat/db07-db08-backups`)*
 
