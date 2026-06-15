@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-11 (INFRA-06 concluído — env separation + deploy Proxmox/Debian 13)
+Última atualização: 2026-06-12 (AUTH-09d e REL-01 concluidos; subplans reorganizados em 13 pastas; IDs INFRA-06/07 corrigidos)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -15,7 +15,7 @@
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
 | Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/05d/06 ✅) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
-| Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c) · ❌ AUTH-09d pendente (avatar WebP 128px) |
+| Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c, AUTH-09d — avatar WebP 128 px, limite 100 KB) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
 | Dark Mode (UI-07) | ✅ Completo — todas as páginas cobertas (commit `d2d6492`) |
 | Migração Flask → FastAPI (BACK-01) | ✅ Completo — 11/11 PASS (`feat/flask-to-fastapi`) |
@@ -28,11 +28,29 @@
 | AI Tooling (AI-02) | ✅ Vault Obsidian completo — 8 fontes, 27 subfatores, RT-SCIE 135/2020, Backend/Frontend (`feat/obsidian-vault`) |
 | AI Tooling (AI-02a) | ❌ Curation manual pendente — `## Definicao` (27 notas), validação "verificar", Graph View Obsidian |
 | SQLAlchemy ORM (DB-06) | ✅ Completo — SQLAlchemy 2.x; NullPool Neon; migrate_sqlite; WAL; code review F1-F6 ✅ |
-| Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.14-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
+| Docker (INFRA-03) | ✅ Completo — Dockerfile Python 3.12-slim + docker-compose.yml; PostgreSQL 16 local; appuser não-root |
 | Env separation (INFRA-06) | ✅ Completo — `.env` + `.env.example` + guia deploy Proxmox/Debian 13; deploy verificado em chichorro-staging |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-12)
+
+### ✅ AUTH-09d — Optimizacao avatar WebP 128 px + script de migracao (`3.1-dev`)
+
+- `app/frontend/src/pages/ProfilePage.tsx` — `maxPx` 256→128, `toDataURL` JPEG→WebP q0.80, limite `AVATAR_TOO_LARGE` actualizado para 100 KB
+- `app/backend/routers/auth.py` — `_AVATAR_MAX_BYTES` 700 000→100 000
+- `scripts/migrate_avatars_to_webp.py` — conversor one-shot JPEG/PNG/GIF→WebP 128 px com `--dry-run`
+
+### ✅ REL-01 — Release baseline v3.1.0 (`3.1-dev`)
+
+- `docs/changelog/CHANGELOG.md` — seccao `[v3.1.0]` criada com sumario completo de todas as funcionalidades 3.1
+- 8 novos IDs adicionados ao roadmap VPS: DB-07, DB-08, SEC-11, SEC-12, INFRA-07, INFRA-08, TEST-04
+- `docs/plans/subplans/` reorganizado em 13 pastas de categoria (AUTH/, INFRA/, SEC/, DB/, ...)
+- `app/frontend/package.json` — script `npm run typecheck` adicionado
+- IDs INFRA-06/07 corrigidos (INFRA-06 = env separation concluido; INFRA-07 = staging Proxmox completo pendente)
 
 ---
 

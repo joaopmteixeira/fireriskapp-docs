@@ -581,3 +581,22 @@ Razao: permite testar deploy containerizado antes de migrar producao para VPS; e
 
 Decisao `infra07-portainer-staging`: Portainer Community Edition instalado na VM chichorro-staging (:9000).
 Razao: interface web para monitorizar contentores sem acesso SSH para operacoes rotineiras; facilita verificacao visual de estado (healthy/running) e logs.
+
+---
+
+## 2026-06-12 — REL-01 release baseline + reorganizacao docs + correcao IDs
+
+Decisao `rel01-changelog-v310`: seccao `## [v3.1.0] — 2026-06-12` criada no CHANGELOG com sumario completo de todas as funcionalidades 3.1 (modelo, auth, seguranca, infra, AI tooling).
+Razao: REL-01 era a unica Prioridade Alta pendente; snapshot documentado antes de avancar para infraestrutura VPS e alteracoes de base de dados.
+
+Decisao `8-new-ids-roadmap-vps`: 8 novos IDs criados com subplans iniciais (DB-07, DB-08, SEC-11, SEC-12, INFRA-07, INFRA-08, TEST-04, REL-01).
+Razao: roadmap em 12 fases requer IDs para todas as tarefas futuras; IDs permitem tracking no Linear e referencia cruzada entre docs.
+
+Decisao `subplans-13-category-folders`: subplans/ reorganizado em 13 pastas de categoria (AI/, AUTH/, B/, BACK/, DB/, DOCS/, FEAT/, INFRA/, REL/, SEC/, TEST/, UI/, UX/).
+Razao: com 80+ subplans numa pasta plana a navegacao tornara-se dificil; categorias espelham os prefixos dos IDs; `tools/update_subplan_links.py` criado para actualizar referencias.
+
+Decisao `infra-id-renumbering-06-07`: IDs INFRA-06 e INFRA-07 trocados — INFRA-06 passa a ser env separation (concluido), INFRA-07 passa a ser staging Proxmox completo com Nginx + PostgreSQL (pendente).
+Razao: convencao exige que o prerequisito tenha numero mais baixo; env separation (INFRA-06) e prerequisito directo de staging VPS (INFRA-07).
+
+Decisao `frontend-typecheck-npm-script`: script `typecheck: "tsc --noEmit"` adicionado ao package.json do frontend.
+Razao: permite verificacao de tipos sem build completo; essencial para CI e pre-commit rapido; documentado em `.claude/rules/verification.md`.
