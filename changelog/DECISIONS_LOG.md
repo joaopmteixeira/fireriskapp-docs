@@ -626,3 +626,22 @@ Razao: utilizador nunca usou nenhuma das ferramentas; avaliacao pratica e mais f
 
 Decisao `infra10-dbeaver-descartado`: DBeaver descartado como opcao para administracao de BD em staging.
 Razao: DBeaver e uma aplicacao desktop, nao uma ferramenta web; nao e adequado para acesso por multiplos utilizadores num servidor; pgAdmin e Adminer sao ambos web-based.
+
+---
+
+## 2026-06-16 — SEC-11 · SEC-12 · SEC-13 · SEC-14
+
+Decisao `sec11-policy-doc-only`: SEC-11 implementado como politica documental (SECRETS_POLICY.md), sem ferramentas de encriptacao.
+Razao: projeto de 1 developer; secrets ja estao fora do Git (Render env vars, .env local gitignored); overhead de SOPS/age nao justificado nesta fase.
+
+Decisao `sec12-basic-auth-nginx`: Basic Auth via Nginx escolhido para proteger pgAdmin e Adminer em vez de VPN, Tailscale ou IP allowlist.
+Razao: mais simples de configurar e manter; Cloudflare Tunnel ja garante HTTPS (credenciais protegidas em transito); sem dependencias externas adicionais; rotacao de password simples (htpasswd).
+
+Decisao `sec12-htpasswd-repo-gitignored`: ficheiro .htpasswd guardado em `infra/nginx/.htpasswd` dentro do repo (gitignored) em vez de `/etc/nginx/` no host.
+Razao: `/etc/nginx/` nao existe no host da VM — o Nginx corre dentro do container Docker; o caminho `./infra/nginx/.htpasswd` e relativo ao repo e montado no container via volume; gitignored para nunca commitar passwords.
+
+Decisao `sec13-sops-diferido-backlog`: SOPS + age diferido para SEC-14 (backlog/futuro) em vez de incluir em SEC-13.
+Razao: adicionar encriptacao de secrets em Git so faz sentido com multiplos developers ou GitOps; por agora SEC-13 cobre hardening pratico sem complexidade operacional excessiva.
+
+Decisao `sec14-subplan-de-chatgpt`: plano SOPS+age (originalmente `docs/plans/main/SECRETS_MANAGEMENT_PLAN.md`, elaborado com ChatGPT) convertido em subplan SEC-14 e ficheiro original removido (era untracked).
+Razao: o conteudo e valido como referencia futura mas nao e uma tarefa ativa; subplan SEC-14 e o lugar correto para backlog com plano detalhado.

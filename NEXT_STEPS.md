@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-15 (INFRA-09 concluído — Cloudflare Tunnel para chichorro.joaopmteixeira.net)
+Última atualização: 2026-06-16 (SEC-11/12 concluídos — política de secrets + Basic Auth pgAdmin/Adminer)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -34,9 +34,36 @@
 | Backups PostgreSQL local (DB-07) | ✅ Completo — serviço Docker `backup` com cron diário 02:00 UTC; retenção 7 dumps; validado em staging |
 | Migração Supabase → local (DB-08) | ✅ Completo — `scripts/migrate_supabase_to_local.sh`; runbook operacional; validado em staging |
 | Cloudflare Tunnel (INFRA-09) | ✅ Completo — `chichorro.joaopmteixeira.net` acessível via HTTPS; `cloudflared` systemd na VM |
+| Política de secrets (SEC-11) | ✅ Completo — `docs/deploy/SECRETS_POLICY.md`; inventário + rotação + backup Bitwarden |
+| Basic Auth pgAdmin/Adminer (SEC-12) | ✅ Completo — Nginx Basic Auth portas 5050/5051; `./infra/nginx/.htpasswd` gitignored; validado em staging |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-16)
+
+### ✅ SEC-11 — Política de gestão de secrets (`feat/sec11-sec12-secrets-pgadmin`)
+
+- `docs/deploy/SECRETS_POLICY.md` — inventário completo de secrets, onde NÃO guardar, procedimentos de rotação por tipo (Render, Supabase, SSH, htpasswd), recomendação de backup em Bitwarden
+- `docs/deploy/ENV_VARS.md` — secção "Staging — VM Proxmox" com `PGADMIN_EMAIL/PASSWORD` e nota htpasswd; referência a `SECRETS_POLICY.md`
+- `docs/plans/subplans/SEC/SEC-11.md` — marcado ✅
+
+### ✅ SEC-12 — Basic Auth Nginx para pgAdmin + Adminer (`feat/sec11-sec12-secrets-pgadmin`)
+
+- `infra/nginx/nginx.conf` — dois `server` blocks: porta 5050 → pgAdmin, porta 5051 → Adminer; `auth_basic` com `/etc/nginx/.htpasswd`
+- `docker-compose.staging.yml` — nginx expõe portas 5050/5051; monta `./infra/nginx/.htpasswd:ro`; pgAdmin e Adminer passaram de `ports:` para `expose:` (tráfego só via Nginx)
+- `.gitignore` — `infra/nginx/.htpasswd` adicionado
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção SEC-12 com runbook: instalar apache2-utils, criar htpasswd em `/opt/chichorro/infra/nginx/`, verificar e rodar
+- `docs/deploy/GUIDE_PGADMIN.md` — nota de Basic Auth no início; fix MD040
+- Validado em staging: `curl -I :5050` → 401, `curl -u admin:<pass> :5050` → HTML pgAdmin ✅
+- `docs/plans/subplans/SEC/SEC-12.md` — marcado ✅
+
+### Novos IDs criados
+
+- **SEC-13** — Hardening Docker: Gitleaks CI, redes internas, serviço `migrate`, suporte `*_FILE`, systemd (`docs/plans/subplans/SEC/SEC-13.md`)
+- **SEC-14** — SOPS + age (backlog/futuro) — plano completo em `docs/plans/subplans/SEC/SEC-14.md`
 
 ---
 

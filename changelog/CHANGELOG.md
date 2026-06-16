@@ -4,6 +4,31 @@
 
 ## [Unreleased]
 
+### 2026-06-16 — SEC-11 · SEC-12
+
+**SEC-11 — Política de gestão de secrets**
+
+- `docs/deploy/SECRETS_POLICY.md` — inventário completo de secrets (CHICHORRO_SECRET_KEY, DATABASE_URL, RESEND_API_KEY, SENTRY_DSN, UPSTASH_REDIS_URL, chaves SSH, PGADMIN_EMAIL/PASSWORD, htpasswd); onde NÃO guardar; rotação por tipo (Render env var, Supabase DB password, chave SSH, CHICHORRO_SECRET_KEY, htpasswd); recomendação de backup em Bitwarden
+- `docs/deploy/ENV_VARS.md` — secção "Staging — VM Proxmox" com variáveis `PGADMIN_EMAIL`/`PGADMIN_PASSWORD` e nota htpasswd; referência a `SECRETS_POLICY.md`; data atualizada
+- `docs/plans/subplans/SEC/SEC-11.md` — marcado ✅ concluído (branch `feat/sec11-sec12-secrets-pgadmin`)
+
+**SEC-12 — Basic Auth Nginx para pgAdmin + Adminer**
+
+- `infra/nginx/nginx.conf` — dois `server` blocks adicionados: porta 5050 → proxy pgAdmin com `auth_basic`; porta 5051 → proxy Adminer com `auth_basic`; ficheiro htpasswd em `/etc/nginx/.htpasswd`
+- `docker-compose.staging.yml` — nginx expõe portas 5050 e 5051; volume `./infra/nginx/.htpasswd:/etc/nginx/.htpasswd:ro`; pgAdmin e Adminer passados de `ports:` para `expose:` (isolados — só acessíveis via Nginx)
+- `.gitignore` — `infra/nginx/.htpasswd` adicionado (ficheiro de passwords nunca commitado)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção SEC-12: instalar apache2-utils, gerar htpasswd em `/opt/chichorro/infra/nginx/.htpasswd`, recreate nginx, verificar 401/200, rotação de password
+- `docs/deploy/GUIDE_PGADMIN.md` — nota de Basic Auth no início do guia; passo extra no login; fix MD040 (fenced code block com linguagem `text`)
+- `docs/plans/subplans/SEC/SEC-12.md` — marcado ✅ concluído (branch `feat/sec11-sec12-secrets-pgadmin`)
+- Validado em staging (192.168.0.7): `curl -I :5050` → 401 ✅; `curl -u admin:<pass> :5050` → HTML pgAdmin ✅; `/health/db` → ok ✅
+
+**Novos subplans**
+
+- `docs/plans/subplans/SEC/SEC-13.md` — Hardening Docker: Gitleaks CI, redes Docker internas, serviço `migrate` separado, suporte `*_FILE` em config.py, systemd na VM
+- `docs/plans/subplans/SEC/SEC-14.md` — SOPS + age (backlog/futuro): plano completo de encriptação de secrets em Git com Docker Compose Secrets; só implementar com equipa ou GitOps
+
+---
+
 ### 2026-06-15 — INFRA-07 · DB-07 · DB-08 · INFRA-09 · INFRA-10
 
 **INFRA-07 — Stack staging Nginx + PostgreSQL**
