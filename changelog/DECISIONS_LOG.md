@@ -600,3 +600,29 @@ Razao: convencao exige que o prerequisito tenha numero mais baixo; env separatio
 
 Decisao `frontend-typecheck-npm-script`: script `typecheck: "tsc --noEmit"` adicionado ao package.json do frontend.
 Razao: permite verificacao de tipos sem build completo; essencial para CI e pre-commit rapido; documentado em `.claude/rules/verification.md`.
+
+
+---
+
+## 2026-06-15 — INFRA-07 · DB-07 · DB-08 · INFRA-09 · INFRA-10
+
+Decisao `infra07-staging-separate-compose`: ficheiro separado `docker-compose.staging.yml` em vez de override.
+Razao: nao quebra `docker compose up` em dev local; staging e dev sao ambientes distintos com requisitos diferentes (PostgreSQL vs SQLite, Nginx vs acesso direto).
+
+Decisao `db07-pg-dump-cron-retention-7`: backup via `pg_dump` com cron diario 02:00 UTC e retencao de 7 dumps.
+Razao: simples, sem dependencias externas, adequado para staging; retencao de 7 dias cobre uma semana de trabalho sem acumular espaco.
+
+Decisao `db08-pgpassword-env-migrate`: script de migracao usa `PGPASSWORD` em vez de `.pgpass` ou prompt interativo.
+Razao: mais simples para uso one-shot em staging; nao ha risco de exposicao pois o script e local e o env e controlado.
+
+Decisao `infra09-cloudflare-tunnel-over-port-forward`: Cloudflare Tunnel escolhido em vez de port forwarding no router.
+Razao: sem exposicao de IP publico, sem configuracao no router, HTTPS automatico via Cloudflare, outbound-only (mais seguro); desvantagem: dependencia do servico Cloudflare.
+
+Decisao `infra09-cloudflared-etc-path`: config do cloudflared colocada em `/etc/cloudflared/` em vez de `~/.cloudflared/`.
+Razao: `cloudflared service install` corre como root via systemd; o servico procura config em `/etc/cloudflared/` e nao no home do utilizador.
+
+Decisao `infra10-avaliar-pgadmin-adminer-ambos`: instalar pgAdmin e Adminer em paralelo em vez de escolher um a priori.
+Razao: utilizador nunca usou nenhuma das ferramentas; avaliacao pratica e mais fiavel do que comparacao teorica; qualquer uma pode ser removida sem afetar a outra ou a stack principal.
+
+Decisao `infra10-dbeaver-descartado`: DBeaver descartado como opcao para administracao de BD em staging.
+Razao: DBeaver e uma aplicacao desktop, nao uma ferramenta web; nao e adequado para acesso por multiplos utilizadores num servidor; pgAdmin e Adminer sao ambos web-based.

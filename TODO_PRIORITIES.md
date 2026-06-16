@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-15 (INFRA-09 concluído — Cloudflare Tunnel para chichorro.joaopmteixeira.net)
+Última atualização: 2026-06-15 (INFRA-10 em progresso — pgAdmin + Adminer instalados em staging, decisão pendente)
 
 ---
 
@@ -210,6 +210,15 @@ CORS estrito, HTTPS obrigatório, headers de segurança, cookies hardened, rate 
 ### ✅ AUTH-11 + AUTH-12 + DB-01 + TEST-01 — Produção: modal sessão, merge, Neon, e2e `Prioridade Alta` *(2026-05-08, `feat/access-log`)*
 
 Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo aprovado em produção.
+
+---
+
+## Em Progresso
+
+### 🔄 INFRA-10 — pgAdmin + Adminer em staging `Prioridade Média` *(2026-06-15, `feat/infra10-pgadmin-adminer`)*
+
+Ambas as ferramentas instaladas e operacionais (`http://192.168.0.7:5050` e `:5051`).
+Pendente: avaliar pgAdmin vs Adminer e remover a não escolhida sem rastros (checklist em `INFRA-10.md`).
 
 ---
 

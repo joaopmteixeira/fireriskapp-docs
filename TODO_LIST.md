@@ -165,6 +165,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | INFRA-07 | ✅ | Staging Proxmox completo — Nginx reverse proxy + PostgreSQL local na VM Debian 13 | 2026-06-15 |
 | INFRA-08 | ❌ | Monitorização self-hosted — Docker logs, PostgreSQL health, disco, CPU, RAM, alertas de backup | — |
 | INFRA-09 | ✅ | Cloudflare Tunnel — expor chichorro.joaopmteixeira.net via tunnel sem abrir portas no router | feat/infra09-cloudflare-tunnel |
+| INFRA-10 | 🔄 | pgAdmin + Adminer em staging — avaliação; conclusão após remover a ferramenta não escolhida | feat/infra10-pgadmin-adminer |
 
 ---
 

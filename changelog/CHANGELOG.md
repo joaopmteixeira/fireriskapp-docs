@@ -4,13 +4,46 @@
 
 ## [Unreleased]
 
-### 2026-06-15 — INFRA-07
+### 2026-06-15 — INFRA-07 · DB-07 · DB-08 · INFRA-09 · INFRA-10
+
+**INFRA-07 — Stack staging Nginx + PostgreSQL**
 
 - `infra/nginx/nginx.conf` — Nginx reverse proxy porta 80 → backend :8000; headers `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`
-- `docker-compose.staging.yml` — stack completa para staging: PostgreSQL 16-alpine + app (ENV=staging) + Nginx; healthchecks encadeados; volume `postgres_data`
+- `docker-compose.staging.yml` — stack completa para staging: PostgreSQL 17-alpine + app (ENV=staging) + Nginx; healthchecks encadeados; volume `postgres_data`
 - `.env.example` — variável `POSTGRES_PASSWORD` documentada
 - `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção "Stack completa (INFRA-07)": comandos, ufw, tabela dev vs staging
 - VM `chichorro-staging` (192.168.0.7): operacional — `/health/db` → `{"status":"ok","db":"ok"}`
+
+**DB-07 — Backups PostgreSQL local em staging**
+
+- `infra/backup/backup.sh` — cron diário 02:00 UTC via `pg_dump`; retenção 7 dumps; log em `/backups/backup.log`
+- `infra/backup/restore.sh` — restore interativo com confirmação; verifica saúde após restore
+- `docker-compose.staging.yml` — serviço `backup` adicionado (depends_on db healthy; volume `backup_dumps`)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção DB-07 com comandos de verificação, backup manual e restore
+
+**DB-08 — Runbook migração Supabase → PostgreSQL local**
+
+- `scripts/migrate_supabase_to_local.sh` — exporta Supabase via `pg_dump`, importa no `db` local via `psql`; usa `PGPASSWORD` para evitar prompt; verifica contagens antes/depois
+- `docs/deploy/RUNBOOK_MIGRATION_SUPABASE_TO_LOCAL.md` — runbook completo (pré-requisitos, execução, verificação, rollback)
+- Validado em staging: 65 registos `access_log` + 2 `users` migrados com sucesso
+
+**INFRA-09 — Cloudflare Tunnel (chichorro.joaopmteixeira.net)**
+
+- `infra/cloudflare/config.yml` — template de configuração do tunnel (preencher `<TUNNEL-ID>` na VM)
+- `docker-compose.staging.yml` — `CHICHORRO_CORS_ORIGINS` e `APP_BASE_URL` atualizados para `https://chichorro.joaopmteixeira.net`
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção INFRA-09 com runbook de 7 passos (instalar cloudflared, autenticar, criar tunnel, configurar DNS, instalar serviço systemd)
+- `docs/plans/subplans/INFRA/INFRA-09.md` — subplan criado e marcado ✅
+- Tunnel ativo e verificado: `curl https://chichorro.joaopmteixeira.net/health/db` → `{"status":"ok"}`
+
+**INFRA-10 — pgAdmin + Adminer em staging (avaliação)**
+
+- `docker-compose.staging.yml` — serviços `pgadmin` (porta 5050) e `adminer` (porta 5051) adicionados; volume `pgadmin_data`
+- `.env.example` — variáveis `PGADMIN_EMAIL` e `PGADMIN_PASSWORD` documentadas (comentadas)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção INFRA-10 com tabela de acesso e instruções de remoção de cada ferramenta
+- `docs/deploy/GUIDE_PGADMIN.md` — guia completo: login, adicionar servidor, ver tabelas, Query Tool, backup via GUI
+- `docs/deploy/GUIDE_ADMINER.md` — guia completo: login, ver tabelas, SQL manual, export/import
+- `docs/plans/subplans/INFRA/INFRA-10.md` — subplan com checklist de remoção sem rastros para cada ferramenta
+- Estado: 🔄 Em progresso — ambas operacionais; decisão entre pgAdmin e Adminer pendente
 
 ---
 
