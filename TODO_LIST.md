@@ -89,8 +89,10 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | SEC-08 | ✅ | Remover `legacyLogin.ts` e limpar variáveis `VITE_LOGIN_*` do `.env` local (M-05) | audit-fix |
 | SEC-09 | ✅ | CSP + Permissions-Policy no backend (`add_security_headers`) e Cloudflare Pages (`_headers`) (M-01) | audit-fix |
 | SEC-10 | ✅ | Fail-fast secrets em produção — `CHICHORRO_SECRET_KEY` e outros secrets obrigatórios; sem arranque silencioso com defaults inseguros (C-04) | audit-fix |
-| SEC-11 | ❌ | Gestão de secrets — política de env vars, backup seguro, rotação (JWT, DB, Resend, Sentry) | — |
-| SEC-12 | ❌ | Proteção pgAdmin — evitar exposição pública (VPN / Tailscale / IP allowlist / Basic Auth) | — |
+| SEC-11 | ✅ | Gestão de secrets — política de env vars, backup seguro, rotação (JWT, DB, Resend, Sentry) | feat/sec11-sec12-secrets-pgadmin |
+| SEC-12 | ✅ | Proteção pgAdmin — Nginx Basic Auth em 5050/5051; pgAdmin/Adminer sem ports diretos | feat/sec11-sec12-secrets-pgadmin |
+| SEC-13 | ❌ | Hardening stack Docker — Gitleaks CI, redes internas, serviço migrate separado, suporte `*_FILE` em config.py, systemd na VM | — |
+| SEC-14 | ❌ | SOPS + age — gestão de secrets encriptados em Git (futuro; relevante quando equipa crescer ou GitOps) | — |
 
 ---
 

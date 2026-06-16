@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-15 (INFRA-10 em progresso — pgAdmin + Adminer instalados em staging, decisão pendente)
+Última atualização: 2026-06-16 (SEC-11 + SEC-12 concluídos; SEC-13 criado)
 
 ---
 
@@ -26,6 +26,18 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ SEC-12 — Proteção pgAdmin + Adminer (Basic Auth Nginx) `Prioridade Baixa` *(2026-06-16, `feat/sec11-sec12-secrets-pgadmin`)*
+
+Nginx expõe portas 5050/5051 com `auth_basic` + `/etc/nginx/.htpasswd` (gerado na VM, nunca commitado); pgAdmin e Adminer passaram de `ports:` para `expose:` — tráfego obrigatoriamente via Nginx; runbook SEC-12 em `DEPLOY_PROXMOX_DEBIAN.md`; nota de Basic Auth em `GUIDE_PGADMIN.md`.
+
+---
+
+### ✅ SEC-11 — Gestão de secrets (política documental) `Prioridade Baixa` *(2026-06-16, `feat/sec11-sec12-secrets-pgadmin`)*
+
+`docs/deploy/SECRETS_POLICY.md` com inventário completo de secrets, onde não devem existir, procedimentos de rotação por tipo (Render, Supabase, SSH, htpasswd) e recomendação de backup no Bitwarden; `ENV_VARS.md` atualizado com secção staging VM e referência à policy.
+
+---
 
 ### ✅ INFRA-09 — Cloudflare Tunnel para chichorro.joaopmteixeira.net `Prioridade Alta` *(2026-06-15, `feat/infra09-cloudflare-tunnel`)*
 
@@ -517,19 +529,26 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 
 ## Prioridade Baixa
 
-### ❌ SEC-11 — Gestão de secrets
+### ❌ SEC-13 — Hardening stack Docker
 
-Política de env vars, backup seguro de secrets e procedimento de rotação (JWT, DB passwords, Resend, Sentry).
+Melhorias práticas de segurança na stack Docker sem introduzir complexidade operacional excessiva:
+Gitleaks no CI (deteção de secrets em commits); redes internas Docker (`data` interna para PostgreSQL/Redis);
+serviço `migrate` separado no compose (isolamento de credenciais Alembic); suporte `*_FILE` em `config.py`
+(preparação para Docker Secrets); systemd para arranque automático da stack após reboot da VM.
 
-Ver [SEC-11.md](plans/subplans/SEC-11.md).
+Ver [SEC-13.md](plans/subplans/SEC/SEC-13.md).
 
 ---
 
-### ❌ SEC-12 — Proteção pgAdmin
+### ✅ SEC-11 — Gestão de secrets (concluído 2026-06-16, branch `feat/sec11-sec12-secrets-pgadmin`)
 
-Impedir acesso público ao pgAdmin: VPN, Tailscale, IP allowlist ou Basic Auth. Critério: pgAdmin não acessível anonimamente.
+`SECRETS_POLICY.md` com inventário, procedimentos de rotação e backup Bitwarden; `ENV_VARS.md` atualizado.
 
-Ver [SEC-12.md](plans/subplans/SEC-12.md).
+---
+
+### ✅ SEC-12 — Proteção pgAdmin (concluído 2026-06-16, branch `feat/sec11-sec12-secrets-pgadmin`)
+
+Nginx Basic Auth em 5050/5051; pgAdmin/Adminer sem `ports:` diretos; `.htpasswd` gerado na VM (não commitado).
 
 ---
 
@@ -616,6 +635,15 @@ Decisão documentada: manter paths atuais (`/POI/*`, `/CTI/*`, etc.) — subdoma
 ---
 
 ## Futuro
+
+### ❌ SEC-14 — SOPS + age (gestão de secrets encriptados em Git)
+
+Encriptação de secrets com SOPS + age para ambientes com múltiplos developers ou GitOps.
+Inclui: `deploy/secrets/staging.sops.yaml`, `decrypt-secrets.sh`, Docker Compose Secrets,
+role `chichorro_backup`, Gitleaks avançado. Referência: `docs/plans/main/SECRETS_MANAGEMENT_PLAN.md`.
+**Não prioritário enquanto o projeto tiver 1 developer e secrets fora do Git.**
+
+---
 
 ### ❌ FEAT-01 — Gráfico de Impacto de Intervenções
 
