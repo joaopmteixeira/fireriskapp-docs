@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-15 (INFRA-09 concluído — Cloudflare Tunnel para chichorro.joaopmteixeira.net)
+Última atualização: 2026-06-17 (DB-09 + INFRA-10 concluídos)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -72,6 +72,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | DB-06 | ✅ | Migrar camada de dados para SQLAlchemy ORM — autogenerate Alembic, connection pooling, remover psycopg2 custom wrapper | 2026-06-09 |
 | DB-07 | ✅ | Backups PostgreSQL local — script diário, restore testado, alertas em falha | feat/db07-db08-backups |
 | DB-08 | ✅ | Runbook migração Supabase → PostgreSQL local — dump, restore, validação, rollback | feat/db07-db08-backups |
+| DB-09 | ✅ | Roles de BD (admin/runtime/readonly) + política de backups diferenciada (daily/triennial/monthly) | 3.1-dev |
 
 ---
 
@@ -167,7 +168,7 @@ Todos concluídos durante a implementação do CHICHORRO 3.1.
 | INFRA-07 | ✅ | Staging Proxmox completo — Nginx reverse proxy + PostgreSQL local na VM Debian 13 | 2026-06-15 |
 | INFRA-08 | ❌ | Monitorização self-hosted — Docker logs, PostgreSQL health, disco, CPU, RAM, alertas de backup | — |
 | INFRA-09 | ✅ | Cloudflare Tunnel — expor chichorro.joaopmteixeira.net via tunnel sem abrir portas no router | feat/infra09-cloudflare-tunnel |
-| INFRA-10 | 🔄 | pgAdmin + Adminer em staging — avaliação; conclusão após remover a ferramenta não escolhida | feat/infra10-pgadmin-adminer |
+| INFRA-10 | ✅ | pgAdmin removido, Adminer mantido na porta 5050 — decisão registada em INFRA-10.md | 3.1-dev |
 
 ---
 

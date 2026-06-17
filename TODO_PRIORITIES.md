@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-16 (SEC-11 + SEC-12 concluídos; SEC-13 criado)
+Última atualização: 2026-06-17 (DB-09 + INFRA-10 concluídos)
 
 ---
 
@@ -26,6 +26,18 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ DB-09 — Roles de BD + política de backups (diário/trienal/mensal) `Prioridade Alta` *(2026-06-17, `3.1-dev`)*
+
+Migração Alembic `0004_create_db_roles.py` cria 3 roles (`chichorro_admin`, `chichorro_runtime`, `chichorro_readonly`) com `IF NOT EXISTS` e `ALTER DEFAULT PRIVILEGES`; `backup.sh` refatorado com política diferenciada (daily 7d, triennial 30d, monthly permanente); 3 cron entries no docker-compose.staging.yml; subplan `DB-09.md`.
+
+---
+
+### ✅ INFRA-10 — pgAdmin removido, Adminer em staging `Prioridade Média` *(2026-06-17, `3.1-dev`)*
+
+Após avaliação, pgAdmin removido (serviço, volume, nginx, GUIDE_PGADMIN.md); Adminer mantido e movido para porta 5050; `servers.json` e pgpass removidos; INFRA-10.md fechado com decisão registada.
+
+---
 
 ### ✅ SEC-12 — Proteção pgAdmin + Adminer (Basic Auth Nginx) `Prioridade Baixa` *(2026-06-16, `feat/sec11-sec12-secrets-pgadmin`)*
 
@@ -227,10 +239,7 @@ Modal sessão expirada; merge `feat/access-log`; PostgreSQL Neon; e2e completo a
 
 ## Em Progresso
 
-### 🔄 INFRA-10 — pgAdmin + Adminer em staging `Prioridade Média` *(2026-06-15, `feat/infra10-pgadmin-adminer`)*
-
-Ambas as ferramentas instaladas e operacionais (`http://192.168.0.7:5050` e `:5051`).
-Pendente: avaliar pgAdmin vs Adminer e remover a não escolhida sem rastros (checklist em `INFRA-10.md`).
+*(nenhuma tarefa em curso)*
 
 ---
 

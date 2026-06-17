@@ -645,3 +645,22 @@ Razao: adicionar encriptacao de secrets em Git so faz sentido com multiplos deve
 
 Decisao `sec14-subplan-de-chatgpt`: plano SOPS+age (originalmente `docs/plans/main/SECRETS_MANAGEMENT_PLAN.md`, elaborado com ChatGPT) convertido em subplan SEC-14 e ficheiro original removido (era untracked).
 Razao: o conteudo e valido como referencia futura mas nao e uma tarefa ativa; subplan SEC-14 e o lugar correto para backlog com plano detalhado.
+
+---
+
+## 2026-06-17 — DB-09 · INFRA-10 · SEC-13 (pgAdmin servers.json)
+
+Decisao `infra10-adminer-over-pgadmin`: Adminer escolhido como ferramenta de administracao de BD em detrimento do pgAdmin; pgAdmin removido sem rastros (servico, volume, nginx, GUIDE_PGADMIN.md).
+Razao: utilizador avaliou ambas as ferramentas em staging e concluiu que o pgAdmin e demasiado complexo para o caso de uso do projeto (consultas pontuais, inserts, ver tabelas); Adminer cobre tudo com UI mais simples, sem estado persistente, e sem configuracao adicional.
+
+Decisao `infra10-adminer-port-5050`: Adminer movido da porta 5051 para a porta 5050 apos remocao do pgAdmin.
+Razao: a porta 5050 estava previamente atribuida ao pgAdmin; reutiliza-la para o Adminer mantem consistencia com o modelo mental do utilizador e com a documentacao existente.
+
+Decisao `db09-pgpassword-over-pgpass`: tentativa de usar ficheiro `pgpass` para pre-autenticar pgAdmin falhou; substituido por variavel de ambiente `PGPASSWORD` no servico pgAdmin.
+Razao: o pgAdmin corre como uid 5050 dentro do container e ignora ficheiros `pgpass` com permissoes incorretas do host; `PGPASSWORD` como env var e mais simples e fiavel (decisao relevante para contextos futuros com outras ferramentas PostgreSQL).
+
+Decisao `db09-three-roles-if-not-exists`: roles de BD criados via migration Alembic `0004_create_db_roles.py` com bloco `DO $$` e `IF NOT EXISTS` para cada role.
+Razao: garantir idempotencia — a migration pode ser re-executada sem erro se os roles ja existirem; compativel com upgrades e re-deploys em staging.
+
+Decisao `db09-backup-tiered-triennial-monthly`: politica de backups diferenciada com 3 niveis (daily 7d, triennial 30d, monthly permanente) em vez de backup unico diario.
+Razao: backup diario com retencao de 7 dias nao cobre o periodo de 3 semanas entre sessoes de trabalho; triennial (a cada 3 dias) garante 30 dias de historico; mensal permanente cobre auditorias e requisitos de dissertacao.

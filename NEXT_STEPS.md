@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-16 (SEC-11/12 concluídos — política de secrets + Basic Auth pgAdmin/Adminer)
+Última atualização: 2026-06-17 (DB-09 + INFRA-10 concluídos — roles BD + política backups + Adminer em 5050)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -35,10 +35,32 @@
 | Migração Supabase → local (DB-08) | ✅ Completo — `scripts/migrate_supabase_to_local.sh`; runbook operacional; validado em staging |
 | Cloudflare Tunnel (INFRA-09) | ✅ Completo — `chichorro.joaopmteixeira.net` acessível via HTTPS; `cloudflared` systemd na VM |
 | Política de secrets (SEC-11) | ✅ Completo — `docs/deploy/SECRETS_POLICY.md`; inventário + rotação + backup Bitwarden |
-| Basic Auth pgAdmin/Adminer (SEC-12) | ✅ Completo — Nginx Basic Auth portas 5050/5051; `./infra/nginx/.htpasswd` gitignored; validado em staging |
+| Basic Auth Adminer (SEC-12) | ✅ Completo — Nginx Basic Auth porta 5050; `./infra/nginx/.htpasswd` gitignored; validado em staging |
+| Roles BD + backups diferenciados (DB-09) | ✅ Completo — 3 roles Alembic; backup daily/triennial/monthly; validado em staging |
+| pgAdmin removido, Adminer em 5050 (INFRA-10) | ✅ Completo — pgAdmin sem rastros; Adminer porta 5050 Basic Auth ✅ |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-17)
+
+### ✅ DB-09 — Roles de BD + política de backups diferenciada (`3.1-dev`)
+
+- `app/backend/alembic/versions/0004_create_db_roles.py` — 3 roles: `chichorro_admin` (ALL), `chichorro_runtime` (DML), `chichorro_readonly` (SELECT); `DO $$ IF NOT EXISTS`; `ALTER DEFAULT PRIVILEGES`
+- `infra/backup/backup.sh` — argumento `$1` (daily/triennial/monthly); retenções 7/10/permanente
+- `docker-compose.staging.yml` — 3 entradas cron para backup diferenciado
+- `.env.example` — `DB_ADMIN/RUNTIME/READONLY_PASSWORD` documentadas
+- Validado em staging: 3 roles visíveis no Adminer ✅
+
+### ✅ INFRA-10 — pgAdmin removido, Adminer em porta 5050 (`3.1-dev`)
+
+- `docker-compose.staging.yml` — serviço `pgadmin` e volume `pgadmin_data` removidos
+- `infra/nginx/nginx.conf` — bloco pgAdmin (5050) removido; Adminer passa de 5051 para 5050
+- `docs/deploy/GUIDE_PGADMIN.md` + `infra/pgadmin/` — eliminados sem rastros
+- `.env.example` — `PGADMIN_EMAIL/PASSWORD` removidas
+- Validado em staging: Adminer em `:5050` com Basic Auth ✅
 
 ---
 
@@ -56,7 +78,6 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 - `docker-compose.staging.yml` — nginx expõe portas 5050/5051; monta `./infra/nginx/.htpasswd:ro`; pgAdmin e Adminer passaram de `ports:` para `expose:` (tráfego só via Nginx)
 - `.gitignore` — `infra/nginx/.htpasswd` adicionado
 - `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção SEC-12 com runbook: instalar apache2-utils, criar htpasswd em `/opt/chichorro/infra/nginx/`, verificar e rodar
-- `docs/deploy/GUIDE_PGADMIN.md` — nota de Basic Auth no início; fix MD040
 - Validado em staging: `curl -I :5050` → 401, `curl -u admin:<pass> :5050` → HTML pgAdmin ✅
 - `docs/plans/subplans/SEC/SEC-12.md` — marcado ✅
 

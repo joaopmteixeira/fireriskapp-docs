@@ -4,6 +4,29 @@
 
 ## [Unreleased]
 
+### 2026-06-17 — DB-09 · INFRA-10
+
+**DB-09 — Roles de BD + política de backups diferenciada**
+
+- `app/backend/alembic/versions/0004_create_db_roles.py` — migration com 3 roles: `chichorro_admin` (ALL PRIVILEGES), `chichorro_runtime` (DML + sequences), `chichorro_readonly` (SELECT); `DO $$ IF NOT EXISTS` para idempotência; `ALTER DEFAULT PRIVILEGES` para tabelas futuras; downgrade revoga e elimina roles
+- `infra/backup/backup.sh` — refatorado com argumento `$1` (daily/triennial/monthly); daily: prefixo `chichorro_daily_`, retenção 7; triennial: prefixo `chichorro_3d_`, retenção 10 (30d); monthly: diretório `/backups/monthly/`, retenção permanente
+- `docker-compose.staging.yml` — 3 entradas cron (daily 02:00, triennial */3 02:00, monthly 1st 02:00); backup healthcheck mantido
+- `.env.example` — vars `DB_ADMIN_PASSWORD`, `DB_RUNTIME_PASSWORD`, `DB_READONLY_PASSWORD` documentadas (comentadas)
+- `docs/plans/subplans/DB/DB-09.md` — subplan criado e marcado ✅
+- Validado em staging: 3 roles visíveis no Adminer ✅
+
+**INFRA-10 — pgAdmin removido, Adminer mantido em porta 5050**
+
+- `docker-compose.staging.yml` — serviço `pgadmin` e volume `pgadmin_data` removidos; Adminer mantido em `expose: 8080`
+- `infra/nginx/nginx.conf` — bloco `server listen 5050 → pgAdmin` removido; Adminer passa de porta 5051 para porta 5050
+- `.env.example` — vars `PGADMIN_EMAIL` e `PGADMIN_PASSWORD` removidas
+- `docs/deploy/GUIDE_PGADMIN.md` — ficheiro eliminado
+- `infra/pgadmin/servers.json` + `infra/pgadmin/pgpass` — eliminados
+- `docs/plans/subplans/INFRA/INFRA-10.md` — marcado ✅; decisão registada: Adminer escolhido, pgAdmin removido sem rastros
+- Validado em staging: `http://192.168.0.7:5050` → Adminer com Basic Auth ✅
+
+---
+
 ### 2026-06-16 — SEC-11 · SEC-12
 
 **SEC-11 — Política de gestão de secrets**
