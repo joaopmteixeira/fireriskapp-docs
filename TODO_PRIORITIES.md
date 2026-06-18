@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-18 (SEC-13 concluído)
+Última atualização: 2026-06-18 (SEC-13 + INFRA-08 concluídos)
 
 ---
 
@@ -26,6 +26,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ INFRA-08 — Monitorização self-hosted `Prioridade Média` *(2026-06-18, `feat/infra08-monitoring`)*
+
+3 scripts bash em `infra/monitoring/` com cron e alertas por email (Resend API): `health_check.sh` (a cada 5 min), `disk_check.sh` (horário), `backup_check.sh` (02:30 UTC). Configuração em `/etc/chichorro-monitoring.env` na VM (chmod 600, nunca commitado). Validado na VM staging.
+
+---
 
 ### ✅ SEC-13 — Hardening stack Docker `Prioridade Alta` *(2026-06-18, `feat/sec13-docker-hardening`)*
 
@@ -564,14 +570,6 @@ Ver [SEC-13.md](plans/subplans/SEC/SEC-13.md).
 ### ✅ SEC-12 — Proteção pgAdmin (concluído 2026-06-16, branch `feat/sec11-sec12-secrets-pgadmin`)
 
 Nginx Basic Auth em 5050/5051; pgAdmin/Adminer sem `ports:` diretos; `.htpasswd` gerado na VM (não commitado).
-
----
-
-### ❌ INFRA-08 — Monitorização self-hosted
-
-Stack de observabilidade para a VM Proxmox: Docker logs, PostgreSQL health, espaço em disco, CPU, RAM, estado de backups. Deteção precoce de falhas.
-
-Ver [INFRA-08.md](plans/subplans/INFRA-08.md).
 
 ---
 
