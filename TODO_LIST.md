@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-17 (DB-09 + INFRA-10 concluídos)
+Última atualização: 2026-06-18 (SEC-13 concluído)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -92,7 +92,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | SEC-10 | ✅ | Fail-fast secrets em produção — `CHICHORRO_SECRET_KEY` e outros secrets obrigatórios; sem arranque silencioso com defaults inseguros (C-04) | audit-fix |
 | SEC-11 | ✅ | Gestão de secrets — política de env vars, backup seguro, rotação (JWT, DB, Resend, Sentry) | feat/sec11-sec12-secrets-pgadmin |
 | SEC-12 | ✅ | Proteção pgAdmin — Nginx Basic Auth em 5050/5051; pgAdmin/Adminer sem ports diretos | feat/sec11-sec12-secrets-pgadmin |
-| SEC-13 | ❌ | Hardening stack Docker — Gitleaks CI, redes internas, serviço migrate separado, suporte `*_FILE` em config.py, systemd na VM | — |
+| SEC-13 | ✅ | Hardening stack Docker — Gitleaks CI, redes internas, serviço migrate separado, suporte `*_FILE` em config.py, systemd na VM | feat/sec13-docker-hardening |
 | SEC-14 | ❌ | SOPS + age — gestão de secrets encriptados em Git (futuro; relevante quando equipa crescer ou GitOps) | — |
 
 ---

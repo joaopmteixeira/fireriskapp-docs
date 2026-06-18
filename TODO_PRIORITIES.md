@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-17 (DB-09 + INFRA-10 concluídos)
+Última atualização: 2026-06-18 (SEC-13 concluído)
 
 ---
 
@@ -26,6 +26,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ SEC-13 — Hardening stack Docker `Prioridade Alta` *(2026-06-18, `feat/sec13-docker-hardening`)*
+
+Gitleaks CI (`secrets-scan` job antes de `test`); padrão `*_FILE` em `config.py` via `model_validator`; testes `test_config.py`; redes Docker internas (`edge`/`data` com `internal: true`); serviço `migrate` isolado (alembic separado do `app`); `deploy/systemd/chichorro.service` para autostart após reboot; docs `ENV_VARS.md`, `SECRETS_POLICY.md`, `DEPLOY_PROXMOX_DEBIAN.md` atualizados. Validado na VM staging.
+
+---
 
 ### ✅ DB-09 — Roles de BD + política de backups (diário/trienal/mensal) `Prioridade Alta` *(2026-06-17, `3.1-dev`)*
 
