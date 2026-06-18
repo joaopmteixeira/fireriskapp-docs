@@ -4,6 +4,31 @@
 
 ## [Unreleased]
 
+### 2026-06-18 — SEC-13 · INFRA-08
+
+**SEC-13 — Hardening stack Docker**
+
+- `.github/workflows/test.yml` — job `secrets-scan` com Gitleaks antes do job `test`; bloqueia commits com secrets no histórico
+- `app/backend/config.py` — `model_validator(mode="before")` resolve `*_FILE` env vars antes da validação Pydantic; suporta `DATABASE_URL_FILE`, `CHICHORRO_SECRET_KEY_FILE`, `RESEND_API_KEY_FILE`, `DATABASE_URL_MIGRATIONS_FILE`
+- `app/backend/tests/test_config.py` — 5 casos: plain value, `_FILE` funciona, `_FILE` inexistente → `FileNotFoundError`, campo None sem nenhum dos dois, `CHICHORRO_SECRET_KEY_FILE` funciona
+- `docker-compose.staging.yml` — redes Docker internas: `edge` (bridge) + `data` (internal); PostgreSQL e backup isolados em `data`; serviço `migrate` separado (`alembic upgrade head`, `restart: "no"`); `DATABASE_URL_MIGRATIONS` removido do serviço `app`; `DATABASE_URL` adicionado ao serviço `migrate`
+- `deploy/systemd/chichorro.service` — unit systemd para autostart: `docker compose up -d --remove-orphans` no boot; `Type=oneshot RemainAfterExit=yes`
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção SEC-13 com runbook systemd + redes Docker; secção SSH via Cloudflare Tunnel removida (revertida — TLS incompatível com Free plan em third-level subdomains)
+- `infra/cloudflare/config.yml` — linha SSH ingress removida (revert); config reduzida a HTTP + catch-all 404
+- Validado em staging: `docker compose up -d` com redes; `migrate` corre e termina; systemd ativo ✅
+
+**INFRA-08 — Scripts de monitorização self-hosted**
+
+- `infra/monitoring/health_check.sh` — curl a `/health/db`; alerta por email se != 200 ou timeout; cron `*/5 * * * *`
+- `infra/monitoring/disk_check.sh` — verifica uso de `/`; alerta se >= 80%; cron `0 * * * *`
+- `infra/monitoring/backup_check.sh` — inspeciona volume do contentor `backup` via `docker exec -T`; alerta se dump mais recente > 26h ou inexistente; cron `30 2 * * *`
+- Configuração na VM: `/etc/chichorro-monitoring.env` (chmod 600, owner `deploy`, nunca commitado)
+- `docs/deploy/DEPLOY_PROXMOX_DEBIAN.md` — secção INFRA-08 com runbook completo de instalação, crontab entries e verificação manual
+- `docs/plans/subplans/INFRA/INFRA-08.md` — estado ✅ Concluído com 5 secções canónicas
+- Validado em staging: 3 alertas confirmados (health falhou → email ✅; disco e backup silenciosos ✅); crontab com 3 entradas ✅
+
+---
+
 ### 2026-06-17 — DB-09 · INFRA-10
 
 **DB-09 — Roles de BD + política de backups diferenciada**

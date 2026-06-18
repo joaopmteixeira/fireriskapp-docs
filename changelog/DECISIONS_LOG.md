@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-06-18 — SEC-13 · INFRA-08
+
+Decisao `sec13-ssh-cloudflare-tunnel-revertido`: SSH via Cloudflare Tunnel tentado e revertido — removido do scope SEC-13.
+Razao: Cloudflare Free plan nao emite certificados TLS para third-level subdomains (`ssh.chichorro.joaopmteixeira.net`); TLS handshake falha mesmo com Access Application configurada; OTP por email adiciona fricao sem melhorar workflow real; VPN local e suficiente para acesso SSH a VM.
+
+Decisao `infra08-docker-exec-backup-check`: `backup_check.sh` usa `docker compose exec -T backup` para inspecionar o volume de backups em vez de aceder ao path do host.
+Razao: o path do host onde o volume Docker esta montado nao e deterministico (depende do Docker daemon e configuracao); aceder via `docker exec` e robusto e independente do sistema de ficheiros do host.
+
+Decisao `infra08-dot-over-source-sh`: scripts de monitorizacao usam `. /etc/chichorro-monitoring.env` (dot) em vez de `source`.
+Razao: `source` e um builtin bash e nao existe em `/bin/sh` POSIX; os scripts usam `#!/bin/sh` para maxima portabilidade; `source: not found` foi o erro real na VM (Debian com dash como sh).
+
+Decisao `infra08-monitoring-env-owner-deploy`: `/etc/chichorro-monitoring.env` com `chown deploy:deploy` em vez de `root:root`.
+Razao: os scripts de monitorizacao correm no crontab do utilizador `deploy`; se o ficheiro e owned por root com chmod 600, o utilizador `deploy` nao consegue le-lo e o script falha silenciosamente.
+
+---
+
 ## 2026-06-01 — AI-01 · Graphify setup · AI tooling strategy
 
 Decisão `graphify-local-only-artifacts`: artefactos do Graphify (`graph.html`, `graph.json`, `GRAPH_REPORT.md`, `.graphify/`, `graphify-out/`) e `docs/vault/` adicionados ao `.gitignore` como local-only.

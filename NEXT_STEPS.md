@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-17 (DB-09 + INFRA-10 concluídos — roles BD + política backups + Adminer em 5050)
+Última atualização: 2026-06-18 (SEC-13 + INFRA-08 concluídos — hardening Docker + scripts de monitorização)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -13,7 +13,7 @@
 | --- | --- |
 | Modelo CHICHORRO 3.1 | ✅ Completo (11/11 paridade backend, e2e aprovado) |
 | Autenticação e sessões | ✅ Completo (AUTH-01..09c, AUTH-10, AUTH-11, AUTH-12, AUTH-13) |
-| Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/05d/06 ✅) |
+| Hardening de segurança | ✅ Completo (audit-fix 16/16 ✅; SEC-04/05/07 ✅; BACK-05/05d/06 ✅; SEC-13 ✅) |
 | Auditoria segurança/UX | ✅ Completo (S-01..02, U-01..04) |
 | Perfil de utilizador | ✅ Completo (AUTH-09, AUTH-09a, AUTH-09b, AUTH-09c, AUTH-09d — avatar WebP 128 px, limite 100 KB) |
 | Preferências / Definições | ✅ Completo (UI-06: dark mode, avisar-antes-de-sair, casas decimais) |
@@ -38,9 +38,32 @@
 | Basic Auth Adminer (SEC-12) | ✅ Completo — Nginx Basic Auth porta 5050; `./infra/nginx/.htpasswd` gitignored; validado em staging |
 | Roles BD + backups diferenciados (DB-09) | ✅ Completo — 3 roles Alembic; backup daily/triennial/monthly; validado em staging |
 | pgAdmin removido, Adminer em 5050 (INFRA-10) | ✅ Completo — pgAdmin sem rastros; Adminer porta 5050 Basic Auth ✅ |
+| Docker hardening (SEC-13) | ✅ Completo — Gitleaks CI, `*_FILE` secrets, serviço `migrate`, redes internas, systemd |
+| Monitorização self-hosted (INFRA-08) | ✅ Completo — 3 scripts bash + cron + alertas Resend (health, disco, backup) |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-06-18)
+
+### ✅ SEC-13 — Hardening stack Docker (`feat/sec13-docker-hardening`)
+
+- `.github/workflows/test.yml` — Gitleaks CI antes do job `test`
+- `app/backend/config.py` — `model_validator` resolve `*_FILE` env vars; `test_config.py` com 5 casos
+- `docker-compose.staging.yml` — redes `edge`/`data` internas; serviço `migrate` separado
+- `deploy/systemd/chichorro.service` — autostart Docker no boot via systemd
+- SSH via Cloudflare Tunnel revertido (TLS incompatível com Free plan em third-level subdomains)
+- Validado em staging: stack com redes isoladas ✅; migrate corre e termina ✅; systemd ativo ✅
+
+### ✅ INFRA-08 — Monitorização self-hosted (`feat/infra08-monitoring`)
+
+- `infra/monitoring/health_check.sh` — alerta se `/health/db` != 200; cron `*/5 * * * *`
+- `infra/monitoring/disk_check.sh` — alerta se disco >= 80%; cron `0 * * * *`
+- `infra/monitoring/backup_check.sh` — alerta se dump > 26h via `docker exec -T`; cron `30 2 * * *`
+- `/etc/chichorro-monitoring.env` na VM (chmod 600, owner `deploy`, nunca commitado)
+- Validado em staging: 3 alertas testados ✅; crontab com 3 entradas ✅
 
 ---
 
