@@ -56,7 +56,7 @@
 | DB-03 | — | Estratégia de backups — scripts, GitHub Actions, restore | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-03.md) | 2026-05-22 |
 | DB-04 | — | Migrations Alembic — versioning de schema, rollback | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-04.md) | 2026-05-22 |
 | DB-05 | — | Least privilege DB — chichorro_runtime, DATABASE_URL_MIGRATIONS | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-05.md) | 2026-05-24 |
-| DB-06 | — | SQLAlchemy ORM — autogenerate Alembic, connection pooling | ✅ Concluído | ❌ Não | 2026-06-09 |
+| DB-06 | — | SQLAlchemy ORM — autogenerate Alembic, connection pooling | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-06.md) | 2026-06-09 |
 | DB-07 | — | Backups PostgreSQL local — cron diário, restore testado | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-07.md) | 2026-06-15 |
 | DB-08 | — | Runbook migração Supabase → PostgreSQL local | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-08.md) | 2026-06-15 |
 | DB-09 | — | Roles BD (admin/runtime/readonly) + backups diferenciados | ✅ Concluído | [✅ Sim](plans/subplans/DB/DB-09.md) | 2026-06-17 |

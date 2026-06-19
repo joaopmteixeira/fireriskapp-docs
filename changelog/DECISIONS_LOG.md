@@ -680,3 +680,19 @@ Razao: garantir idempotencia — a migration pode ser re-executada sem erro se o
 
 Decisao `db09-backup-tiered-triennial-monthly`: politica de backups diferenciada com 3 niveis (daily 7d, triennial 30d, monthly permanente) em vez de backup unico diario.
 Razao: backup diario com retencao de 7 dias nao cobre o periodo de 3 semanas entre sessoes de trabalho; triennial (a cada 3 dias) garante 30 dias de historico; mensal permanente cobre auditorias e requisitos de dissertacao.
+
+---
+
+## 2026-06-19 — Docs · Dev Local
+
+Decisao `undone-suffix-pending-subplans`: subplans de tarefas ainda nao implementadas renomeados de `<ID>.md` para `<ID>_UNDONE.md`.
+Razao: sinalizar visualmente que o plano existe mas a implementacao nao comecou; evita confundir ficheiros de planeamento com implementacoes concluidas; ficheiros historicos (CHANGELOG, HISTORY_AI) ficam intactos — so links operacionais atualizados.
+
+Decisao `project-status-md-central-table`: criado `docs/PROJECT_STATUS.md` gerado pelo `/plans-missing` como tabela central de todos os IDs do projeto.
+Razao: nenhum documento existente agregava todos os 97 IDs com estado, FIR lookup e link para subplan numa unica vista; PROJECT_STATUS.md preenche essa lacuna sem duplicar os TODOs.
+
+Decisao `seed-dev-admin-admin`: utilizador de desenvolvimento `admin`/`admin` (role=admin, email=admin@dev.local) criado via `seed_dev.py` idempotente.
+Razao: em dev local a BD SQLite esta sempre vazia no primeiro arranque; ter um utilizador pre-criado elimina o passo manual de registo e verificacao de email (que requer Resend em producao).
+
+Decisao `dev-ps1-one-command-startup`: script `dev.ps1` criado para arranque com um comando (seed + backend + frontend + browser).
+Razao: passos manuais repetitivos (3 terminais, ordem correta, seed) sao fonte de erro e fricao; o script encapsula tudo e serve de referencia para novos developers.
