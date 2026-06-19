@@ -336,19 +336,15 @@ Render força HTTPS no reverse proxy; `CHICHORRO_SESSION_SECURE=1` ativo; HSTS v
 
 ---
 
-### ❌ DB-07 — Backups PostgreSQL local
+### ✅ DB-07 — Backups PostgreSQL local (concluído 2026-06-15, branch `feat/db07-db08-backups`)
 
 Script de backup diário do PostgreSQL local na VM Proxmox, restore testado e alertas em caso de falha.
 
-Ver [DB-07.md](plans/subplans/DB-07.md).
-
 ---
 
-### ❌ DB-08 — Runbook migração Supabase → PostgreSQL local
+### ✅ DB-08 — Runbook migração Supabase → PostgreSQL local (concluído 2026-06-15, branch `feat/db07-db08-backups`)
 
 Procedimento completo: dump Supabase, restore PostgreSQL local, validação, rollback. Prerequisito para abandonar Supabase em produção.
-
-Ver [DB-08.md](plans/subplans/DB-08.md).
 
 ---
 
@@ -357,6 +353,13 @@ Ver [DB-08.md](plans/subplans/DB-08.md).
 Suite mínima de testes pós-deploy: `/health`, `/health/db`, login, logout, sessão, CSRF, frontend build. Gate de qualidade para cada deploy.
 
 Ver [TEST-04_UNDONE.md](plans/subplans/TEST/TEST-04_UNDONE.md).
+
+---
+
+### ❌ CALC-AUDIT — Golden tests do código de cálculo
+
+~280 testes automatizados a validar o motor CHICHORRO (POI/CTI/DPI/ESCI/RI) contra os valores da tese3.1.
+**Bloqueado** até os ficheiros Excel da tese3.1 estarem disponíveis.
 
 ---
 

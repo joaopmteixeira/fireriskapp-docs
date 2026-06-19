@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-06-18 (SEC-13 + INFRA-08 concluídos)
+Última atualização: 2026-06-19 (UI-11 + UI-12 adicionados; REL-01/UI-07 corrigidos; ordem AUTH/UI corrigida)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -32,7 +32,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
 | ID | Estado | Descrição | Branch |
 | --- | --- | --- | --- |
-| REL-01 | ❌ | Release baseline v3.1.0 — tag git, release notes, snapshot estável pré-infra | — |
+| REL-01 | ✅ | Release baseline v3.1.0 — tag git, release notes, snapshot estável pré-infra | 3.1-dev |
 
 ---
 
@@ -54,9 +54,9 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | AUTH-09c | ✅ | ProfilePage redesign card compacto — 4 rows expansíveis inline (username, e-mail, password, apagar conta); sem modal separado | 3.1-dev |
 | AUTH-09d | ✅ | Otimização do avatar: WebP, 128 px, limite 100 KB — reduz armazenamento na BD ~80% | 3.1-dev |
 | AUTH-10 | ✅ | Sistema de roles/permissões: coluna `role`, `require_admin`, admin UI — viewer/demo diferidos | auth/roles → 3.1-dev |
-| AUTH-13 | ✅ | Hardening sessão: max_age configurável, Secure flag obrigatória em prod, CSRF protection | 3.1-dev |
 | AUTH-11 | ✅ | Validar modal sessão expirada em produção (apagar cookie) | feat/access-log |
 | AUTH-12 | ✅ | Merge `feat/access-log` → `3.1-dev` | 3.1-dev |
+| AUTH-13 | ✅ | Hardening sessão: max_age configurável, Secure flag obrigatória em prod, CSRF protection | 3.1-dev |
 
 ---
 
@@ -105,11 +105,13 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | UI-03 | ❌ | Página de Ajuda integrada na app | — |
 | UI-04 | ❌ | FAQs — Perguntas Frequentes | — |
 | UI-05 | ❌ | Bug Report — formulário de reporte (destino: e-mail/GitHub/ClickUp) | — |
+| UI-06 | ✅ | Preferências / Definições do utilizador — dark mode (sistema/claro/escuro), avisar antes de sair, casas decimais | 3.1-dev |
+| UI-07 | ✅ | Dark Mode — tema escuro em todas as páginas (sidebar, cards, auth, RiPage, CtiPage, InterventionsPage) | 3.1-dev |
 | UI-08 | ❌ | Ícones ℹ️ nos subfatores — painel com descrição detalhada, tabela de valores e referência RT-SCIE | — |
 | UI-09 | ❌ | Badge de lápis persistente no avatar — sempre visível (mobile-friendly), substitui overlay câmara hover-only | 3.1-dev |
 | UI-10 | ❌ | Sidebar direita persistente — resumo da sessão atual e valores introduzidos nos subfatores (POI/CTI/DPI/ESCI) visíveis durante o cálculo | — |
-| UI-06 | ✅ | Preferências / Definições do utilizador — dark mode (sistema/claro/escuro), avisar antes de sair, casas decimais | 3.1-dev |
-| UI-07 | ❌ | Dark Mode — redesign e validação pendentes; implementação inicial de 2026-05-18 carece de revisão completa de todas as vistas | 3.1-dev |
+| UI-11 | ❌ | Formulário de suporte técnico na LoginPage — modal público, tabela `support_requests`, endpoint `POST /support/request`, emails Resend | 3.1-dev |
+| UI-12 | ❌ | Modal "Sobre" na LoginPage — ícone ℹ️, descrição legal CHICHORRO (DL 220/2008 + DL 95/2019), contacto | 3.1-dev |
 
 ---
 
