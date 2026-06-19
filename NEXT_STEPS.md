@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-18 (SEC-13 + INFRA-08 concluídos — hardening Docker + scripts de monitorização)
+Última atualização: 2026-06-19 (UI-11 + UI-12 planeados — FIR-52/53)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -40,6 +40,8 @@
 | pgAdmin removido, Adminer em 5050 (INFRA-10) | ✅ Completo — pgAdmin sem rastros; Adminer porta 5050 Basic Auth ✅ |
 | Docker hardening (SEC-13) | ✅ Completo — Gitleaks CI, `*_FILE` secrets, serviço `migrate`, redes internas, systemd |
 | Monitorização self-hosted (INFRA-08) | ✅ Completo — 3 scripts bash + cron + alertas Resend (health, disco, backup) |
+| Suporte técnico LoginPage (UI-11) | ❌ Planeado — FIR-52; subplan UI-11.md criado |
+| Modal "Sobre" LoginPage (UI-12) | ❌ Planeado — FIR-53; subplan UI-12.md criado |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
@@ -730,6 +732,23 @@ Todas as páginas cobertas: sidebar, POI/DPI/ESCI cards, ProfilePage, SettingsPa
 
 ## Pendente — Prioridade Média
 
+### UI-11 — Formulário de suporte técnico na LoginPage [FIR-52]
+
+Botão discreto na LoginPage que abre modal público com campos: nome, email, telemóvel (opcional),
+assunto (select), mensagem. Backend: nova tabela `support_requests`, endpoint `POST /support/request`
+(público, rate limit 3/h), emails Resend (admin + confirmação utilizador).
+Ver [UI-11_UNDONE.md](plans/subplans/UI/UI-11_UNDONE.md).
+
+---
+
+### UI-12 — Modal "Sobre" na LoginPage [FIR-53]
+
+Ícone ℹ️ que abre janela flutuante com nome oficial, descrição legal do modelo CHICHORRO
+(DL 220/2008 + DL 95/2019) e contacto. Apenas frontend.
+Ver [UI-12_UNDONE.md](plans/subplans/UI/UI-12_UNDONE.md).
+
+---
+
 ### UI-02 — Página de Documentação
 
 Página de DOCS integrada na app com documentação e manuais de utilização.
@@ -771,7 +790,7 @@ Substituir por um badge circular persistente com ícone de lápis (`mdiPencil`) 
 inferior-direito, sempre visível, seguindo o padrão Gmail/LinkedIn.
 
 Ficheiro: `app/frontend/src/pages/ProfilePage.tsx`.
-Ver plano detalhado em [UI-09.md](plans/subplans/UI-09.md).
+Ver plano detalhado em [UI-09_UNDONE.md](plans/subplans/UI/UI-09_UNDONE.md).
 
 ---
 

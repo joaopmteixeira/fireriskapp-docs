@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-18 (SEC-13 + INFRA-08 concluídos)
+Última atualização: 2026-06-19 (UI-11 + UI-12 planeados — FIR-52/53)
 
 ---
 
@@ -356,7 +356,24 @@ Ver [DB-08.md](plans/subplans/DB-08.md).
 
 Suite mínima de testes pós-deploy: `/health`, `/health/db`, login, logout, sessão, CSRF, frontend build. Gate de qualidade para cada deploy.
 
-Ver [TEST-04.md](plans/subplans/TEST-04.md).
+Ver [TEST-04_UNDONE.md](plans/subplans/TEST/TEST-04_UNDONE.md).
+
+---
+
+### ❌ UI-11 — Formulário de suporte técnico na LoginPage [FIR-52]
+
+Botão discreto "Problemas de acesso? Contactar suporte" na LoginPage que abre um modal público.
+Campos: nome, email, telemóvel (opcional), assunto (select), mensagem. Backend: nova tabela
+`support_requests`, endpoint `POST /support/request` (público, rate limit 3/h), emails Resend
+(notificação admin + confirmação utilizador). Ver [UI-11_UNDONE.md](plans/subplans/UI/UI-11_UNDONE.md).
+
+---
+
+### ❌ UI-12 — Modal "Sobre" na LoginPage [FIR-53]
+
+Ícone ℹ️ que abre janela flutuante com nome oficial, descrição legal do modelo CHICHORRO
+(DL 220/2008 + DL 95/2019) e contacto. Apenas frontend, sem backend.
+Ver [UI-12_UNDONE.md](plans/subplans/UI/UI-12_UNDONE.md).
 
 ---
 
@@ -394,7 +411,7 @@ Formulário de reporte de bugs na app; canal de destino a definir (email, GitHub
 
 O ícone de câmara no avatar é apenas visível no hover (`opacity-0 group-hover:opacity-100`) — invisível em mobile. Substituir por um badge circular persistente com `mdiPencil` no canto inferior-direito, sempre visível, seguindo o padrão Gmail/LinkedIn.
 
-Ver [UI-09.md](plans/subplans/UI-09.md).
+Ver [UI-09_UNDONE.md](plans/subplans/UI/UI-09_UNDONE.md).
 
 ---
 
@@ -550,14 +567,9 @@ Deploy com gunicorn + uvicorn workers no Render; `wsgi.py` com `--proxy-headers`
 
 ## Prioridade Baixa
 
-### ❌ SEC-13 — Hardening stack Docker
+### ✅ SEC-13 — Hardening stack Docker (concluído 2026-06-18, branch `feat/sec13-docker-hardening`)
 
-Melhorias práticas de segurança na stack Docker sem introduzir complexidade operacional excessiva:
-Gitleaks no CI (deteção de secrets em commits); redes internas Docker (`data` interna para PostgreSQL/Redis);
-serviço `migrate` separado no compose (isolamento de credenciais Alembic); suporte `*_FILE` em `config.py`
-(preparação para Docker Secrets); systemd para arranque automático da stack após reboot da VM.
-
-Ver [SEC-13.md](plans/subplans/SEC/SEC-13.md).
+Gitleaks CI; `*_FILE` env vars em `config.py`; redes Docker internas `edge`/`data`; serviço `migrate` separado; `deploy/systemd/chichorro.service` para autostart. Validado em staging.
 
 ---
 
@@ -589,7 +601,7 @@ Graphify instalado; CLAUDE.md com regras de refresh; 3 grafos: backend (367 nós
 
 Trabalho manual residual do [AI-02](plans/subplans/AI-02.md): (1) preencher `## Definicao` nas 27 notas de subfator; (2) validar entradas "verificar" em `## Onde e mencionado` (confirmar Sim/Não e correr `map_sources.py` para limpar); (3) abrir vault no Obsidian e verificar Graph View e cores por tipo de nó.
 
-Ver [AI-02a.md](plans/subplans/AI-02a.md).
+Ver [AI-02a_UNDONE.md](plans/subplans/AI/AI-02a_UNDONE.md).
 
 ---
 
@@ -666,7 +678,7 @@ Bar chart horizontal (tornado chart) com impacto individual de cada intervençã
 
 ### ❌ FEAT-02 — Guardar Edifício
 
-Após cálculo completo, guardar avaliação com nome, morada, código postal, Distrito/Concelho/Freguesia (dropdowns em cascata), latitude/longitude + pin no mapa. Ver [FEAT-02.md](plans/subplans/FEAT-02.md).
+Após cálculo completo, guardar avaliação com nome, morada, código postal, Distrito/Concelho/Freguesia (dropdowns em cascata), latitude/longitude + pin no mapa. Ver [FEAT-02_UNDONE.md](plans/subplans/FEAT/FEAT-02_UNDONE.md).
 
 ---
 
