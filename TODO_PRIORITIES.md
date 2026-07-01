@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-19 (UI-11 + UI-12 planeados — FIR-52/53)
+Última atualização: 2026-06-30 (UI-11 concluído; UI-13 planeado — FIR-54)
 
 ---
 
@@ -26,6 +26,12 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ UI-11 — Formulário de suporte técnico na LoginPage `Prioridade Média` *(2026-06-30, `feat/ui-11-support-modal`)* [FIR-52]
+
+FAB "Suporte" na LoginPage abre modal público fora do `<form>` de login. Campos: nome, email, telemóvel PT (validação JS + Pydantic), assunto (select), mensagem. Backend: tabela `support_requests` (migration 0005), status ENUM open/pending/working/closed (migration 0006), `POST /support/request` (rate limit 3/h), emails Resend HTML com tabela colorida e ID no assunto. `postJson` via `VITE_API_BASE_URL` para arquitetura split-origin (Cloudflare Pages + Render). 10/10 testes pytest.
+
+---
 
 ### ✅ INFRA-08 — Monitorização self-hosted `Prioridade Média` *(2026-06-18, `feat/infra08-monitoring`)*
 
@@ -363,12 +369,12 @@ Ver [TEST-04_UNDONE.md](plans/subplans/TEST/TEST-04_UNDONE.md).
 
 ---
 
-### ❌ UI-11 — Formulário de suporte técnico na LoginPage [FIR-52]
+### ❌ UI-13 — Painel admin de pedidos de suporte [FIR-54]
 
-Botão discreto "Problemas de acesso? Contactar suporte" na LoginPage que abre um modal público.
-Campos: nome, email, telemóvel (opcional), assunto (select), mensagem. Backend: nova tabela
-`support_requests`, endpoint `POST /support/request` (público, rate limit 3/h), emails Resend
-(notificação admin + confirmação utilizador). Ver [UI-11_UNDONE.md](plans/subplans/UI/UI-11_UNDONE.md).
+Página `/app/admin/support` visível apenas para admins. Tabela com todos os pedidos de suporte
+(ID, nome, email, assunto, status, data), ordenação por qualquer coluna, badge colorido por status
+e dropdown inline para alterar status (open/pending/working/closed) sem reload. Backend: dois endpoints
+`GET /admin/support` e `PATCH /admin/support/{id}`. Ver [UI-13_UNDONE.md](plans/subplans/UI/UI-13_UNDONE.md).
 
 ---
 

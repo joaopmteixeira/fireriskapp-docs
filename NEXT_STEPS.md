@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-19 (UI-11 + UI-12 planeados — FIR-52/53)
+Última atualização: 2026-06-30 (UI-11 concluído, UI-13 planeado — FIR-52/54)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -40,8 +40,9 @@
 | pgAdmin removido, Adminer em 5050 (INFRA-10) | ✅ Completo — pgAdmin sem rastros; Adminer porta 5050 Basic Auth ✅ |
 | Docker hardening (SEC-13) | ✅ Completo — Gitleaks CI, `*_FILE` secrets, serviço `migrate`, redes internas, systemd |
 | Monitorização self-hosted (INFRA-08) | ✅ Completo — 3 scripts bash + cron + alertas Resend (health, disco, backup) |
-| Suporte técnico LoginPage (UI-11) | ❌ Planeado — FIR-52; subplan UI-11.md criado |
-| Modal "Sobre" LoginPage (UI-12) | ❌ Planeado — FIR-53; subplan UI-12.md criado |
+| Suporte técnico LoginPage (UI-11) | ✅ Completo — FIR-52; branch `feat/ui-11-support-modal` |
+| Modal "Sobre" LoginPage (UI-12) | ❌ Planeado — FIR-53; subplan UI-12_UNDONE.md |
+| Painel admin pedidos de suporte (UI-13) | ❌ Planeado — FIR-54; subplan UI-13_UNDONE.md |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
