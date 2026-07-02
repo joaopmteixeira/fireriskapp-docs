@@ -51,12 +51,22 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 
 ## Concluído Recentemente (2026-07-02)
 
-### ✅ UI-13 — Painel admin de pedidos de suporte (`feat/ui-13-admin-support`) [FIR-54]
+### ✅ UI-13 — Painel admin de pedidos de suporte (`3.1-dev`, merge de `feat/ui-13-admin-support`) [FIR-54]
 
 - `GET /admin/support` e `PATCH /admin/support/{id}` em `admin.py`; schema `SupportStatusUpdate`
 - `AdminSupportPage.tsx` — tabela ordenável, badges de status, dropdown inline com PATCH otimista
 - NavLink "Suporte" na sidebar admin; rota `admin/support`
 - `lib/api.ts` — `patchJson` generalizado a partir de `postJson`
+- Fix pós-teste manual: Email com `break-all`, Data sem `whitespace-nowrap` forçado (wrap só em ecrã estreito)
+- Testado manualmente em staging (VM) e aprovado; merge `--no-ff` em `3.1-dev`
+
+### Novo ID criado
+
+- **UI-14** — Corrigir dark mode em toda a app (contraste/legibilidade inconsistentes, detetado nas páginas admin durante teste de UI-13; afeta também outras páginas) — sem plano/branch ainda
+
+### Pendente sem ID (manutenção)
+
+- Renormalização CRLF → LF retroativa (`git add --renormalize .`) nos ficheiros já afetados antes da regra `.gitattributes` `* text=auto eol=lf`; adiada deliberadamente para tarefa separada
 
 ---
 

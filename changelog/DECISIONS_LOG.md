@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-07-02 — UI-13 · UI-14 · .gitattributes
+
+Decisao `ui13-branch-sem-merge-ate-teste`: `feat/ui-13-admin-support` commitado e enviado para push sem merge imediato em `3.1-dev`.
+Razao: utilizador queria testar manualmente em staging (VM) antes de integrar; evita reverter merge se o teste revelar problemas.
+
+Decisao `ui13-email-break-all-data-wrap-natural`: coluna Email da tabela de suporte usa `break-all` (quebra dentro da string); coluna Data remove `whitespace-nowrap` em vez de forcar split em duas linhas via markup.
+Razao: teste manual do utilizador identificou que Email nao encolhia em ecra estreito (ao contrario de Assunto) e que Data devia poder quebrar — mas rejeitou a primeira tentativa (`formatDate` a devolver `{date, time}` sempre em duas linhas); a correcao final so quebra naturalmente no espaco entre data e hora quando a coluna fica demasiado estreita, mantendo uma linha só no caso normal.
+
+Decisao `ui13-merge-apos-teste-aprovado`: `feat/ui-13-admin-support` mergeado (`--no-ff`) em `3.1-dev` apos o utilizador confirmar teste manual bem sucedido em staging.
+Razao: seguem-se o workflow padrao do projeto (branch com ID, merge no-ff so apos aprovacao explicita).
+
+Decisao `gitattributes-eol-lf-global`: `.gitattributes` alargado de `*.md text eol=lf` para `* text=auto eol=lf` (todos os ficheiros de texto).
+Razao: edicoes em `App.tsx`, `lib/api.ts` e `AppLayout.tsx` durante UI-13 produziram ficheiros em CRLF (editor/ferramenta Windows), causando diffs gigantes (ex: 909 linhas mudadas em `AppLayout.tsx` para uma edicao de 3 linhas) porque o repo espera LF; a regra global prevem a recorrencia a partir de agora.
+
+Decisao `gitattributes-renormalize-adiado`: renormalizacao retroativa dos ficheiros ja afetados por CRLF (`git add --renormalize .`) NAO executada nesta sessao.
+Razao: pedido explicito do utilizador para tratar como tarefa separada, sem misturar com o commit da feature UI-13; registado em memoria (`project_pending_no_id_tasks.md`) e em `docs/NEXT_STEPS.md`.
+
+Decisao `ui14-criado-dark-mode-global`: novo ID UI-14 criado para corrigir dark mode em toda a app, sem branch nem plano ainda.
+Razao: utilizador reportou (com screenshots) contraste/legibilidade estranhos em dark mode nas paginas admin (Utilizadores, Access Log, Suporte) e confirmou que o problema existe em toda a app, nao so ali; pediu para adiar a correcao para uma sessao dedicada em vez de um fix pontual.
+
+---
+
 ## 2026-06-18 — SEC-13 · INFRA-08
 
 Decisao `sec13-ssh-cloudflare-tunnel-revertido`: SSH via Cloudflare Tunnel tentado e revertido — removido do scope SEC-13.

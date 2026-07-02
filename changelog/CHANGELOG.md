@@ -14,7 +14,20 @@
 - `app/frontend/src/pages/AppLayout.tsx` — NavLink "Suporte" no bloco ADMIN da sidebar
 - `app/frontend/src/App.tsx` — rota `admin/support` → `AdminSupportPage`
 - `app/frontend/src/lib/api.ts` — `postJson`/`patchJson` generalizados a partir de um helper `sendJson` comum (primeiro uso de PATCH no projeto)
-- Validado: 358 testes pytest, `npm run typecheck` e `npm run build` sem erros; fluxo completo testado manualmente via curl (login, GET, PATCH válido/404, persistência confirmada)
+- Fix pós-teste manual: coluna Email com `break-all` (quebra dentro da string, sem espaços) e coluna Data sem `whitespace-nowrap` forçado (só quebra naturalmente em ecrãs estreitos)
+- Merge `feat/ui-13-admin-support` → `3.1-dev` (`--no-ff`)
+- Validado: 358 testes pytest, `npm run typecheck` e `npm run build` sem erros; fluxo completo testado manualmente via curl (login, GET, PATCH válido/404, persistência confirmada); teste manual em staging (VM) aprovado
+
+**UI-14 — Corrigir dark mode em toda a app (planeado)**
+
+- Detetado durante o teste manual de UI-13: contraste/legibilidade inconsistentes em dark mode, não só nas páginas admin mas em várias páginas da app
+- Adicionado a `TODO_LIST.md` / `TODO_PRIORITIES.md` como pendente (❌), sem branch ainda — revisão visual completa a fazer noutra sessão
+
+**Manutenção — `.gitattributes`**
+
+- `* text=auto eol=lf` adicionado (antes só cobria `*.md`) para normalizar automaticamente ficheiros CRLF criados por editores/ferramentas Windows
+- Motivo: edições em `App.tsx`, `lib/api.ts` e `AppLayout.tsx` durante UI-13 produziram diffs gigantes por CRLF vs LF; corrigido pontualmente com `sed -i 's/\r$//'` nesses ficheiros
+- Renormalização retroativa do resto do repositório (`git add --renormalize .`) adiada de propósito para tarefa separada (ver `docs/NEXT_STEPS.md`)
 
 ---
 
