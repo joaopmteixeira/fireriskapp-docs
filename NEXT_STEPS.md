@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-06-30 (UI-11 concluído, UI-13 planeado — FIR-52/54)
+Última atualização: 2026-07-02 (UI-13 concluído — FIR-54)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -42,10 +42,21 @@
 | Monitorização self-hosted (INFRA-08) | ✅ Completo — 3 scripts bash + cron + alertas Resend (health, disco, backup) |
 | Suporte técnico LoginPage (UI-11) | ✅ Completo — FIR-52; branch `feat/ui-11-support-modal` |
 | Modal "Sobre" LoginPage (UI-12) | ❌ Planeado — FIR-53; subplan UI-12_UNDONE.md |
-| Painel admin pedidos de suporte (UI-13) | ❌ Planeado — FIR-54; subplan UI-13_UNDONE.md |
+| Painel admin pedidos de suporte (UI-13) | ✅ Completo — FIR-54; branch `feat/ui-13-admin-support` |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-07-02)
+
+### ✅ UI-13 — Painel admin de pedidos de suporte (`feat/ui-13-admin-support`) [FIR-54]
+
+- `GET /admin/support` e `PATCH /admin/support/{id}` em `admin.py`; schema `SupportStatusUpdate`
+- `AdminSupportPage.tsx` — tabela ordenável, badges de status, dropdown inline com PATCH otimista
+- NavLink "Suporte" na sidebar admin; rota `admin/support`
+- `lib/api.ts` — `patchJson` generalizado a partir de `postJson`
 
 ---
 

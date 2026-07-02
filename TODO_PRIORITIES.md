@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-06-30 (UI-11 concluído; UI-13 planeado — FIR-54)
+Última atualização: 2026-07-02 (UI-13 concluído — FIR-54)
 
 ---
 
@@ -26,6 +26,16 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ UI-13 — Painel admin de pedidos de suporte `Prioridade Média` *(2026-07-02, `feat/ui-13-admin-support`)* [FIR-54]
+
+Página `/app/admin/support` (só admins). Tabela ordenável por qualquer coluna (ID, nome, email,
+assunto, status, data), badge colorido por status, dropdown inline com PATCH optimista
+(open/pending/working/closed). Backend: `GET /admin/support` e `PATCH /admin/support/{id}`
+em `admin.py`, schema `SupportStatusUpdate`. `lib/api.ts` ganhou `patchJson` (generalizado
+a partir de `postJson`). 358 testes pytest, typecheck e build sem erros.
+
+---
 
 ### ✅ UI-11 — Formulário de suporte técnico na LoginPage `Prioridade Média` *(2026-06-30, `feat/ui-11-support-modal`)* [FIR-52]
 
@@ -369,20 +379,19 @@ Ver [TEST-04_UNDONE.md](plans/subplans/TEST/TEST-04_UNDONE.md).
 
 ---
 
-### ❌ UI-13 — Painel admin de pedidos de suporte [FIR-54]
-
-Página `/app/admin/support` visível apenas para admins. Tabela com todos os pedidos de suporte
-(ID, nome, email, assunto, status, data), ordenação por qualquer coluna, badge colorido por status
-e dropdown inline para alterar status (open/pending/working/closed) sem reload. Backend: dois endpoints
-`GET /admin/support` e `PATCH /admin/support/{id}`. Ver [UI-13_UNDONE.md](plans/subplans/UI/UI-13_UNDONE.md).
-
----
-
 ### ❌ UI-12 — Modal "Sobre" na LoginPage [FIR-53]
 
 Ícone ℹ️ que abre janela flutuante com nome oficial, descrição legal do modelo CHICHORRO
 (DL 220/2008 + DL 95/2019) e contacto. Apenas frontend, sem backend.
 Ver [UI-12_UNDONE.md](plans/subplans/UI/UI-12_UNDONE.md).
+
+---
+
+### ❌ UI-14 — Corrigir dark mode em toda a app
+
+Detetado durante testes de UI-13 (2026-07-02): contraste/legibilidade inconsistentes em
+dark mode, não só nas páginas admin (Utilizadores, Access Log, Suporte) mas em várias
+páginas da app. Precisa de revisão visual completa, não só um fix pontual.
 
 ---
 
@@ -669,6 +678,21 @@ Decisão documentada: manter paths atuais (`/POI/*`, `/CTI/*`, etc.) — subdoma
 ---
 
 ## Futuro
+
+### Nota — Subdomínio `admin.dominio` separado
+
+Avaliado em 2026-07-02: não vale a pena atualmente. Admin (`AdminUsersPage`,
+`AdminLogPage`, `AdminSupportPage`) vive no mesmo bundle React (`/app/admin/*`,
+`RequireAuth`) e mesma app FastAPI (`routers/admin.py`, `Depends(require_admin)`).
+A proteção real é sessão + `role == "admin"`, não a URL — um subdomínio próprio
+não acrescenta segurança e implica custo de infra desproporcional (novo deploy
+Cloudflare Pages, CORS extra, cookies cross-subdomain) para um projeto de
+1 developer. Reconsiderar se um dia houver admins externos (ex: terceiros a
+gerir suporte) ou se o bundle React crescer muito — nesse caso, a alternativa
+mais barata é lazy loading (`React.lazy`) das páginas admin em vez de separar
+por subdomínio.
+
+---
 
 ### ❌ SEC-14 — SOPS + age (gestão de secrets encriptados em Git)
 

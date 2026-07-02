@@ -4,6 +4,20 @@
 
 ## [Unreleased]
 
+### 2026-07-02 — UI-13
+
+**UI-13 — Painel admin de pedidos de suporte**
+
+- `app/backend/routers/admin.py` — `GET /admin/support` (lista até 200 pedidos, `require_admin`) e `PATCH /admin/support/{id}` (atualiza `status`, 404 se id não existir)
+- `app/backend/schemas/support.py` — `SupportStatusUpdate(status: Literal["open","pending","working","closed"])`
+- `app/frontend/src/pages/AdminSupportPage.tsx` — nova página: tabela ordenável por qualquer coluna (client-side, default `created_at` desc), badge colorido por status, select inline com PATCH otimista (reverte em erro)
+- `app/frontend/src/pages/AppLayout.tsx` — NavLink "Suporte" no bloco ADMIN da sidebar
+- `app/frontend/src/App.tsx` — rota `admin/support` → `AdminSupportPage`
+- `app/frontend/src/lib/api.ts` — `postJson`/`patchJson` generalizados a partir de um helper `sendJson` comum (primeiro uso de PATCH no projeto)
+- Validado: 358 testes pytest, `npm run typecheck` e `npm run build` sem erros; fluxo completo testado manualmente via curl (login, GET, PATCH válido/404, persistência confirmada)
+
+---
+
 ### 2026-06-18 — SEC-13 · INFRA-08
 
 **SEC-13 — Hardening stack Docker**
