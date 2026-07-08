@@ -4,6 +4,24 @@
 
 ## [Unreleased]
 
+### 2026-07-08 — UI-12
+
+**UI-12 — Modal "Sobre" na LoginPage**
+
+- `app/frontend/src/components/ui/AboutModal.tsx` (novo) — nome oficial da app, versão,
+  descrição legal do modelo CHICHORRO (DL 220/2008 + DL 95/2019) e contacto `mailto:`;
+  segue o padrão do `SupportModal.tsx` (`role="dialog"`, `aria-modal`, componente `Button`)
+- `app/frontend/src/pages/LoginPage.tsx` — FAB "Sobre" (`mdiInformationOutline`) ao lado
+  do FAB "Suporte" (UI-11) no canto inferior direito; ambos quadrados `h-16 w-16` e com o
+  mesmo estilo visual; "Suporte" à esquerda, "Sobre" à direita
+- 1ª iteração (link de texto "Sobre esta aplicação" dentro do card de login, por baixo de
+  "Criar conta") substituída após feedback de UX: pouco visível e não devia estar
+  integrada na box de login
+- Branch `feat/ui-12-about-modal`; validado `npm run typecheck` e `npm run build` sem
+  erros em todas as iterações
+
+---
+
 ### 2026-07-02 — UI-13
 
 **UI-13 — Painel admin de pedidos de suporte**

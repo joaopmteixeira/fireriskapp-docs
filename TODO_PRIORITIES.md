@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-07-02 (UI-13 concluído — FIR-54)
+Última atualização: 2026-07-08 (UI-12 concluído — FIR-53)
 
 ---
 
@@ -26,6 +26,17 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 ---
 
 ## Concluídos Recentemente (mais recente → mais antigo)
+
+### ✅ UI-12 — Modal "Sobre" na LoginPage `Prioridade Baixa` *(2026-07-08, `feat/ui-12-about-modal`)* [FIR-53]
+
+FAB "Sobre" quadrado (`h-16 w-16`, ícone `mdiInformationOutline`) ao lado do FAB "Suporte"
+(UI-11) no canto inferior direito da LoginPage — "Suporte" à esquerda, "Sobre" à direita.
+`AboutModal.tsx` segue o padrão do `SupportModal.tsx` (`role="dialog"`, componente `Button`);
+conteúdo: nome oficial, versão, descrição legal do modelo CHICHORRO (DL 220/2008 + DL 95/2019)
+e contacto `mailto:`. 1ª iteração (link de texto dentro do card) substituída após feedback
+de UX: pouco visível e não devia estar integrada na box de login. Typecheck e build sem erros.
+
+---
 
 ### ✅ UI-13 — Painel admin de pedidos de suporte `Prioridade Média` *(2026-07-02, `feat/ui-13-admin-support`)* [FIR-54]
 
@@ -376,14 +387,6 @@ Ver [TEST-04_UNDONE.md](plans/subplans/TEST/TEST-04_UNDONE.md).
 
 ~280 testes automatizados a validar o motor CHICHORRO (POI/CTI/DPI/ESCI/RI) contra os valores da tese3.1.
 **Bloqueado** até os ficheiros Excel da tese3.1 estarem disponíveis.
-
----
-
-### ❌ UI-12 — Modal "Sobre" na LoginPage [FIR-53]
-
-Ícone ℹ️ que abre janela flutuante com nome oficial, descrição legal do modelo CHICHORRO
-(DL 220/2008 + DL 95/2019) e contacto. Apenas frontend, sem backend.
-Ver [UI-12_UNDONE.md](plans/subplans/UI/UI-12_UNDONE.md).
 
 ---
 

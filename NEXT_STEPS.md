@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-07-02 (UI-13 concluído — FIR-54)
+Última atualização: 2026-07-08 (UI-12 concluído — FIR-53)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -41,11 +41,25 @@
 | Docker hardening (SEC-13) | ✅ Completo — Gitleaks CI, `*_FILE` secrets, serviço `migrate`, redes internas, systemd |
 | Monitorização self-hosted (INFRA-08) | ✅ Completo — 3 scripts bash + cron + alertas Resend (health, disco, backup) |
 | Suporte técnico LoginPage (UI-11) | ✅ Completo — FIR-52; branch `feat/ui-11-support-modal` |
-| Modal "Sobre" LoginPage (UI-12) | ❌ Planeado — FIR-53; subplan UI-12_UNDONE.md |
+| Modal "Sobre" LoginPage (UI-12) | ✅ Completo — FIR-53; branch `feat/ui-12-about-modal` |
 | Painel admin pedidos de suporte (UI-13) | ✅ Completo — FIR-54; branch `feat/ui-13-admin-support` |
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-07-08)
+
+### ✅ UI-12 — Modal "Sobre" na LoginPage (`feat/ui-12-about-modal`) [FIR-53]
+
+- `AboutModal.tsx` (novo) — nome oficial, versão, descrição legal do modelo CHICHORRO
+  (DL 220/2008 + DL 95/2019), contacto `mailto:`; segue o padrão do `SupportModal.tsx`
+- `LoginPage.tsx` — FAB "Sobre" quadrado (`h-16 w-16`, ícone `mdiInformationOutline`) ao
+  lado do FAB "Suporte" (UI-11) no canto inferior direito; "Suporte" à esquerda, "Sobre" à direita
+- 1ª iteração (link de texto dentro do card de login) substituída após feedback de UX
+  (pouco visível, não devia estar integrada na box de login)
+- `npm run typecheck && npm run build` sem erros em todas as iterações
 
 ---
 

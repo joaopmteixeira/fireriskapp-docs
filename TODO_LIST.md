@@ -3,7 +3,7 @@
 Listagem completa de todas as ações do projeto, ordenadas por prefixo e número de ID.
 Para prioridades e detalhes ver [TODO_PRIORITIES.md](TODO_PRIORITIES.md).
 
-Última atualização: 2026-07-02 (UI-13 concluído)
+Última atualização: 2026-07-08 (UI-12 concluído — FIR-53)
 
 Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 
@@ -111,7 +111,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | UI-09 | ❌ | Badge de lápis persistente no avatar — sempre visível (mobile-friendly), substitui overlay câmara hover-only | 3.1-dev |
 | UI-10 | ❌ | Sidebar direita persistente — resumo da sessão atual e valores introduzidos nos subfatores (POI/CTI/DPI/ESCI) visíveis durante o cálculo | — |
 | UI-11 | ✅ | Formulário de suporte técnico na LoginPage — modal público, tabela `support_requests`, endpoint `POST /support/request`, emails Resend HTML | feat/ui-11-support-modal |
-| UI-12 | ❌ | Modal "Sobre" na LoginPage — ícone ℹ️, descrição legal CHICHORRO (DL 220/2008 + DL 95/2019), contacto | 3.1-dev |
+| UI-12 | ✅ | Modal "Sobre" na LoginPage — FAB quadrado ao lado do Suporte, descrição legal CHICHORRO (DL 220/2008 + DL 95/2019), contacto | feat/ui-12-about-modal |
 | UI-13 | ✅ | Painel admin de pedidos de suporte — `/app/admin/support`, tabela sortável, badges status, dropdown inline | feat/ui-13-admin-support |
 | UI-14 | ❌ | Corrigir dark mode em toda a app — contraste/legibilidade inconsistentes (detetado em páginas admin e restantes páginas da app) | — |
 
