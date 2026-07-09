@@ -94,6 +94,7 @@ Legenda: ✅ concluído · 🔄 em progresso · ❌ pendente
 | SEC-12 | ✅ | Proteção pgAdmin — Nginx Basic Auth em 5050/5051; pgAdmin/Adminer sem ports diretos | feat/sec11-sec12-secrets-pgadmin |
 | SEC-13 | ✅ | Hardening stack Docker — Gitleaks CI, redes internas, serviço migrate separado, suporte `*_FILE` em config.py, systemd na VM | feat/sec13-docker-hardening |
 | SEC-14 | ❌ | SOPS + age — gestão de secrets encriptados em Git (futuro; relevante quando equipa crescer ou GitOps) | — |
+| SEC-15 | ❌ | CAPTCHA (Cloudflare Turnstile) no formulário de suporte — protege `POST /support/request` contra bots além do rate limiting existente | — |
 
 ---
 
