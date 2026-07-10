@@ -4,6 +4,47 @@
 
 ## [Unreleased]
 
+### 2026-07-10 — Análise de proveniência CHICHORRO · Pedido de despesa FEUP
+
+**Análise de proveniência v3.0 → v3.1 → v4.0 → v4.1 → v5.0**
+
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN.md` — roteiro geral das 5 fases de análise
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN_PHASE1.md` — leitura linha-a-linha do código v4.0
+  (Inês Casas): subfatores POI/CTI/DPI/ESCI e as 34 medidas de intervenção; 14
+  bugs/anomalias identificados, incluindo `Custo_Interv.php` nunca invocado e com sintaxe
+  inválida na secção final
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN_PHASE2.md` — validação das 3 afirmações da Inês
+  Casas sobre a v4.0 (todas confirmadas pelo código dela), separada do gap de migração
+  v4.0→backend atual
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN_PHASE3.md` — guideline de migração v4.0→backend
+  atual (cálculo + schemas + routers); confirma que o modelo simplificado (MAGR) nunca foi
+  portado para o backend atual
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN_PHASE4.md` — comparativo v4.0 vs v4.1 (tese Ana
+  Martins), usando o código v5.0 só como evidência auxiliar (sem código v4.1 isolado
+  disponível); achado central: a fórmula do RI (produto→soma) foi corrigida pela própria Ana
+  Martins nesta transição, não é artefacto da migração para Python
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN_PHASE5.md` — gap v4.1→v5.0, sem autor nem
+  documento conhecido; achado central: camada de BD com 2-3 esquemas incoerentes entre si
+- `docs/plans/main/CHICHORRO_V4_MAIN_PLAN_SUMMARY.md` — resumo consolidado das 5 fases com
+  recomendações de próximos passos
+- `docs/research/tese4.1-am/tese4.1.ai.md` + `.chunks.jsonl` — conversão docling da tese de
+  Ana Martins (205 páginas, 73 chunks), com preservação de tabelas
+- `docling` instalado como dependência de conversão de PDF (substitui fallback `pypdf`)
+- Processo só de análise/relatório — nenhum código de cálculo alterado
+
+**Pedido de despesa FEUP — VPS + domínio**
+
+- `docs/deploy/FEUP_PEDIDO_DESPESA.md` (+ `.docx`) — justificação técnica e de custo para
+  aprovação institucional: VPS OVHcloud VPS-2 (~€106,44/ano a partir do 2.º ano) + domínio
+  `chichorro.pt` (~€16,47/ano a partir do 2.º ano)
+- `docs/deploy/ANEXO_PROVA_CUSTO_VPS.md` / `ANEXO_PROVA_CUSTO_DOMINIO.md` — provas de custo
+  com capturas de ecrã dos preços públicos OVHcloud, embutidas como imagens reais no `.docx`
+- `docs/deploy/DOMAIN_OPTIONS.md` — comparação de alternativas de domínio consideradas
+- Objetivo: sair da atual VM de staging na rede local (acesso via Cloudflare Tunnel) para uma
+  VPS pública com domínio próprio, permitindo demonstração/avaliação externa e serviço real
+
+---
+
 ### 2026-07-08 — UI-12
 
 **UI-12 — Modal "Sobre" na LoginPage**

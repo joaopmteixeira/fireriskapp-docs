@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-07-08 (UI-12 concluído — FIR-53)
+Última atualização: 2026-07-10 (análise de proveniência CHICHORRO v3.0-v5.0 concluída)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -46,6 +46,40 @@
 | Branch ativo | `3.1-dev` (produção + desenvolvimento) |
 
 Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CHANGELOG.md).
+
+---
+
+## Concluído Recentemente (2026-07-10)
+
+### ✅ Análise de proveniência CHICHORRO v3.0 → v3.1 → v4.0 → v4.1 → v5.0 (`3.1-dev`)
+
+- Plano de 5 fases + resumo final em `docs/plans/main/CHICHORRO_V4_MAIN_PLAN*.md` — leitura
+  linha-a-linha do código v4.0 (Inês Casas), validação das afirmações dela, guideline de
+  migração v4.0→backend atual, comparativo v4.0 vs v4.1 (tese Ana Martins) e gap v4.1→v5.0
+- Achado central: a fórmula do RI usada no backend atual (`Chichorro_RI.py:91`, soma
+  `(DPI+ESCI)/2`) está alinhada com a correção de bug feita pela própria Ana Martins na
+  transição v4.0→v4.1 — não é um erro de transcrição introduzido na migração para Python
+- Conversão docling da tese 4.1 (`docs/research/tese4.1-am/tese4.1.ai.md` +
+  `.chunks.jsonl`), com preservação de tabelas
+- Gap não resolvido, sem autor nem documento conhecido: transição v4.1→v5.0 — recomendações
+  no `CHICHORRO_V4_MAIN_PLAN_SUMMARY.md` (contactar Prof. Miguel Chichorro Gonçalves, procurar
+  repositório git da FEUP, resolver inconsistência de esquemas de BD antes de continuar a
+  migração)
+- Processo só de análise/relatório — nenhum código de cálculo alterado nesta ronda
+
+### ✅ Pedido de despesa FEUP — VPS + domínio (`3.1-dev`)
+
+- `docs/deploy/FEUP_PEDIDO_DESPESA.md` (+ `.docx` gerado) — justificação técnica e de custo
+  para aprovação institucional de infraestrutura de produção: VPS OVHcloud VPS-2 (gama 2027,
+  4 vCores/8 GB RAM/75 GB NVMe, ~€106,44/ano a partir do 2.º ano) e domínio `chichorro.pt`
+  (~€16,47/ano a partir do 2.º ano)
+- `docs/deploy/ANEXO_PROVA_CUSTO_VPS.md` e `ANEXO_PROVA_CUSTO_DOMINIO.md` — provas de custo
+  com capturas de ecrã reais dos preços públicos OVHcloud, embutidas como imagens no `.docx`
+  final (sem depender de links para ficheiros `.md` irmãos)
+- `docs/deploy/DOMAIN_OPTIONS.md` — comparação de alternativas de domínio consideradas
+- Objetivo: permitir avaliação/demonstração do CHICHORRO fora da rede local (defesa de
+  dissertação, apresentações) e disponibilização como serviço público estável, substituindo o
+  atual acesso via Cloudflare Tunnel a uma VM de staging na rede local
 
 ---
 

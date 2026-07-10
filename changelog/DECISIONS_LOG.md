@@ -4,6 +4,38 @@
 
 ---
 
+## 2026-07-10 — Análise de proveniência CHICHORRO · Pedido de despesa FEUP
+
+Decisao `v4-analysis-v5-evidencia-nao-objeto`: na Fase 4 do plano de proveniência, o codigo
+v5.0 e citado apenas como evidencia de onde as mudancas da v4.1 ficaram registadas em codigo,
+nunca como objeto de analise em si.
+Razao: correcao explicita do utilizador apos primeira versao do relatorio ter tratado o v5.0
+como foco principal ("A fase 4 era so comparativo entre 4.0 e 4.1, nao 5.0. Refaz") — essa
+analise fica reservada a Fase 5, que cobre o gap v4.1->v5.0.
+
+Decisao `v4-analysis-sem-id-tracking`: a analise de proveniencia (5 fases + resumo) nao recebeu
+ID no TODO_LIST/TODO_PRIORITIES.
+Razao: e um processo de analise e relatorio, nao uma implementacao de funcionalidade — decisao
+confirmada explicitamente pelo utilizador quando questionado sobre como registar o trabalho.
+
+Decisao `v4-analysis-docling-sobre-pypdf`: instalado `docling` e usado para reconverter a tese
+4.1, substituindo a primeira conversao feita com fallback `pypdf`.
+Razao: pedido explicito do utilizador para melhorar a qualidade da conversao (preservacao de
+tabelas em Markdown, ausente no fallback pypdf).
+
+Decisao `feup-vps2-sobre-vps1`: escolhido OVHcloud VPS-2 (4 vCores/8 GB RAM) em vez do minimo
+viavel VPS-1 (2 vCores/4 GB) no pedido de despesa FEUP.
+Razao: VPS-1 nao teria margem para correr PostgreSQL + Redis + backend (calculo simbolico
+numpy/sympy) em simultaneo sob carga; VPS-2 da folga confortavel com custo adicional pequeno.
+
+Decisao `feup-dominio-pt-sobre-subdominio`: escolhido dominio proprio `chichorro.pt` em vez de
+continuar com subdominio gratuito de terceiros (Cloudflare Tunnel).
+Razao: reforca credibilidade e identidade nacional do projeto, alinhado com o ambito de
+protecao civil em Portugal; necessario para demonstracao/avaliacao externa estavel (defesa de
+dissertacao, apresentacoes).
+
+---
+
 ## 2026-07-02 — UI-13 · UI-14 · .gitattributes
 
 Decisao `ui13-branch-sem-merge-ate-teste`: `feat/ui-13-admin-support` commitado e enviado para push sem merge imediato em `3.1-dev`.
