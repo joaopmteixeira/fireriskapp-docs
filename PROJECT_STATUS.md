@@ -18,13 +18,17 @@
 | FEAT-04 | — | Geração de relatório em PDF após cálculo completo | ❌ Pendente | ❌ Não | — |
 | CALC-AUDIT | — | Golden tests do código de cálculo vs. tese3.1 (~280 tests) | ❌ Pendente | ❌ Não | — |
 | AI-03 | — | RAG — pgvector + routers/rag.py + botão "Explicar" por subfator | ❌ Pendente | ❌ Não | — |
-| MODEL-01 | — | Método simplificado baseado no CHICHORRO 2.0 | ❌ Pendente | ❌ Não | — |
-| MODEL-02 | — | Alterar ordem do Cenário 4 (CI → VVE → VHE alternativo) | ❌ Pendente | ❌ Não | — |
-| MODEL-03 | — | Afinação de custos €/m² via PRONIC | ❌ Pendente | ❌ Não | — |
-| MODEL-04 | — | Intervenções adicionais: Gerador, Bombagem, Cablagem, Evacuação | ❌ Pendente | ❌ Não | — |
-| MODEL-05 | — | Georreferenciação e base de dados de edifícios | ❌ Pendente | ❌ Não | — |
-| MODEL-06 | — | Tratamento de edifícios devolutos | ❌ Pendente | ❌ Não | — |
-| MODEL-07 | — | Integração com Firecheck 2.0 | ❌ Pendente | ❌ Não | — |
+| FEAT-05 | — | Método simplificado baseado no CHICHORRO 2.0 | ❌ Pendente | ❌ Não | — |
+| FEAT-06 | — | Alterar ordem do Cenário 4 (CI → VVE → VHE alternativo) | ❌ Pendente | ❌ Não | — |
+| FEAT-07 | — | Afinação de custos €/m² via PRONIC | ❌ Pendente | ❌ Não | — |
+| FEAT-08 | — | Intervenções adicionais: Gerador, Bombagem, Cablagem, Evacuação | ❌ Pendente | ❌ Não | — |
+| FEAT-09 | — | Georreferenciação e base de dados de edifícios | ❌ Pendente | ❌ Não | — |
+| FEAT-10 | — | Tratamento de edifícios devolutos | ❌ Pendente | ❌ Não | — |
+| FEAT-11 | — | Integração com Firecheck 2.0 | ❌ Pendente | ❌ Não | — |
+| MODEL-01 | — | v4.0 (Inês Casas) — modelo completo (MARI) | 🔄 Em progresso | [✅ Sim](plans/main/CHICHORRO_V4_MARI_IMPLEMENTATION_PLAN.md) | — |
+| MODEL-02 | — | v4.0 (Inês Casas) — modelo simplificado (MAGR) | ❌ Pendente | ❌ Não | — |
+| MODEL-03 | — | v4.1 (Ana Martins) — migração/consolidação | ❌ Pendente | ❌ Não | — |
+| MODEL-04 | — | v5.0 — migração/consolidação | ❌ Pendente | ❌ Não | — |
 | SEC-14 | — | SOPS + age — gestão de secrets encriptados em Git | ❌ Pendente | [✅ Sim](plans/subplans/SEC/SEC-14_UNDONE.md) | — |
 | UI-09 | — | Badge de lápis persistente no avatar (mobile-friendly) | ❌ Pendente | [✅ Sim](plans/subplans/UI/UI-09_UNDONE.md) | — |
 | UI-12 | FIR-53 | Modal "Sobre" na LoginPage | ❌ Pendente | [✅ Sim](plans/subplans/UI/UI-12_UNDONE.md) | — |
@@ -122,7 +126,8 @@
 3. **FEAT-01** (FIR-24) — gráfico tornado de intervenções; backend já expõe os dados necessários, Recharts já está no projeto
 
 > CALC-AUDIT = bloqueado até Excel da tese3.1 disponível.
-> MODEL-01…07 = backlog pós-3.1, fora do âmbito atual.
+> FEAT-05…11 = backlog pós-3.1 (ex-MODEL-01…07), fora do âmbito atual.
+> MODEL-01…04 = migração de versões v4.0 → v4.1 → v5.0; MODEL-01 (v4.0 MARI) em progresso.
 
 ---
 

@@ -4,6 +4,42 @@
 
 ---
 
+## 2026-07-13 — Verificação aprofundada v4.0 · Reorganização TODO
+
+Decisao `v4-mari-reexame-a-fundo`: a conclusao inicial "sem gap de subfator entre v3.1 e v4.0"
+foi rejeitada pelo utilizador e substituida por uma segunda verificacao, mais profunda,
+linha-a-linha, cruzando 3 fontes (PHP v4.0, Python atual, capitulo 3 da tese da Ines Casas).
+Razao: pedido explicito do utilizador ("Nao, quero reexaminar mais a fundo") apos a primeira
+resposta ter concluido demasiado depressa que nao havia trabalho real a fazer; o reexame
+confirmou 2 achados novos (DPI_VDGF e DPI_OGS nao replicam fielmente as tabelas cruzadas que a
+propria tese documenta).
+
+Decisao `v4-mari-nomenclatura-no-ambito`: a consolidacao de nomenclatura de campos (ex.:
+`DPI_OGS_*`) foi incluida no ambito da implementacao do MODEL-01, nao tratada como cosmetica
+fora de ambito.
+Razao: escolha explicita do utilizador ao responder a AskUserQuestion ("Incluir no ambito").
+
+Decisao `v4-mari-ri-formula-manter-soma`: a formula final do RI mantem-se `POI*CTI*((DPI+ESCI)/2)`
+(soma), nao se muda para o produto usado no PHP v4.0.
+Razao: confirmado como correcao deliberada e correta da Ana Martins na transicao v4.1 (ja
+documentado na analise de proveniencia de 2026-07-10); nao e um bug de migracao a corrigir.
+
+Decisao `v4-mari-docs-md-antes-de-codigo`: o relatorio de verificacao e o plano de
+implementacao foram escritos como ficheiros `.md` completos e verbatim em
+`docs/plans/main/`, antes de qualquer alteracao de codigo.
+Razao: pedido explicito do utilizador ("Quero que transcrevas, ainda com mais profundidade,
+este plano em .md para eu fazer uma comparacao manual") — permite comparacao manual contra a
+tese antes de codificar `DPI_VDGF`/`DPI_OGS`, evitando codificar a partir de inferencia.
+
+Decisao `model-reaproveitado-para-migracao-versoes`: o prefixo `MODEL` (antes usado para
+backlog de propostas de Rui Sobral) foi reaproveitado para a migracao de versoes do modelo
+(v4.0 -> v4.1 -> v5.0); o backlog antigo `MODEL-01..07` foi renumerado para `FEAT-05..11`.
+Razao: escolha explicita do utilizador entre 2 opcoes apresentadas (criar prefixo novo vs.
+reaproveitar `MODEL`); `MODEL` ("Modelo CHICHORRO") descreve melhor a migracao de versoes do
+modelo do que o backlog de features do Rui Sobral, que cabe melhor em `FEAT`.
+
+---
+
 ## 2026-07-10 — Análise de proveniência CHICHORRO · Pedido de despesa FEUP
 
 Decisao `v4-analysis-v5-evidencia-nao-objeto`: na Fase 4 do plano de proveniência, o codigo

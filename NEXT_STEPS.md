@@ -1,6 +1,6 @@
 # Estado do Projeto e Próximos Passos
 
-Última atualização: 2026-07-10 (análise de proveniência CHICHORRO v3.0-v5.0 concluída)
+Última atualização: 2026-07-13 (verificação aprofundada v4.0 MARI + reorganização MODEL/FEAT)
 
 > **Issues tracked in Linear** — team [FireRiskApp](https://linear.app/fireriskapp), projeto **CHICHORRO 3.1** (FIR-5 a FIR-31).
 > Usar o Linear como fonte de verdade para estado de tarefas. Este ficheiro mantém-se como referência rápida.
@@ -69,14 +69,15 @@ Detalhe completo de tudo o que foi implementado: ver [CHANGELOG.md](changelog/CH
 
 ### ✅ Pedido de despesa FEUP — VPS + domínio (`3.1-dev`)
 
-- `docs/deploy/FEUP_PEDIDO_DESPESA.md` (+ `.docx` gerado) — justificação técnica e de custo
+- `docs/PAD_FEUP/FEUP_PEDIDO_DESPESA.md` (+ `.docx` gerado) — justificação técnica e de custo
   para aprovação institucional de infraestrutura de produção: VPS OVHcloud VPS-2 (gama 2027,
-  4 vCores/8 GB RAM/75 GB NVMe, ~€106,44/ano a partir do 2.º ano) e domínio `chichorro.pt`
-  (~€16,47/ano a partir do 2.º ano)
-- `docs/deploy/ANEXO_PROVA_CUSTO_VPS.md` e `ANEXO_PROVA_CUSTO_DOMINIO.md` — provas de custo
+  4 vCores/8 GB RAM/75 GB NVMe, €106,44/ano com compromisso de 12 meses, faturação anual
+  pré-paga) + Backup Snapshot (€6,00/ano) e domínio `chichorro.pt` (€16,47/ano a partir do
+  2.º ano, faturação anual). Total ano 1: €126,20; anos seguintes: €128,91/ano
+- `docs/PAD_FEUP/ANEXO_PROVA_CUSTO_VPS.md` e `ANEXO_PROVA_CUSTO_DOMINIO.md` — provas de custo
   com capturas de ecrã reais dos preços públicos OVHcloud, embutidas como imagens no `.docx`
   final (sem depender de links para ficheiros `.md` irmãos)
-- `docs/deploy/DOMAIN_OPTIONS.md` — comparação de alternativas de domínio consideradas
+- `docs/PAD_FEUP/DOMAIN_OPTIONS.md` — comparação de alternativas de domínio consideradas
 - Objetivo: permitir avaliação/demonstração do CHICHORRO fora da rede local (defesa de
   dissertação, apresentações) e disponibilização como serviço público estável, substituindo o
   atual acesso via Cloudflare Tunnel a uma VM de staging na rede local
@@ -908,10 +909,25 @@ Propostas de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do mod
 
 | ID | Descrição |
 | --- | --- |
-| MODEL-01 | Método simplificado baseado no CHICHORRO 2.0 |
-| MODEL-02 | Alterar ordem do Cenário 4 (CI → VVE → VHE alternativo) |
-| MODEL-03 | Afinação de custos €/m² via PRONIC |
-| MODEL-04 | Intervenções adicionais: Gerador, Grupo de bombagem, Cablagem, Evacuação alternativa |
-| MODEL-05 | Georreferenciação e base de dados de edifícios |
-| MODEL-06 | Tratamento de edifícios devolutos |
-| MODEL-07 | Integração com Firecheck 2.0 |
+| FEAT-05 | Método simplificado baseado no CHICHORRO 2.0 |
+| FEAT-06 | Alterar ordem do Cenário 4 (CI → VVE → VHE alternativo) |
+| FEAT-07 | Afinação de custos €/m² via PRONIC |
+| FEAT-08 | Intervenções adicionais: Gerador, Grupo de bombagem, Cablagem, Evacuação alternativa |
+| FEAT-09 | Georreferenciação e base de dados de edifícios |
+| FEAT-10 | Tratamento de edifícios devolutos |
+| FEAT-11 | Integração com Firecheck 2.0 |
+
+## Migração de versões — MODEL (v4.0 → v4.1 → v5.0)
+
+Trazer para o backend atual (`app/backend/calc/`) o trabalho das dissertações de Inês Casas
+(v4.0), Ana Martins (v4.1) e v5.0. Ver
+[CHICHORRO_V4_MAIN_PLAN.md](plans/main/CHICHORRO_V4_MAIN_PLAN.md).
+
+| ID | Estado | Descrição |
+| --- | --- | --- |
+| MODEL-01 | 🔄 | v4.0 (Inês Casas) — modelo completo (MARI) |
+| MODEL-01a | ❌ | DPI_VDGF — tabela cruzada fiel à Tabela 3.10 da tese |
+| MODEL-01b | ❌ | DPI_OGS — tabela cruzada fiel à Tabela 3.11 da tese |
+| MODEL-02 | ❌ | v4.0 (Inês Casas) — modelo simplificado (MAGR) |
+| MODEL-03 | ❌ | v4.1 (Ana Martins) — migração/consolidação |
+| MODEL-04 | ❌ | v5.0 — migração/consolidação |

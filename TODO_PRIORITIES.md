@@ -2,7 +2,7 @@
 
 Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver [TODO_LIST.md](TODO_LIST.md).
 
-Última atualização: 2026-07-08 (UI-12 concluído — FIR-53)
+Última atualização: 2026-07-13 (reorganização MODEL/FEAT — início MODEL-01, migração v4.0)
 
 ---
 
@@ -19,7 +19,7 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 - **`INFRA`** — Infraestrutura, deploy e DevOps
 - **`TEST`** — Testes e validação
 - **`DOCS`** — Documentação
-- **`MODEL`** — Modelo CHICHORRO (backlog pós-3.1)
+- **`MODEL`** — Modelo CHICHORRO (migração de versões v4.0 → v4.1 → v5.0)
 - **`AI`** — AI tooling e knowledge graph (Graphify, Obsidian, RAG)
 - **`B`** — Tarefas de manutenção/organização
 
@@ -27,7 +27,22 @@ Listagem de tarefas organizada por prioridade. Para listagem completa por ID ver
 
 ## Por Concluir / Pendente
 
-*(nenhuma tarefa em progresso)*
+### Prioridade Alta
+
+#### 🔄 MODEL-01 — v4.0 (Inês Casas) — modelo completo (MARI)
+
+Trazer para o backend atual (`app/backend/calc/`) o trabalho da dissertação de Inês Casas
+(v4.0), começando pelo modelo completo (MARI); o modelo simplificado (MAGR, MODEL-02) fica
+para depois. Verificação linha-a-linha (PHP v4.0 vs Python atual vs tese cap.3) já concluída
+— ver
+[CHICHORRO_V4_MARI_VERIFICATION_REPORT.md](plans/main/CHICHORRO_V4_MARI_VERIFICATION_REPORT.md)
+e
+[CHICHORRO_V4_MARI_IMPLEMENTATION_PLAN.md](plans/main/CHICHORRO_V4_MARI_IMPLEMENTATION_PLAN.md).
+
+Sub-tarefas identificadas (alta prioridade — bugs/gaps reais):
+
+- MODEL-01a — `DPI_VDGF`: reimplementar como tabela cruzada fiel à Tabela 3.10 da tese.
+- MODEL-01b — `DPI_OGS`: reimplementar como tabela cruzada fiel à Tabela 3.11 da tese.
 
 ### Prioridade Média
 
@@ -175,37 +190,37 @@ Exportar resultados RI, CTI e subfatores (POI/DPI/ESCI) para ficheiro PDF imprim
 
 ---
 
-#### ❌ MODEL-01 — Método simplificado baseado no CHICHORRO 2.0
+#### ❌ FEAT-05 — Método simplificado baseado no CHICHORRO 2.0
 
 Proposta de Rui Sobral (dissertação, secção 7.2) — fora do âmbito do modelo 3.1.
 
 ---
 
-#### ❌ MODEL-02 — Alterar ordem do Cenário 4
+#### ❌ FEAT-06 — Alterar ordem do Cenário 4
 
 CI → VVE → VHE alternativo.
 
 ---
 
-#### ❌ MODEL-03 — Afinação de custos €/m² via "PRONIC" ou similar com atualização automática de base de dados de custos
+#### ❌ FEAT-07 — Afinação de custos €/m² via "PRONIC" ou similar com atualização automática de base de dados de custos
 
 ---
 
-#### ❌ MODEL-04 — Intervenções adicionais
+#### ❌ FEAT-08 — Intervenções adicionais
 
 Gerador, Grupo de bombagem, Cablagem, Evacuação alternativa.
 
 ---
 
-#### ❌ MODEL-05 — Georreferenciação e base de dados de edifícios
+#### ❌ FEAT-09 — Georreferenciação e base de dados de edifícios
 
 ---
 
-#### ❌ MODEL-06 — Tratamento de edifícios devolutos
+#### ❌ FEAT-10 — Tratamento de edifícios devolutos
 
 ---
 
-#### ❌ MODEL-07 — Integração com Firecheck 2.0
+#### ❌ FEAT-11 — Integração com Firecheck 2.0
 
 ---
 

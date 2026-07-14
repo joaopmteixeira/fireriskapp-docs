@@ -4,6 +4,38 @@
 
 ## [Unreleased]
 
+### 2026-07-13 — Verificação aprofundada v4.0 · Reorganização TODO · Ajustes PAD_FEUP
+
+**Verificação linha-a-linha v4.0 (Inês Casas) vs Python atual vs tese cap.3**
+
+- `docs/plans/main/CHICHORRO_V4_MARI_VERIFICATION_REPORT.md` — comparação linha-a-linha do
+  PHP de referência v4.0, do Python atual e do capítulo 3 da própria tese da Inês Casas, para
+  cada subfator de POI/CTI/DPI/ESCI/RI/Intervenções; distingue bugs de migração (já
+  corrigidos no Python) de divergências reais entre a tese e o próprio código PHP dela
+- `docs/plans/main/CHICHORRO_V4_MARI_IMPLEMENTATION_PLAN.md` — plano de implementação do
+  modelo completo (MARI) daí resultante: `DPI_VDGF` e `DPI_OGS` identificados como os únicos
+  dois pontos com trabalho real a fazer (reimplementar como tabelas cruzadas fiéis às
+  Tabelas 3.10/3.11 da tese); fórmula do RI confirmada correta (manter soma); modelo
+  simplificado (MAGR) deliberadamente fora de âmbito nesta ronda
+- Nenhum código de cálculo alterado — só os 2 documentos de referência, para comparação
+  manual do utilizador antes de qualquer alteração a `Chichorro_DPI.py`
+
+**Reorganização MODEL → FEAT no tracking de tarefas**
+
+- `docs/TODO_LIST.md`, `TODO_PRIORITIES.md`, `PROJECT_STATUS.md`, `NEXT_STEPS.md`,
+  `docs/plans/main/ROADMAP_SELF_HOSTED_VPS.md` — o backlog antigo `MODEL-01..07` (propostas
+  de Rui Sobral, dissertação secção 7.2, não relacionado com a migração de versões) foi
+  renumerado para `FEAT-05..11`; o prefixo `MODEL` passou a designar a migração de versões
+  do modelo (v4.0 → v4.1 → v5.0), com `MODEL-01` (v4.0 MARI, 🔄 em progresso, sub-IDs
+  `MODEL-01a`/`MODEL-01b` para DPI_VDGF/DPI_OGS), `MODEL-02` (v4.0 MAGR), `MODEL-03` (v4.1),
+  `MODEL-04` (v5.0)
+
+**Ajustes ao pedido de despesa FEUP**
+
+- `docs/PAD_FEUP/FEUP_PEDIDO_DESPESA.md` (+ `.docx`, `ANEXO_PROVA_CUSTO_VPS.md`) — billing da
+  VPS OVHcloud alterado de mensal para compromisso de 12 meses; adicionado o add-on Backup
+  Snapshot ao cálculo de custo
+
 ### 2026-07-10 — Análise de proveniência CHICHORRO · Pedido de despesa FEUP
 
 **Análise de proveniência v3.0 → v3.1 → v4.0 → v4.1 → v5.0**
